@@ -21,3 +21,7 @@ Configure the **config.json** file and run the emulator with:
 ```cmd
 ./start.sh
 ```
+
+## Discover the Orion project
+
+- [OrionCMS - Modern and secure CMS for Arcturus Emulator made in Laravel 10+ and AlpineJS.](https://github.com/nicollassilva/orioncms)
