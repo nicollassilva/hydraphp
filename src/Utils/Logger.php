@@ -64,4 +64,16 @@ class Logger
             </div>
         HTML);
     }
+
+    public function advertisement(string $message): void
+    {
+        render(<<<HTML
+            <div>
+                <div class="px-1 mr-1 bg-orange-500 text-black">
+                    <span class="font-bold">$this->className</span>
+                </div>
+                <span class="text-white">$message</span>
+            </div>
+        HTML);
+    }
 }

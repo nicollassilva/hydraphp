@@ -29,8 +29,6 @@ class NetworkManager implements INetworkManager
 
         $this->packageManager = new PackageManager();
         $this->connectionManager = new ConnectionManager();
-
-        $this->initialize();
     }
     
     public function initialize(): void
@@ -62,6 +60,6 @@ class NetworkManager implements INetworkManager
             });
         });
 
-        $this->logger->success("Server listening on {$host}:{$port}!");
+        $this->logger->info("Server listening on {$host}:{$port}!");
     }
 }

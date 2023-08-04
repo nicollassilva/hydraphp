@@ -20,9 +20,14 @@ class Emulator
 
     public function run()
     {
-        $this->logger->success('Emulator started!');
-
+        $this->logger->advertisement('░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░');
+        $this->logger->advertisement('░░█▄█░▀▄▀░█▀▄▒█▀▄▒▄▀▄▒█▀▄░█▄█▒█▀▄░░');
+        $this->logger->advertisement('░▒█▒█░▒█▒▒█▄▀░█▀▄░█▀█░█▀▒▒█▒█░█▀▒░░');
+        $this->logger->advertisement('░░░ Made with love by @iNicollas ░░');
+        $this->logger->advertisement('░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░');
+       
         $this->networkManager = new NetworkManager();
+        $this->networkManager->initialize();
     }
 
     public function getConfigManager(): EmulatorConfig
