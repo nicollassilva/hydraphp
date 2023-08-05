@@ -5,9 +5,9 @@ namespace Emulator\Networking\Connections;
 use React\Socket\ConnectionInterface;
 use Emulator\Networking\Connections\Client;
 use Emulator\Api\Networking\Connections\IClient;
-use Emulator\Api\Networking\Connections\IConnectionManager;
+use Emulator\Api\Networking\Connections\IClientManager;
 
-class ConnectionManager implements IConnectionManager
+class ClientManager implements IClientManager
 {
     private array $activeClients = [];
 

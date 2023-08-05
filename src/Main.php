@@ -15,8 +15,6 @@ abstract class Main
         self::$emulator = new Emulator();
 
         self::$isDebugging = self::$emulator->getConfigManager()->get('emulator.debug', false);
-
-        self::$emulator->run();
     }
 
     public static function getEmulator(): Emulator

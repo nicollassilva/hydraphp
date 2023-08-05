@@ -5,7 +5,7 @@ namespace Emulator\Api\Networking\Connections;
 use React\Socket\ConnectionInterface;
 use Emulator\Api\Networking\Connections\IClient;
 
-interface IConnectionManager
+interface IClientManager
 {
     public function getClients(): array;
     public function getClient(string $connectionHash): ?IClient;

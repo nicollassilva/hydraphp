@@ -4,7 +4,8 @@
     "type": "project",
     "require": {
         "react/react": "^1.4",
-        "nunomaduro/termwind": "^1.15"
+        "nunomaduro/termwind": "^1.15",
+        "react/mysql": "0.5.7"
     },
     "license": "MIT",
     "autoload": {

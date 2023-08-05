@@ -2,6 +2,7 @@
 
 namespace Emulator\Networking;
 
+use Throwable;
 use Emulator\Main;
 use React\EventLoop\Loop;
 use Emulator\Utils\Logger;
@@ -10,9 +11,9 @@ use React\EventLoop\LoopInterface;
 use React\Socket\ConnectionInterface;
 use Emulator\Api\Networking\INetworkManager;
 use Emulator\Networking\Packages\PackageManager;
+use Emulator\Networking\Connections\ClientManager;
 use Emulator\Api\Networking\Packages\IPackageManager;
-use Emulator\Networking\Connections\ConnectionManager;
-use Emulator\Api\Networking\Connections\IConnectionManager;
+use Emulator\Api\Networking\Connections\IClientManager;
 
 class NetworkManager implements INetworkManager
 {
@@ -22,20 +23,24 @@ class NetworkManager implements INetworkManager
     private LoopInterface $loop;
 
     private readonly IPackageManager $packageManager;
-    private readonly IConnectionManager $connectionManager;
+    private readonly IClientManager $clientManager;
 
     public function __construct() {
         $this->logger = new Logger(get_class($this));
 
         $this->packageManager = new PackageManager();
-        $this->connectionManager = new ConnectionManager();
+        $this->clientManager = new ClientManager();
+
+        $this->initialize();
     }
     
-    public function initialize(): void
+    private function initialize(): void
     {
-        $this->logger->info('NetworkManager initialized!');
-
-        $this->initializeServer();
+        try {
+            $this->initializeServer();
+        } catch (Throwable $throwable) {
+            $this->logger->error($throwable->getMessage());
+        }
     }
 
     private function initializeServer(): void
@@ -47,19 +52,30 @@ class NetworkManager implements INetworkManager
         $this->tcpServer = new TcpServer("{$host}:{$port}", $this->loop);
 
         $this->tcpServer->on('connection', function (ConnectionInterface $connection) {
-            $client = $this->connectionManager->addIfAbsent($connection);
+            $client = $this->clientManager->addIfAbsent($connection);
 
-            $this->logger->info(sprintf('[%s] connected. Total of connections: [%s]', $client->getId(), count($this->connectionManager->getClients())));
+            $this->logger->info(sprintf('[%s] connected. Total of connections: [%s]', $client->getId(), count($this->clientManager->getClients())));
 
             $connection->on('data', function ($data) use (&$client) {
                 $this->packageManager->handle($data, $client);
             });
 
             $connection->on('close', function () use ($connection) {
-                $this->connectionManager->disposeClient($connection);
+                $this->clientManager->disposeClient($connection);
             });
         });
 
+        $this->logger->info('NetworkManager initialized!');
         $this->logger->info("Server listening on {$host}:{$port}!");
+    }
+
+    public function getPackageManager(): IPackageManager
+    {
+        return $this->packageManager;
+    }
+
+    public function getClientManager(): IClientManager
+    {
+        return $this->clientManager;
     }
 }

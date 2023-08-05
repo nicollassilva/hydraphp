@@ -8,7 +8,7 @@ abstract class IncomingHeaders
     public static int $releaseVersionEvent = 4000;
     public static int $clientVariablesEvent = 1053;
     public static int $uniqueIdEvent = 2490;
-    public static int $SSOTicketEvent = 2419;
+    public static int $ssoTicketEvent = 2419;
     # -----
     
     # Hotel View Events

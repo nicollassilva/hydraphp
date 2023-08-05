@@ -62,7 +62,7 @@ class IncomingPackagesLoader
         $this->addPackage(IncomingHeaders::$releaseVersionEvent, ReleaseVersionEvent::class);
         $this->addPackage(IncomingHeaders::$clientVariablesEvent, ClientVariablesEvent::class);
         $this->addPackage(IncomingHeaders::$uniqueIdEvent, UniqueIdEvent::class);
-        $this->addPackage(IncomingHeaders::$SSOTicketEvent, SSOTicketEvent::class);
+        $this->addPackage(IncomingHeaders::$ssoTicketEvent, SSOTicketEvent::class);
     }
 
     private function loadHotelViewEvents(): void

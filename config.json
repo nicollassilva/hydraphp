@@ -4,7 +4,11 @@
     "server.host": "0.0.0.0",
     "server.port": 1234,
 
-    "mysql.host": "localhost",
-    "mysql.port": 3306,
-    "mysql.dbname": "test"
+    "db.host": "localhost",
+    "db.port": 3306,
+    "db.user": "root",
+    "db.password": "password",
+    "db.name": "orioncms",
+    "db.tcpKeepAlive": true,
+    "db.autoReconnect": true
 }
