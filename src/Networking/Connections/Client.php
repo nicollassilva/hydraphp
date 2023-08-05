@@ -2,6 +2,7 @@
 
 namespace Emulator\Networking\Connections;
 
+use Emulator\Api\Game\Users\IUser;
 use Emulator\Hydra;
 use Emulator\Utils\Logger;
 use React\Socket\ConnectionInterface;
@@ -14,6 +15,8 @@ class Client implements IClient
 
     private string $version = 'UNKNOW';
     private string $uniqueId;
+
+    private ?IUser $user = null;
 
     public function __construct(
         private readonly string $id,
@@ -80,5 +83,15 @@ class Client implements IClient
     public function getLogger(): Logger
     {
         return $this->logger;
+    }
+
+    public function setUser(IUser $user): void
+    {
+        $this->user = $user;
+    }
+
+    public function getUser(): IUser
+    {
+        return $this->user;
     }
 }

@@ -26,7 +26,7 @@ abstract class RoomRepository extends EmulatorRepository
     {
         $roomData = null;
 
-        return self::encapsuledSelect('SELECT * FROM rooms WHERE id = ?', function(QueryResult $result) use (&$roomData) {
+        self::encapsuledSelect('SELECT * FROM rooms WHERE id = ?', function(QueryResult $result) use (&$roomData) {
             if(empty($result->resultRows)) return;
 
             $roomData = new RoomData($result->resultRows[0]);

@@ -5,7 +5,7 @@ namespace Emulator\Storage\Repositories;
 use Closure;
 use Throwable;
 use Emulator\Hydra;
-use React\MySQL\QueryResult;
+use function React\Async\await;
 use React\MySQL\ConnectionInterface;
 
 abstract class EmulatorRepository
@@ -25,9 +25,14 @@ abstract class EmulatorRepository
             };
         }
 
-        $connection->query($select, $params)
-            ->then(fn (QueryResult $result) => $onSuccessCallback($result))
-            ->catch(fn (Throwable $error) => $onErrorCallback($error));
+        $result = await($connection->query($select, $params));
+
+        if($result instanceof \Throwable) {
+            $onErrorCallback($result);
+            return;
+        }
+
+        $onSuccessCallback($result);
 
         $connection->quit();
         unset($connection);

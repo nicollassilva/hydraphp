@@ -3,6 +3,7 @@
 namespace Emulator\Api\Networking\Connections;
 
 use Emulator\Utils\Logger;
+use Emulator\Api\Game\Users\IUser;
 use React\Socket\ConnectionInterface;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
 
@@ -21,4 +22,7 @@ interface IClient
     public function disconnect(): void;
 
     public function getLogger(): Logger;
+
+    public function setUser(IUser $user): void;
+    public function getUser(): IUser;
 }

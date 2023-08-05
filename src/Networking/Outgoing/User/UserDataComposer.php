@@ -2,21 +2,22 @@
 
 namespace Emulator\Networking\Outgoing\User;
 
+use Emulator\Api\Game\Users\IUser;
 use Emulator\Networking\Outgoing\MessageComposer;
 use Emulator\Networking\Outgoing\OutgoingHeaders;
 
 class UserDataComposer extends MessageComposer
 {
-    public function __construct()
+    public function __construct(IUser $user)
     {
         $this->header = OutgoingHeaders::$userDataComposer;
 
-        $this->writeInt32(1);
-        $this->writeString("iNicollas");
-        $this->writeString("hr-3090-42-61.hd-180-10-61.ch-804-82-61.lg-281-1408-61.sh-295-80-61");
-        $this->writeString("M");
-        $this->writeString("I Love Orion");
-        $this->writeString("iNicollas");
+        $this->writeInt32($user->getData()->getId());
+        $this->writeString($user->getData()->getUsername());
+        $this->writeString($user->getData()->getLook());
+        $this->writeString($user->getData()->getGender());
+        $this->writeString($user->getData()->getMotto());
+        $this->writeString($user->getData()->getUsername());
         $this->writeBoolean(false);
         $this->writeInt32(1);
         $this->writeInt32(3);

@@ -3,6 +3,7 @@
 namespace Emulator\Game\Users\Requests;
 
 use Emulator\Api\Networking\Connections\IClient;
+use Emulator\Game\Users\UserManager;
 
 class LoginRequest
 {
@@ -17,7 +18,7 @@ class LoginRequest
     {
         $ticketLength = $this->getTicketLength();
 
-        return $ticketLength >= 8 && $ticketLength <= 128;
+        return ($ticketLength >= 8 && $ticketLength <= 128) || empty($this->client);
     }
 
     public function getTicketLength(): int
@@ -27,7 +28,13 @@ class LoginRequest
 
     public function attemptLogin(): bool
     {
-        // TODO: Implement login attempt
+        $user = UserManager::getInstance()->loadUser($this->ticket);
+        
+        if(empty($user)) return false;
+        
+        $this->client->setUser($user);
+        $user->setClient($this->client);
+
         return true;
     }
 }

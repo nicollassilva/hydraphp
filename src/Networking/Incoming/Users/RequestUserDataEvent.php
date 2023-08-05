@@ -13,7 +13,7 @@ class RequestUserDataEvent implements IIncomingMessage
 {
     public function handle(IClient $client, ClientMessage $message): void
     {
-        $client->send(new UserDataComposer)
+        $client->send(new UserDataComposer($client->getUser()))
             ->send(new UserPerksComposer)
             ->send(new MeMenuSettingsComposer);
     }

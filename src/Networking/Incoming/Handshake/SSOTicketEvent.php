@@ -28,7 +28,6 @@ use Emulator\Networking\Outgoing\HotelView\AdventCalendarDataComposer;
 
 class SSOTicketEvent implements IIncomingMessage
 {
-
     public function handle(IClient $client, ClientMessage $message): void
     {
         $ticket = $message->readString();
