@@ -3,7 +3,7 @@
 namespace Emulator\Networking;
 
 use Throwable;
-use Emulator\Main;
+use Emulator\Hydra;
 use React\EventLoop\Loop;
 use Emulator\Utils\Logger;
 use React\Socket\TcpServer;
@@ -45,8 +45,8 @@ class NetworkManager implements INetworkManager
 
     private function initializeServer(): void
     {
-        $host = Main::getEmulator()->getConfigManager()->get('server.host');
-        $port = Main::getEmulator()->getConfigManager()->get('server.port');
+        $host = Hydra::getEmulator()->getConfigManager()->get('server.host');
+        $port = Hydra::getEmulator()->getConfigManager()->get('server.port');
 
         $this->loop = Loop::get();
         $this->tcpServer = new TcpServer("{$host}:{$port}", $this->loop);

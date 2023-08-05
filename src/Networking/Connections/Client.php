@@ -2,11 +2,11 @@
 
 namespace Emulator\Networking\Connections;
 
+use Emulator\Hydra;
+use Emulator\Utils\Logger;
 use React\Socket\ConnectionInterface;
 use Emulator\Api\Networking\Connections\IClient;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
-use Emulator\Main;
-use Emulator\Utils\Logger;
 
 class Client implements IClient
 {
@@ -48,7 +48,7 @@ class Client implements IClient
             return $this;
         }
 
-        if(Main::$isDebugging) {
+        if(Hydra::$isDebugging) {
             $this->logger->info(sprintf('[O] [%s] %s', $message->getHeader(), get_class($message)));
         }
 

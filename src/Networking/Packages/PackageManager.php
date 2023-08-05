@@ -2,10 +2,10 @@
 
 namespace Emulator\Networking\Packages;
 
+use Emulator\Hydra;
 use Emulator\Utils\Logger;
 use Emulator\Api\Networking\Connections\IClient;
 use Emulator\Api\Networking\Packages\IPackageManager;
-use Emulator\Main;
 use Emulator\Networking\Connections\ClientMessage;
 use Emulator\Utils\Services\EncodingService;
 
@@ -51,14 +51,14 @@ class PackageManager implements IPackageManager
         if(empty($client)) return;
 
         if($package = $this->incomingPackagesLoader->getPackageByHeader($message->getHeader())) {
-            if(Main::$isDebugging) {
+            if(Hydra::$isDebugging) {
                 $this->logger->info(sprintf('[I] [%s] %s', $message->getHeader(), $package));
             }
 
             $package = new $package();
             $package->handle($client, $message);
         } else {
-            if(Main::$isDebugging) {
+            if(Hydra::$isDebugging) {
                 $this->logger->warning(sprintf('[%s] %s', $message->getHeader(), "Unhandled package"));
             }
         }

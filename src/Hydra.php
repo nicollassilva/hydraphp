@@ -4,7 +4,7 @@ namespace Emulator;
 
 use Emulator\Boot\Emulator;
 
-abstract class Main
+abstract class Hydra
 {
     public static Emulator $emulator;
     

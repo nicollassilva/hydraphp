@@ -14,8 +14,9 @@ class RoomData implements IRoomData
     private int $maxUsers;
     private int $score;
 
-    public function __construct()
+    public function __construct(array $roomData = [])
     {
+        print_r($roomData);
         $this->id = 1;
         $this->name = 'PHP Emulator Room';
         $this->description = 'PHP Emulator';

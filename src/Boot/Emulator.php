@@ -5,15 +5,17 @@ namespace Emulator\Boot;
 use Closure;
 use Emulator\Utils\Logger;
 use Emulator\Boot\EmulatorConfig;
+use Emulator\Game\Rooms\RoomManager;
 use Emulator\Storage\ConnectorManager;
 use Emulator\Networking\NetworkManager;
 use Emulator\Api\Networking\INetworkManager;
+use Emulator\Storage\Compositions\IConnectorManager;
 
 class Emulator
 {
     private readonly Logger $logger;
-    private readonly NetworkManager $networkManager;
-    private readonly ConnectorManager $connectorManager;
+    private readonly INetworkManager $networkManager;
+    private readonly IConnectorManager $connectorManager;
 
     public function __construct(
         public readonly EmulatorConfig $config = new EmulatorConfig()
@@ -23,6 +25,8 @@ class Emulator
         $this->showAdvertisement();
 
         $this->startConnectorManager(function() {
+            RoomManager::getInstance()->initialize();
+
             $this->startNetworkManager();
         });
     }
@@ -60,7 +64,7 @@ class Emulator
         return $this->config;
     }
 
-    public function getConnectorManager(): ConnectorManager
+    public function getConnectorManager(): IConnectorManager
     {
         return $this->connectorManager;
     }
