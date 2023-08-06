@@ -1,17 +1,17 @@
 <?php
 
-namespace Emulator\Networking\Incoming\Users;
+namespace Emulator\Networking\Incoming\Rooms;
 
 use Emulator\Api\Networking\Connections\IClient;
 use Emulator\Networking\Connections\ClientMessage;
 use Emulator\Api\Networking\Incoming\IIncomingMessage;
-use Emulator\Networking\Outgoing\User\MeMenuSettingsComposer;
+use Emulator\Networking\Outgoing\Rooms\RoomOpenComposer;
 
-class RequestMeMenuSettingsEvent implements IIncomingMessage
+class JoinRoomEvent implements IIncomingMessage
 {
     public function handle(IClient $client, ClientMessage $message): void
     {
-        $client->send(new MeMenuSettingsComposer($client->getUser()->getSettings()));
+        // $client->send(new RoomOpenComposer);
     }
     
     public function needsAuthentication(): bool

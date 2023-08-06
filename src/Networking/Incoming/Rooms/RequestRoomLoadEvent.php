@@ -6,7 +6,7 @@ use Emulator\Game\Rooms\RoomManager;
 use Emulator\Api\Networking\Connections\IClient;
 use Emulator\Networking\Connections\ClientMessage;
 use Emulator\Api\Networking\Incoming\IIncomingMessage;
-use Emulator\Networking\Outgoing\Rooms\{RoomOpenComposer,RoomModelComposer,RoomScoreComposer,HideDoorbellComposer,RoomPromotionComposer};
+use Emulator\Networking\Outgoing\Rooms\{RoomOpenComposer,RoomModelComposer,RoomScoreComposer,HideDoorbellComposer, RoomPaintComposer, RoomPromotionComposer, RoomUsersComposer, RoomUserStatusComposer};
 
 class RequestRoomLoadEvent implements IIncomingMessage
 {
@@ -19,7 +19,10 @@ class RequestRoomLoadEvent implements IIncomingMessage
         
         $client->send(new HideDoorbellComposer(""))
             ->send(new RoomOpenComposer)
+            ->send(new RoomUsersComposer($client->getUser()))
+            ->send(new RoomUserStatusComposer)
             ->send(new RoomModelComposer)
+            ->send(new RoomPaintComposer)
             ->send(new RoomScoreComposer)
             ->send(new RoomPromotionComposer);
     }

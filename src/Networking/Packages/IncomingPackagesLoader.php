@@ -7,7 +7,7 @@ use Emulator\Networking\Incoming\Emulator\{PingEvent, PongEvent};
 use Emulator\Networking\Incoming\Catalog\{RequestTargetOfferEvent};
 use Emulator\Networking\Incoming\Messenger\{RequestFriendRequestsEvent, RequestFriendsEvent,RequestInitFriendsEvent};
 use Emulator\Networking\Incoming\HotelView\{HotelViewRequestBonusRareEvent,HotelViewDataEvent};
-use Emulator\Networking\Incoming\Rooms\{RequestPromotedRoomsEvent, RequestRoomCategoriesEvent, RequestRoomDataEvent, RequestRoomLoadEvent};
+use Emulator\Networking\Incoming\Rooms\{JoinRoomEvent, RequestPromotedRoomsEvent, RequestRoomCategoriesEvent, RequestRoomDataEvent, RequestRoomLoadEvent};
 use Emulator\Networking\Incoming\GameCenter\{GetGameListMessageEvent,GameCenterRequestGamesEvent};
 use Emulator\Networking\Incoming\Navigator\{RequestNavigatorSettingsEvent, RequestNewNavigatorDataEvent, RequestNewNavigatorRoomsEvent};
 use Emulator\Networking\Incoming\Handshake\{UniqueIdEvent, SSOTicketEvent, ReleaseVersionEvent, ClientVariablesEvent};
@@ -104,6 +104,7 @@ class IncomingPackagesLoader
         $this->addPackage(IncomingHeaders::$requestRoomCategoriesEvent, RequestRoomCategoriesEvent::class);
         $this->addPackage(IncomingHeaders::$requestRoomDataEvent, RequestRoomDataEvent::class);
         $this->addPackage(IncomingHeaders::$requestRoomLoadEvent, RequestRoomLoadEvent::class);
+        $this->addPackage(IncomingHeaders::$joinRoomEvent, JoinRoomEvent::class);
     }
 
     private function loadCatalogEvents(): void

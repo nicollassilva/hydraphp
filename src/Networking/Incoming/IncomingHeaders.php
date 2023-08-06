@@ -46,6 +46,7 @@ abstract class IncomingHeaders
     public static int $requestNewNavigatorRoomsEvent = 249;
     public static int $requestRoomDataEvent = 2230;
     public static int $requestRoomLoadEvent = 2312;
+    public static int $joinRoomEvent = 685;
     # -----
     
     # Emulator Events

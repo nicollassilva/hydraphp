@@ -1,8 +1,9 @@
 <?php
 
-namespace Emulator\Game\Rooms\Component;
+namespace Emulator\Game\Rooms\Components;
 
 use Emulator\Game\Rooms\Data\ChatBubble;
+use Emulator\Api\Game\Rooms\Data\IChatBubble;
 
 class ChatBubblesComponent
 {

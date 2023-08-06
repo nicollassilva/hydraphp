@@ -6,7 +6,7 @@ use Emulator\Utils\Logger;
 use Emulator\Game\Rooms\Room;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Rooms\IRoomManager;
-use Emulator\Game\Rooms\Component\ChatBubblesComponent;
+use Emulator\Game\Rooms\Components\ChatBubblesComponent;
 use Emulator\Storage\Repositories\Rooms\RoomRepository;
 
 class RoomManager implements IRoomManager

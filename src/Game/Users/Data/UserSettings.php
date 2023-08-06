@@ -196,7 +196,7 @@ class UserSettings implements IUserSettings
         return $this->volumeTrax;
     }
 
-    public function getChatColor(): array
+    public function getChatColor(): IChatBubble
     {
         return $this->chatColor;
     }
