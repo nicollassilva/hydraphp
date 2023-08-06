@@ -15,15 +15,15 @@ class RequestRoomLoadEvent implements IIncomingMessage
         $roomId = $message->readInt32();
         $password = $message->readString();
 
-        // $room = RoomManager::getInstance()->loadRoom(50);
+        $room = RoomManager::getInstance()->loadRoom(50);
         
-        $client->send(new HideDoorbellComposer(""))
+        $client->send(new HideDoorbellComposer($client->getUser()->getData()->getUsername()))
             ->send(new RoomOpenComposer)
             ->send(new RoomUsersComposer($client->getUser()))
             ->send(new RoomUserStatusComposer)
-            ->send(new RoomModelComposer)
-            ->send(new RoomPaintComposer)
-            ->send(new RoomScoreComposer)
+            ->send(new RoomModelComposer($room))
+            ->send(new RoomPaintComposer($room))
+            ->send(new RoomScoreComposer($room))
             ->send(new RoomPromotionComposer);
     }
     

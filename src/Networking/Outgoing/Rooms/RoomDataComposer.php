@@ -2,6 +2,7 @@
 
 namespace Emulator\Networking\Outgoing\Rooms;
 
+use Emulator\Game\Rooms\RoomManager;
 use Emulator\Networking\Outgoing\MessageComposer;
 use Emulator\Networking\Outgoing\OutgoingHeaders;
 

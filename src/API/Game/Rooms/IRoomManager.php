@@ -4,7 +4,7 @@ namespace Emulator\Api\Game\Rooms;
 
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\IRoom;
-use Emulator\Game\Rooms\Components\ChatBubblesComponent;
+use Emulator\Game\Rooms\Components\{ChatBubblesComponent,RoomModelsComponent};
 
 interface IRoomManager
 {
@@ -13,4 +13,5 @@ interface IRoomManager
     public function getLoadedRooms(): array;
     public function loadRoom(int $roomId): ?IRoom;
     public function getChatBubblesComponent(): ChatBubblesComponent;
+    public function getRoomModelsComponent(): RoomModelsComponent;
 }
