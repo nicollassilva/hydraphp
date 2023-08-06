@@ -15,7 +15,7 @@ class RequestUserDataEvent implements IIncomingMessage
     {
         $client->send(new UserDataComposer($client->getUser()))
             ->send(new UserPerksComposer($client->getUser()))
-            ->send(new MeMenuSettingsComposer);
+            ->send(new MeMenuSettingsComposer($client->getUser()->getSettings()));
     }
     
     public function needsAuthentication(): bool

@@ -2,7 +2,9 @@
 
 namespace Emulator\Game\Users\Data;
 
+use Emulator\Api\Game\Rooms\Data\IChatBubble;
 use Emulator\Api\Game\Users\Data\IUserSettings;
+use Emulator\Game\Rooms\RoomManager;
 
 class UserSettings implements IUserSettings
 {
@@ -27,7 +29,7 @@ class UserSettings implements IUserSettings
     private int $volumeSystem;
     private int $volumeFurni;
     private int $volumeTrax;
-    private array $chatColor;
+    private ?IChatBubble $chatColor;
     private int $hofPoints;
     private bool $blockStaffAlerts;
     private int $citizenshipLevel;
@@ -69,7 +71,7 @@ class UserSettings implements IUserSettings
         $this->volumeSystem = $data["volume_system"];
         $this->volumeFurni = $data["volume_furni"];
         $this->volumeTrax = $data["volume_trax"];
-        $this->chatColor = [];
+        $this->chatColor = RoomManager::getInstance()->getChatBubblesComponent()->getChatBubbleById($data["chat_color"]);
         $this->hofPoints = $data["hof_points"];
         $this->blockStaffAlerts = $data["block_alerts"];
         $this->citizenshipLevel = $data["talent_track_citizenship_level"];

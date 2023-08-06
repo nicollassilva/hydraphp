@@ -6,6 +6,7 @@ use Emulator\Utils\Logger;
 use Emulator\Game\Rooms\Room;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Rooms\IRoomManager;
+use Emulator\Game\Rooms\Component\ChatBubblesComponent;
 use Emulator\Storage\Repositories\Rooms\RoomRepository;
 
 class RoomManager implements IRoomManager
@@ -18,9 +19,13 @@ class RoomManager implements IRoomManager
 
     private array $loadedRooms = [];
 
+    private readonly ChatBubblesComponent $chatBubblesComponent;
+
     public function __construct()
     {
         $this->logger = new Logger(get_class($this));
+
+        $this->chatBubblesComponent = new ChatBubblesComponent();
     }
 
     public static function getInstance(): IRoomManager
@@ -33,6 +38,11 @@ class RoomManager implements IRoomManager
     public function getLogger(): Logger
     {
         return $this->logger;
+    }
+
+    public function getChatBubblesComponent(): ChatBubblesComponent
+    {
+        return $this->chatBubblesComponent;
     }
 
     public function initialize(): void

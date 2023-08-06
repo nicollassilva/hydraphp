@@ -2,6 +2,8 @@
 
 namespace Emulator\Api\Game\Users\Data;
 
+use Emulator\Api\Game\Rooms\Data\IChatBubble;
+
 interface IUserSettings
 {
     public function getAchievementScore(): int;
@@ -25,7 +27,7 @@ interface IUserSettings
     public function getVolumeSystem(): int;
     public function getVolumeFurni(): int;
     public function getVolumeTrax(): int;
-    public function getChatColor(): array;
+    public function getChatColor(): ?IChatBubble;
     public function getHofPoints(): int;
     public function getBlockStaffAlerts(): bool;
     public function getCitizenshipLevel(): int;
