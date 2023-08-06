@@ -5,6 +5,7 @@ namespace Emulator\Game\Users;
 use Emulator\Api\Game\Users\IUser;
 use Emulator\Api\Networking\Connections\IClient;
 use Emulator\Game\Users\Data\{UserData,UserSettings};
+use Emulator\Api\Game\Rooms\Types\Entities\IUserEntity;
 use Emulator\Api\Game\Users\Data\{IUserData,IUserSettings};
 
 class User implements IUser
@@ -13,6 +14,7 @@ class User implements IUser
     private IUserSettings $settings;
 
     private IClient $client;
+    private IUserEntity $entity;
 
     private bool $isDisposed = false;
 
@@ -58,5 +60,15 @@ class User implements IUser
     public function isDisposed(): bool
     {
         return $this->isDisposed;
+    }
+
+    public function setEntity(IUserEntity $entity): void
+    {
+        $this->entity = $entity;
+    }
+
+    public function getEntity(): IUserEntity
+    {
+        return $this->entity;
     }
 }

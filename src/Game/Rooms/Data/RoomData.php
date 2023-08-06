@@ -3,7 +3,7 @@
 namespace Emulator\Game\Rooms\Data;
 
 use Emulator\Api\Game\Rooms\Data\IRoomData;
-use Emulator\Game\Rooms\Enums\RoomStateEnum;
+use Emulator\Game\Rooms\Enums\RoomState;
 
 class RoomData implements IRoomData
 {
@@ -17,7 +17,7 @@ class RoomData implements IRoomData
     private int $maxUsers;
     private int $score;
     private string $password;
-    private RoomStateEnum $state;
+    private RoomState $state;
     private int $guildId;
     private string $category;
     private string $paperFloor;
@@ -58,13 +58,14 @@ class RoomData implements IRoomData
         $this->name = $data['name'];
         $this->description = $data['description'];
         $this->model = $data['model'];
-        $this->ownerId = $data['ownerId'];
+        $this->ownerId = $data['owner_id'];
         $this->ownerName = $data['owner_name'];
         $this->currentUsers = $data['users'];
         $this->maxUsers = $data['users_max'];
+        $this->guildId = $data['guild_id'];
         $this->score = $data['score'];
         $this->password = $data['password'];
-        $this->state = RoomStateEnum::getState($data['state']);
+        $this->state = RoomState::getState($data['state']);
         $this->category = $data['category'];
         $this->paperFloor = $data['paper_floor'];
         $this->paperWall = $data['paper_wall'];
@@ -79,11 +80,11 @@ class RoomData implements IRoomData
         $this->allowPets = (bool) $data['allow_other_pets'];
         $this->allowPetsEat = (bool) $data['allow_other_pets_eat'];
         $this->allowWalkthrough = (bool) $data['allow_walkthrough'];
-        $this->hideWall = (bool) $data['hide_wall'];
+        $this->hideWall = (bool) $data['allow_hidewall'];
         $this->chatMode = $data['chat_mode'];
         $this->chatWeight = $data['chat_weight'];
         $this->chatSpeed = $data['chat_speed'];
-        $this->chatDistance = $data['chat_distance'];
+        $this->chatDistance = $data['chat_hearing_distance'];
         $this->chatProtection = $data['chat_protection'];
         $this->overrideModel = (bool) $data['override_model'];
         $this->whoCanMute = $data['who_can_mute'];
@@ -95,7 +96,7 @@ class RoomData implements IRoomData
         $this->tradeMode = $data['trade_mode'];
         $this->canMoveDiagonally = (bool) $data['move_diagonally'];
         $this->hasJukeboxActive = (bool) $data['jukebox_active'];
-        $this->hideWireds = (bool) $data['hide_wired'];
+        $this->hideWireds = (bool) $data['hidewired'];
         $this->isForSale = (bool) $data['is_forsale'];
     }
 
@@ -149,7 +150,7 @@ class RoomData implements IRoomData
         return $this->password;
     }
 
-    public function getState(): RoomStateEnum
+    public function getState(): RoomState
     {
         return $this->state;
     }

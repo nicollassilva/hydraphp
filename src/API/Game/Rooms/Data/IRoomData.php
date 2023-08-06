@@ -2,7 +2,7 @@
 
 namespace Emulator\Api\Game\Rooms\Data;
 
-use Emulator\Game\Rooms\Enums\RoomStateEnum;
+use Emulator\Game\Rooms\Enums\RoomState;
 
 interface IRoomData
 {
@@ -16,7 +16,7 @@ interface IRoomData
     public function getMaxUsers(): int;
     public function getScore(): int;
     public function getPassword(): string;
-    public function getState(): RoomStateEnum;
+    public function getState(): RoomState;
     public function getGuildId(): int;
     public function getCategory(): string;
     public function getPaperFloor(): string;
@@ -49,5 +49,5 @@ interface IRoomData
     public function canMoveDiagonally(): bool;
     public function hasJukeboxActive(): bool;
     public function hideWireds(): bool;
-    public function isForSale(): bool
+    public function isForSale(): bool;
 }
