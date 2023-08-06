@@ -12,4 +12,9 @@ class ReleaseVersionEvent implements IIncomingMessage
     {
         $client->setVersion($message->readString());
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return false;
+    }
 }

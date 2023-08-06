@@ -13,4 +13,9 @@ class RequestFriendRequestsEvent implements IIncomingMessage
     {
         $client->send(new LoadFriendRequestsComposer);
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

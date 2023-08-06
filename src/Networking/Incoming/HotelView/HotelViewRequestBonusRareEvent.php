@@ -13,4 +13,9 @@ class HotelViewRequestBonusRareEvent implements IIncomingMessage
     {
         $client->send(new BonusRareComposer);
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

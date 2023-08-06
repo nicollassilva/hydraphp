@@ -12,4 +12,6 @@ interface IClientManager
     public function hasClient(string $connectionHash): bool;
     public function addIfAbsent(ConnectionInterface &$connection): IClient;
     public function disposeClient(ConnectionInterface $connection): void;
+    public function getClientByTicket(string $ticket): ?IClient;
+    public function getClientByUserId(int $userId): ?IClient;
 }

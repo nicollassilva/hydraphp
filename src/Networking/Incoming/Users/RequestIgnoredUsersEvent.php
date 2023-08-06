@@ -13,4 +13,9 @@ class RequestIgnoredUsersEvent implements IIncomingMessage
     {
         $client->send(new IgnoredUsersComposer);
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

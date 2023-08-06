@@ -12,4 +12,9 @@ class ClientVariablesEvent implements IIncomingMessage
     {
         // do something
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return false;
+    }
 }

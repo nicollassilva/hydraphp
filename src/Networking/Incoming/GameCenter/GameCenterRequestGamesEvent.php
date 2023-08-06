@@ -13,4 +13,9 @@ class GameCenterRequestGamesEvent implements IIncomingMessage
     {
         $client->send(new GameCenterAchievementsConfigurationComposer);
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

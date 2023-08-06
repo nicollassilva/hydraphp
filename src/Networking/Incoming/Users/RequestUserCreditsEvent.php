@@ -15,4 +15,9 @@ class RequestUserCreditsEvent implements IIncomingMessage
         $client->send(new UserCreditsComposer)
             ->send(new UserCurrencyComposer);
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

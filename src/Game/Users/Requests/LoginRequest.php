@@ -4,6 +4,7 @@ namespace Emulator\Game\Users\Requests;
 
 use Emulator\Api\Networking\Connections\IClient;
 use Emulator\Game\Users\UserManager;
+use Emulator\Hydra;
 
 class LoginRequest
 {
@@ -31,6 +32,13 @@ class LoginRequest
         $user = UserManager::getInstance()->loadUser($this->ticket);
         
         if(empty($user)) return false;
+
+        if(Hydra::getEmulator()->getNetworkManager()->getClientManager()->getClientByUserId($user->getData()->getId())) {
+            $this->client->getLogger()->warning("User {$user->getData()->getUsername()} tried to login twice.");
+            unset($user);
+            
+            return false;
+        }
         
         $this->client->setUser($user);
         $user->setClient($this->client);

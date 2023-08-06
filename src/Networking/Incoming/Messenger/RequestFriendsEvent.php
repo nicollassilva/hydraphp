@@ -12,4 +12,9 @@ class RequestFriendsEvent implements IIncomingMessage
     {
         // do something
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

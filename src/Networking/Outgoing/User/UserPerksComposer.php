@@ -2,12 +2,13 @@
 
 namespace Emulator\Networking\Outgoing\User;
 
+use Emulator\Api\Game\Users\IUser;
 use Emulator\Networking\Outgoing\MessageComposer;
 use Emulator\Networking\Outgoing\OutgoingHeaders;
 
 class UserPerksComposer extends MessageComposer
 {
-    public function __construct()
+    public function __construct(IUser $user)
     {
         $this->header = OutgoingHeaders::$userPerksComposer;
 

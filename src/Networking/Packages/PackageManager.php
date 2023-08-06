@@ -56,6 +56,13 @@ class PackageManager implements IPackageManager
             }
 
             $package = new $package();
+
+            if($package->needsAuthentication() && (!$client->getUser() || $client->getUser()->isDisposed())) {
+                $this->logger->warning(sprintf('[%s] %s', $message->getHeader(), "Package needs authentication"));
+                $client->disconnect();
+                return;
+            }
+
             $package->handle($client, $message);
         } else {
             if(Hydra::$isDebugging) {

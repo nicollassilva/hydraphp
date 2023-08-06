@@ -19,12 +19,12 @@ class UserDataComposer extends MessageComposer
         $this->writeString($user->getData()->getMotto());
         $this->writeString($user->getData()->getUsername());
         $this->writeBoolean(false);
-        $this->writeInt32(1);
-        $this->writeInt32(3);
-        $this->writeInt32(3);
+        $this->writeInt32($user->getSettings()->getRespectPointsReceived());
+        $this->writeInt32($user->getSettings()->getRespectPointsGiven());
+        $this->writeInt32($user->getSettings()->getPetRespectPointsToGive());
         $this->writeBoolean(false);
         $this->writeString("01-01-1970 00:00:00");
-        $this->writeString(false);
+        $this->writeString($user->getSettings()->getAllowNameChange());
         $this->writeString(false);
     }
 }

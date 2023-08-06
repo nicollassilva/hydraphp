@@ -30,4 +30,9 @@ class HotelViewDataEvent implements IIncomingMessage
             $client->send(new HotelViewDataComposer($completeKey, $splittedCompleteKey[count($splittedCompleteKey) - 1]));
         }
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

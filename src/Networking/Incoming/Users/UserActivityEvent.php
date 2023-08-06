@@ -34,4 +34,9 @@ class UserActivityEvent implements IIncomingMessage
             // progress action
         }
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

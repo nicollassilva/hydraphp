@@ -13,4 +13,9 @@ class MySanctionStatusEvent implements IIncomingMessage
     {
         $client->send(new ModToolSanctionInfoComposer);
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

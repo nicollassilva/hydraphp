@@ -9,6 +9,7 @@ use Emulator\Api\Networking\Connections\IClientManager;
 
 class ClientManager implements IClientManager
 {
+    // @param array<string, IClient>
     private array $activeClients = [];
 
     public function getClients(): array
@@ -43,8 +44,29 @@ class ClientManager implements IClientManager
         return isset($this->activeClients[$connectionHash]);
     }
 
-    public function disposeClient(ConnectionInterface $connection): void
+    public function disposeClient(ConnectionInterface $connection, bool $needsDisconnectUser = false): void
     {
         unset($this->activeClients[spl_object_hash($connection)]);
+    }
+
+    public function getClientByTicket(string $ticket): ?IClient
+    {
+        return $this->getClientByDataProperty($ticket, "getTicket");
+    }
+
+    public function getClientByUserId(int $userId): ?IClient
+    {
+        return $this->getClientByDataProperty($userId, "getId");
+    }
+
+    private function getClientByDataProperty(mixed $searchedValue, string $property): ?IClient
+    {
+        foreach($this->activeClients as $client) {
+            if($client->getUser()?->getData()->{$property}() === $searchedValue) {
+                return $client;
+            }
+        }
+        
+        return null;
     }
 }

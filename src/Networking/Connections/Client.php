@@ -38,7 +38,11 @@ class Client implements IClient
     public function disconnect(): void
     {
         $this->connection->close();
-        $this->logger->info('Disconnected');
+        Hydra::getEmulator()->getNetworkManager()->getClientManager()->disposeClient($this->connection);
+
+        if($this->getUser() && Hydra::$isDebugging) {
+            $this->logger->info(sprintf('[%s] disconnected.', $this->getUser()->getData()->getUsername()));
+        }
     }
 
     public function send(?IMessageComposer $message): IClient
@@ -90,7 +94,7 @@ class Client implements IClient
         $this->user = $user;
     }
 
-    public function getUser(): IUser
+    public function getUser(): ?IUser
     {
         return $this->user;
     }

@@ -20,4 +20,9 @@ class RequestNewNavigatorRoomsEvent implements IIncomingMessage
 
         $client->send(new NewNavigatorSearchResultsComposer($category, $search));
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

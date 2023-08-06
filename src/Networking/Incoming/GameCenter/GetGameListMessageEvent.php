@@ -13,4 +13,9 @@ class GetGameListMessageEvent implements IIncomingMessage
     {
         $client->send(new GameCenterGameListComposer);
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

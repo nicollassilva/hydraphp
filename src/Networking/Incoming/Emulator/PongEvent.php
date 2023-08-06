@@ -12,4 +12,10 @@ class PongEvent implements IIncomingMessage
     {
         $client->getLogger()->info('Pong!');
     }
+
+    
+    public function needsAuthentication(): bool
+    {
+        return false;
+    }
 }

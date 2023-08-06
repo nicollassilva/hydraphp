@@ -25,4 +25,9 @@ class RequestNewNavigatorDataEvent implements IIncomingMessage
             ->send(new NewNavigatorSavedSearchesComposer)
             ->send(new NewNavigatorEventCategoriesComposer);
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

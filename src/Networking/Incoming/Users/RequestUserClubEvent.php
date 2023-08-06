@@ -15,4 +15,9 @@ class RequestUserClubEvent implements IIncomingMessage
 
         $client->send(new UserClubComposer($subscriptionType));
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

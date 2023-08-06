@@ -24,4 +24,10 @@ class UniqueIdEvent implements IIncomingMessage
 
         $client->setUniqueId($storedMachineId);
     }
+
+    
+    public function needsAuthentication(): bool
+    {
+        return false;
+    }
 }

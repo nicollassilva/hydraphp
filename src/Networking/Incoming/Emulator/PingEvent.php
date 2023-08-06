@@ -13,4 +13,9 @@ class PingEvent implements IIncomingMessage
     {
         $client->send(new PongComposer($message->readInt32()));
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return false;
+    }
 }

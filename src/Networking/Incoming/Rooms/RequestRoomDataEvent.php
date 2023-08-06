@@ -17,4 +17,9 @@ class RequestRoomDataEvent implements IIncomingMessage
 
         $client->send(new RoomDataComposer);
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

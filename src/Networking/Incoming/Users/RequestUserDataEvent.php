@@ -14,7 +14,12 @@ class RequestUserDataEvent implements IIncomingMessage
     public function handle(IClient $client, ClientMessage $message): void
     {
         $client->send(new UserDataComposer($client->getUser()))
-            ->send(new UserPerksComposer)
+            ->send(new UserPerksComposer($client->getUser()))
             ->send(new MeMenuSettingsComposer);
+    }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
     }
 }

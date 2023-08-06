@@ -24,5 +24,5 @@ interface IClient
     public function getLogger(): Logger;
 
     public function setUser(IUser $user): void;
-    public function getUser(): IUser;
+    public function getUser(): ?IUser;
 }

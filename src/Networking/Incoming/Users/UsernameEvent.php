@@ -13,4 +13,9 @@ class UsernameEvent implements IIncomingMessage
     {
         // TODO: Implement this
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

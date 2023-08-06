@@ -13,4 +13,9 @@ class RequestMeMenuSettingsEvent implements IIncomingMessage
     {
         $client->send(new MeMenuSettingsComposer);
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

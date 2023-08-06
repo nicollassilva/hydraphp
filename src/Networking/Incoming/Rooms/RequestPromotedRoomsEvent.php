@@ -13,4 +13,9 @@ class RequestPromotedRoomsEvent implements IIncomingMessage
     {
         $client->send(new PrivateRoomsComposer);
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

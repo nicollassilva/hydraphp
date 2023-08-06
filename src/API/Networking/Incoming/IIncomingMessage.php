@@ -8,4 +8,5 @@ use Emulator\Networking\Connections\ClientMessage;
 interface IIncomingMessage
 {
     public function handle(IClient $client, ClientMessage $message): void;
+    public function needsAuthentication(): bool;
 }

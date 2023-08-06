@@ -13,4 +13,9 @@ class RequestInitFriendsEvent implements IIncomingMessage
     {
         $client->send(new MessengerInitComposer);
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

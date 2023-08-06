@@ -23,4 +23,9 @@ class RequestRoomLoadEvent implements IIncomingMessage
             ->send(new RoomScoreComposer)
             ->send(new RoomPromotionComposer);
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

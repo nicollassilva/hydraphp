@@ -13,4 +13,9 @@ class RequestNavigatorSettingsEvent implements IIncomingMessage
     {
         $client->send(new NewNavigatorSettingsComposer);
     }
+    
+    public function needsAuthentication(): bool
+    {
+        return true;
+    }
 }

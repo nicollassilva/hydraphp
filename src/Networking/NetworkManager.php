@@ -60,8 +60,13 @@ class NetworkManager implements INetworkManager
                 $this->packageManager->handle($data, $client);
             });
 
-            $connection->on('close', function () use ($connection) {
-                $this->clientManager->disposeClient($connection);
+            $connection->on('close', function () use ($connection, &$client) {
+                if(!$client->getUser()) {
+                    $this->clientManager->disposeClient($connection);
+                    return;
+                }
+
+                $client->getUser()->dispose();
             });
         });
 

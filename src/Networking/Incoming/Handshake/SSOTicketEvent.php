@@ -66,4 +66,10 @@ class SSOTicketEvent implements IIncomingMessage
             ->send(new InventoryAchievementsComposer)
             ->send(new UserHomeRoomComposer);
     }
+
+    
+    public function needsAuthentication(): bool
+    {
+        return false;
+    }
 }
