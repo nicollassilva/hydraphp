@@ -2,9 +2,9 @@
 
 namespace Emulator\Api\Boot;
 
-interface IEmulatorConfig
+interface IHydraConfig
 {
-    public function isLoaded(): bool;
     public function forceReload(): void;
+    public function loadEmulatorSettings(bool $forceLoad = false): void;
     public function get(string $key, mixed $default = null): mixed;
 }

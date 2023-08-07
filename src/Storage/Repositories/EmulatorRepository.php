@@ -6,6 +6,7 @@ use Closure;
 use Throwable;
 use Emulator\Hydra;
 use Emulator\Utils\Logger;
+use React\MySQL\QueryResult;
 use function React\Async\await;
 use React\MySQL\ConnectionInterface;
 
@@ -19,6 +20,21 @@ abstract class EmulatorRepository implements IEmulatorRepository
     public static function getConnection(): ConnectionInterface
     {
         return Hydra::getEmulator()->getConnectorManager()->getConnection();
+    }
+
+    public static function loadEmulatorConfigurations(): array
+    {
+        $configurations = [];
+
+        self::encapsuledSelect('SELECT * FROM emulator_settings', function(QueryResult $result) use (&$configurations) {
+            if(empty($result->resultRows)) return;
+
+            foreach($result->resultRows as $row) {
+                $configurations[$row['key']] = $row['value'];
+            }
+        });
+
+        return $configurations;
     }
 
     public static function encapsuledSelect(string $select, Closure $onSuccessCallback, array $params = [], ?Closure $onErrorCallback = null): void

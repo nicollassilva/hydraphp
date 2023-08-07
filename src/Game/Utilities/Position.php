@@ -53,4 +53,9 @@ class Position
     {
         $this->z = $z;
     }
+
+    public function isEquals(Position $positionToCompare): bool
+    {
+        return $this->getX() == $positionToCompare->getX() && $this->getY() == $positionToCompare->getY();
+    }
 }

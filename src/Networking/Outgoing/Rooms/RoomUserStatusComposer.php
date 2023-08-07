@@ -13,7 +13,7 @@ class RoomUserStatusComposer extends MessageComposer
         $this->header = OutgoingHeaders::$roomUserStatusComposer;
 
         $this->writeInt32(1);
-        $this->writeInt32(0); // $entity->getId()
+        $this->writeInt32($entity->getId());
         $this->writeInt32($entity->getPosition()->getX());
         $this->writeInt32($entity->getPosition()->getY());
         $this->writeString((string) $entity->getPosition()->getZ());

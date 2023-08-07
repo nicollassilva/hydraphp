@@ -46,12 +46,15 @@ class RequestHeightmapEvent implements IIncomingMessage
         if($flatCtrl->value == RoomRightLevels::Moderator->value) {
             $client->send(new RoomRightsListComposer($room));
         }
+
+        if(!$room->getProcessComponent()->started()) {
+            $room->getProcessComponent()->start();
+        }
         
         $client->send(new RoomUsersComposer($client->getUser()))
             ->send(new RoomUserStatusComposer($userEntity))
             ->send(new RoomPaneComposer($room, $room->isOwner($client->getUser())))
             ->send(new RoomThicknessComposer($room))
-            ->send(new RoomDataComposer($room, $client->getUser(), false, true))
             ->send(new RoomWallItemsComposer($room))
             ->send(new RoomFloorItemsComposer($room))
             ->send(new RoomGroupBadgesComposer);

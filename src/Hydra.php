@@ -14,7 +14,7 @@ abstract class Hydra
     {
         self::$emulator = new Emulator();
 
-        self::$isDebugging = self::$emulator->getConfigManager()->get('emulator.debug', false);
+        self::$isDebugging = self::$emulator->getConfigManager()->get('hydra.emulator.debug', false);
     }
 
     public static function getEmulator(): Emulator

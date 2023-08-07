@@ -29,6 +29,10 @@ abstract class IncomingHeaders
     public static int $requestMeMenuSettingsEvent = 2388;
     public static int $usernameEvent = 3878;
     public static int $requestUserGroupBadgesEvent = 21;
+    public static int $userStartTypingEvent = 1597;
+    public static int $userStopTypingEvent = 1474;
+    public static int $userTalkEvent = 1314;
+    public static int $userWalkingEvent = 3320;
     # -----
 
     # Navigator Outgoing Events

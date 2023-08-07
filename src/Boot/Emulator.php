@@ -4,7 +4,7 @@ namespace Emulator\Boot;
 
 use Closure;
 use Emulator\Utils\Logger;
-use Emulator\Boot\EmulatorConfig;
+use Emulator\Boot\HydraConfig;
 use Emulator\Game\Rooms\RoomManager;
 use Emulator\Storage\ConnectorManager;
 use Emulator\Networking\NetworkManager;
@@ -14,17 +14,19 @@ use Emulator\Storage\Compositions\IConnectorManager;
 class Emulator
 {
     private readonly Logger $logger;
+    public readonly HydraConfig $configManager;
     private readonly INetworkManager $networkManager;
     private readonly IConnectorManager $connectorManager;
 
-    public function __construct(
-        public readonly EmulatorConfig $config = new EmulatorConfig()
-    ) {
+    public function __construct() {
         $this->logger = new Logger(get_class($this));
 
         $this->showAdvertisement();
+        $this->startConfigManager();
 
         $this->startConnectorManager(function() {
+            $this->getConfigManager()->loadEmulatorSettings();
+
             RoomManager::getInstance()->initialize();
 
             $this->startNetworkManager();
@@ -45,23 +47,28 @@ class Emulator
         $this->networkManager = new NetworkManager();
     }
 
+    public function startConfigManager()
+    {  
+        $this->configManager = new HydraConfig();
+    }
+
     public function startConnectorManager(Closure $onConnectionCallback): void
     {
         $this->connectorManager = new ConnectorManager(
-            $this->config->get('db.host'),
-            $this->config->get('db.port'),
-            $this->config->get('db.user'),
-            $this->config->get('db.password'),
-            $this->config->get('db.name'),
-            $this->config->get('db.tcpKeepAlive'),
-            $this->config->get('db.autoReconnect'),
+            $this->configManager->get('hydra.db.host'),
+            $this->configManager->get('hydra.db.port'),
+            $this->configManager->get('hydra.db.user'),
+            $this->configManager->get('hydra.db.password'),
+            $this->configManager->get('hydra.db.name'),
+            $this->configManager->get('hydra.db.tcpKeepAlive'),
+            $this->configManager->get('hydra.db.autoReconnect'),
             $onConnectionCallback
         );
     }
 
-    public function getConfigManager(): EmulatorConfig
+    public function getConfigManager(): HydraConfig
     {
-        return $this->config;
+        return $this->configManager;
     }
 
     public function getConnectorManager(): IConnectorManager

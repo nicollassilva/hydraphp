@@ -1,14 +1,14 @@
 {
-    "emulator.debug": true,
+    "hydra.emulator.debug": true,
     
-    "server.host": "0.0.0.0",
-    "server.port": 1234,
+    "hydra.server.host": "0.0.0.0",
+    "hydra.server.port": 1234,
 
-    "db.host": "localhost",
-    "db.port": 3306,
-    "db.user": "root",
-    "db.password": "password",
-    "db.name": "orioncms",
-    "db.tcpKeepAlive": true,
-    "db.autoReconnect": true
+    "hydra.db.host": "localhost",
+    "hydra.db.port": 3306,
+    "hydra.db.user": "root",
+    "hydra.db.password": "password",
+    "hydra.db.name": "orioncms",
+    "hydra.db.tcpKeepAlive": true,
+    "hydra.db.autoReconnect": true
 }

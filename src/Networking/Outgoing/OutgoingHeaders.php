@@ -30,11 +30,13 @@ abstract class OutgoingHeaders
     public static int $userCurrencyComposer = 2018;
     public static int $ignoredUsersComposer = 126;
     public static int $loadFriendRequestsComposer = 280;
-
+    
     public static int $roomUsersComposer = 374;
     public static int $roomUserStatusComposer = 1640;
     public static int $roomRightsComposer = 780;
     public static int $roomOwnerComposer = 339;
+    public static int $userTypingComposer = 1717;
+    public static int $userTalkComposer = 1446;
     # -----
 
     # Hotel View Outgoing Events

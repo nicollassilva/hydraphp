@@ -6,15 +6,13 @@ use function Termwind\{render};
 
 class Logger
 {
-    public readonly string $completeClass;
-    public readonly string $className;
+    public readonly string $name;
 
-    public function __construct(string $completeClass) {
-        $this->completeClass = $completeClass;
-        
-        $this->className = (
-            new \ReflectionClass($completeClass)
-        )->getShortName();
+    public function __construct(string $name, bool $nameIsClassName = true)
+    {
+        $this->name = $nameIsClassName ? (
+            new \ReflectionClass($name)
+        )->getShortName() : $name;
     }
 
     public function warning(string $message): void
@@ -22,7 +20,7 @@ class Logger
         render(<<<HTML
             <div>
                 <div class="px-1 mr-1 bg-yellow-600 text-black">
-                    <span class="font-bold">$this->className</span>
+                    <span class="font-bold">$this->name</span>
                 </div>
                 <span class="text-white">$message</span>
             </div>
@@ -34,7 +32,7 @@ class Logger
         render(<<<HTML
             <div>
                 <div class="px-1 mr-1 bg-red-600 text-white">
-                    <span class="font-bold">$this->className</span>
+                    <span class="font-bold">$this->name</span>
                 </div>
                 <span class="text-white">$message</span>
             </div>
@@ -46,7 +44,7 @@ class Logger
         render(<<<HTML
             <div>
                 <div class="px-1 mr-1 bg-sky-600 text-black">
-                    <span class="font-bold">$this->className</span>
+                    <span class="font-bold">$this->name</span>
                 </div>
                 <span class="text-white">$message</span>
             </div>
@@ -58,7 +56,7 @@ class Logger
         render(<<<HTML
             <div>
                 <div class="px-1 mr-1 bg-green-500 text-black">
-                    <span class="font-bold">$this->className</span>
+                    <span class="font-bold">$this->name</span>
                 </div>
                 <span class="text-white">$message</span>
             </div>
@@ -70,7 +68,7 @@ class Logger
         render(<<<HTML
             <div>
                 <div class="px-1 mr-1 bg-orange-500 text-black">
-                    <span class="font-bold">$this->className</span>
+                    <span class="font-bold">$this->name</span>
                 </div>
                 <span class="text-white">$message</span>
             </div>

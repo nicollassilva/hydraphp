@@ -10,7 +10,7 @@ class PongEvent implements IIncomingMessage
 {
     public function handle(IClient $client, ClientMessage $message): void
     {
-        $client->getLogger()->info('Pong!');
+        // $client->getLogger()->info('Pong!');
     }
 
     

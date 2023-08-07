@@ -62,9 +62,11 @@ class User implements IUser
         return $this->isDisposed;
     }
 
-    public function setEntity(UserEntity $entity): void
+    public function setEntity(UserEntity $entity): UserEntity
     {
         $this->entity = $entity;
+
+        return $this->entity;
     }
 
     public function getEntity(): UserEntity

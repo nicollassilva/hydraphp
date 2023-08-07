@@ -13,6 +13,11 @@ class RoomTile implements IPositionable
     private bool $canStack;
     private int $stackHeight;
 
+    private int $gCosts = 0;
+    private int $hCosts = 0;
+
+    private ?RoomTile $previousTile = null;
+
     public function __construct(
         private readonly Position $position,
         RoomTileState &$state = RoomTileState::Invalid
@@ -71,5 +76,30 @@ class RoomTile implements IPositionable
         }
 
         return $this->getCanStack() ? ($this->getStackHeight() * 256) : pow(128, 2);
+    }
+
+    public function getgCosts(): int
+    {
+        return $this->gCosts;
+    }
+
+    public function getfCosts(): int
+    {
+        return $this->gCosts + $this->hCosts;
+    }
+
+    public function setPreviousTile(RoomTile $previousTile): void
+    {
+        $this->previousTile = $previousTile;
+    }
+
+    public function getPreviousTile(): RoomTile
+    {
+        return $this->previousTile;
+    }
+
+    public function isEquals(RoomTile $tileToCompare): bool
+    {
+        return $this->getPosition()->isEquals($tileToCompare->getPosition());
     }
 }

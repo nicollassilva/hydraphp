@@ -45,7 +45,7 @@ class UserEntity extends RoomEntity implements IUserEntity
         $this->user = $user;
         $this->roomRightLevel = RoomRightLevels::None;
 
-        $this->logger = new Logger(get_class($this));
+        $this->logger = new Logger($user->getData()->getUsername(), false);
     }
 
     public function getUser(): IUser

@@ -125,8 +125,17 @@ class RoomManager implements IRoomManager
 
         $user->getClient()->send(new HideDoorbellComposer(""));
 
-        $user->setEntity(new UserEntity(0, $user, $room));
-        $user->getEntity()->clearStatus();
+        $userEntity = $user->setEntity(new UserEntity($room->getNextEntityId(), $user, $room));
+
+        if(!$userEntity) {
+            if(Hydra::$isDebugging) {
+                $this->getLogger()->warning("User entity not created for user {$user->getData()->getUsername()}.");
+            }
+
+            return;
+        }
+        
+        $userEntity->clearStatus();
 
         $user->getClient()->send(new RoomPaintComposer($room));
 
@@ -137,14 +146,16 @@ class RoomManager implements IRoomManager
             $flatCtrl = RoomRightLevels::Moderator;
         }
         
-        $user->getEntity()->setStatus(RoomEntityStatus::FlatCtrl, $flatCtrl->value);
-        $user->getEntity()->setRoomRightLevel($flatCtrl);
+        $userEntity->setStatus(RoomEntityStatus::FlatCtrl, $flatCtrl->value);
+        $userEntity->setRoomRightLevel($flatCtrl);
         
         $user->getClient()->send(new RoomRightsComposer($flatCtrl));
 
         if($flatCtrl->value == RoomRightLevels::Moderator->value) {
             $user->getClient()->send(new RoomRightsListComposer($room));
         }
+
+        $room->addEntity($userEntity);
         
         $user->getClient()
             ->send(new RoomScoreComposer($room))

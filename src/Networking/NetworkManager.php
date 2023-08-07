@@ -45,8 +45,8 @@ class NetworkManager implements INetworkManager
 
     private function initializeServer(): void
     {
-        $host = Hydra::getEmulator()->getConfigManager()->get('server.host');
-        $port = Hydra::getEmulator()->getConfigManager()->get('server.port');
+        $host = Hydra::getEmulator()->getConfigManager()->get('hydra.server.host');
+        $port = Hydra::getEmulator()->getConfigManager()->get('hydra.server.port');
 
         $this->loop = Loop::get();
         $this->tcpServer = new TcpServer("{$host}:{$port}", $this->loop);
@@ -82,5 +82,10 @@ class NetworkManager implements INetworkManager
     public function getClientManager(): IClientManager
     {
         return $this->clientManager;
+    }
+
+    public function getLogger(): Logger
+    {
+        return $this->logger;
     }
 }

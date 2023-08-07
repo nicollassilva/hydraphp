@@ -3,6 +3,7 @@
 namespace Emulator\Networking\Packages;
 
 use Emulator\Networking\Incoming\IncomingHeaders;
+use Emulator\Networking\Incoming\Users\UserWalkingEvent;
 use Emulator\Networking\Incoming\Rooms\RequestHeightmapEvent;
 use Emulator\Networking\Incoming\Emulator\{PingEvent, PongEvent};
 use Emulator\Networking\Incoming\Catalog\{RequestTargetOfferEvent};
@@ -12,7 +13,7 @@ use Emulator\Networking\Incoming\Messenger\{RequestFriendRequestsEvent, RequestF
 use Emulator\Networking\Incoming\Handshake\{UniqueIdEvent, SSOTicketEvent, ReleaseVersionEvent, ClientVariablesEvent};
 use Emulator\Networking\Incoming\Navigator\{RequestNavigatorSettingsEvent, RequestNewNavigatorDataEvent, RequestNewNavigatorRoomsEvent};
 use Emulator\Networking\Incoming\Rooms\{JoinRoomEvent, RequestPromotedRoomsEvent, RequestRoomCategoriesEvent, RequestRoomDataEvent, RequestRoomLoadEvent};
-use Emulator\Networking\Incoming\Users\{UserActivityEvent,RequestUserDataEvent,MySanctionStatusEvent, RequestIgnoredUsersEvent, RequestMeMenuSettingsEvent, RequestUserClubEvent, RequestUserCreditsEvent, UsernameEvent};
+use Emulator\Networking\Incoming\Users\{UserActivityEvent,RequestUserDataEvent,MySanctionStatusEvent, RequestIgnoredUsersEvent, RequestMeMenuSettingsEvent, RequestUserClubEvent, RequestUserCreditsEvent, UsernameEvent, UserStartTypingEvent, UserStopTypingEvent, UserTalkEvent};
 
 class IncomingPackagesLoader
 {
@@ -84,6 +85,10 @@ class IncomingPackagesLoader
         $this->addPackage(IncomingHeaders::$requestUserClubEvent, RequestUserClubEvent::class);
         $this->addPackage(IncomingHeaders::$requestIgnoredUsersEvent, RequestIgnoredUsersEvent::class);
         $this->addPackage(IncomingHeaders::$requestMeMenuSettingsEvent, RequestMeMenuSettingsEvent::class);
+        $this->addPackage(IncomingHeaders::$userStartTypingEvent, UserStartTypingEvent::class);
+        $this->addPackage(IncomingHeaders::$userStopTypingEvent, UserStopTypingEvent::class);
+        $this->addPackage(IncomingHeaders::$userTalkEvent, UserTalkEvent::class);
+        $this->addPackage(IncomingHeaders::$userWalkingEvent, UserWalkingEvent::class);
     }
 
     private function loadGameCenterEvents(): void
