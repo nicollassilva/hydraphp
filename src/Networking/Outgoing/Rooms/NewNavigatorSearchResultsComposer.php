@@ -23,7 +23,7 @@ class NewNavigatorSearchResultsComposer extends MessageComposer
 
         $this->writeInt32(1);
 
-        $this->writeInt32(1);
+        $this->writeInt32(58);
         $this->writeString('PHP Emulator');
         $this->writeInt32(1);
         $this->writeString('iNicollas');

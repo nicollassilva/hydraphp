@@ -16,4 +16,6 @@ interface IRoomModel
     public function getMapSizeY(): int;
     public function getName(): string;
     public function getDoorDirection(): int;
+    public function getMapSize(): int;
+    public function getRelativeMap(): string;
 }

@@ -2,16 +2,26 @@
 
 namespace Emulator\Game\Rooms;
 
+use Emulator\Hydra;
 use Emulator\Utils\Logger;
 use Emulator\Game\Rooms\Room;
 use Emulator\Api\Game\Rooms\IRoom;
-use Emulator\Api\Game\Rooms\IRoomManager;
 use Emulator\Api\Game\Users\IUser;
-use Emulator\Storage\Repositories\Rooms\RoomRepository;
-use Emulator\Game\Rooms\Components\{RoomModelsComponent,ChatBubblesComponent};
+use Emulator\Api\Game\Rooms\IRoomManager;
+use Emulator\Game\Rooms\Enums\RoomRightLevels;
+use Emulator\Game\Rooms\Enums\RoomEntityStatus;
 use Emulator\Game\Rooms\Types\Entities\UserEntity;
-use Emulator\Hydra;
+use Emulator\Storage\Repositories\Rooms\RoomRepository;
+use Emulator\Networking\Outgoing\Rooms\RoomOpenComposer;
+use Emulator\Networking\Outgoing\Rooms\RoomModelComposer;
+use Emulator\Networking\Outgoing\Rooms\RoomOwnerComposer;
+use Emulator\Networking\Outgoing\Rooms\RoomPaintComposer;
+use Emulator\Networking\Outgoing\Rooms\RoomScoreComposer;
+use Emulator\Networking\Outgoing\Rooms\RoomRightsComposer;
 use Emulator\Networking\Outgoing\Rooms\HideDoorbellComposer;
+use Emulator\Networking\Outgoing\Rooms\RoomPromotionComposer;
+use Emulator\Networking\Outgoing\Rooms\RoomRightsListComposer;
+use Emulator\Game\Rooms\Components\{RoomModelsComponent,ChatBubblesComponent};
 
 class RoomManager implements IRoomManager
 {
@@ -93,7 +103,7 @@ class RoomManager implements IRoomManager
         return $this->loadedRooms;
     }
 
-    public function enterRoom(IUser $user, int $roomId, string $password, bool $bypassPermissionVerifications = false): void
+    public function sendInitialRoomData(IUser $user, int $roomId, string $password, bool $bypassPermissionVerifications = false): void
     {
         $room = $this->loadRoom($roomId);
 
@@ -115,7 +125,29 @@ class RoomManager implements IRoomManager
 
         $user->getClient()->send(new HideDoorbellComposer(""));
 
-        $user->setEntity(new UserEntity(random_int(0, 10000), $user, $room));
+        $user->setEntity(new UserEntity(0, $user, $room));
         $user->getEntity()->clearStatus();
+
+        $user->getClient()->send(new RoomPaintComposer($room));
+
+        $flatCtrl = RoomRightLevels::None;
+
+        if($room->isOwner($user)) {
+            $user->getClient()->send(new RoomOwnerComposer);
+            $flatCtrl = RoomRightLevels::Moderator;
+        }
+        
+        $user->getEntity()->setStatus(RoomEntityStatus::FlatCtrl, $flatCtrl->value);
+        $user->getEntity()->setRoomRightLevel($flatCtrl);
+        
+        $user->getClient()->send(new RoomRightsComposer($flatCtrl));
+
+        if($flatCtrl->value == RoomRightLevels::Moderator->value) {
+            $user->getClient()->send(new RoomRightsListComposer($room));
+        }
+        
+        $user->getClient()
+            ->send(new RoomScoreComposer($room))
+            ->send(new RoomPromotionComposer);
     }
 }

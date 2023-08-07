@@ -3,14 +3,15 @@
 namespace Emulator\Networking\Packages;
 
 use Emulator\Networking\Incoming\IncomingHeaders;
+use Emulator\Networking\Incoming\Rooms\RequestHeightmapEvent;
 use Emulator\Networking\Incoming\Emulator\{PingEvent, PongEvent};
 use Emulator\Networking\Incoming\Catalog\{RequestTargetOfferEvent};
-use Emulator\Networking\Incoming\Messenger\{RequestFriendRequestsEvent, RequestFriendsEvent,RequestInitFriendsEvent};
 use Emulator\Networking\Incoming\HotelView\{HotelViewRequestBonusRareEvent,HotelViewDataEvent};
-use Emulator\Networking\Incoming\Rooms\{JoinRoomEvent, RequestPromotedRoomsEvent, RequestRoomCategoriesEvent, RequestRoomDataEvent, RequestRoomLoadEvent};
 use Emulator\Networking\Incoming\GameCenter\{GetGameListMessageEvent,GameCenterRequestGamesEvent};
-use Emulator\Networking\Incoming\Navigator\{RequestNavigatorSettingsEvent, RequestNewNavigatorDataEvent, RequestNewNavigatorRoomsEvent};
+use Emulator\Networking\Incoming\Messenger\{RequestFriendRequestsEvent, RequestFriendsEvent,RequestInitFriendsEvent};
 use Emulator\Networking\Incoming\Handshake\{UniqueIdEvent, SSOTicketEvent, ReleaseVersionEvent, ClientVariablesEvent};
+use Emulator\Networking\Incoming\Navigator\{RequestNavigatorSettingsEvent, RequestNewNavigatorDataEvent, RequestNewNavigatorRoomsEvent};
+use Emulator\Networking\Incoming\Rooms\{JoinRoomEvent, RequestPromotedRoomsEvent, RequestRoomCategoriesEvent, RequestRoomDataEvent, RequestRoomLoadEvent};
 use Emulator\Networking\Incoming\Users\{UserActivityEvent,RequestUserDataEvent,MySanctionStatusEvent, RequestIgnoredUsersEvent, RequestMeMenuSettingsEvent, RequestUserClubEvent, RequestUserCreditsEvent, UsernameEvent};
 
 class IncomingPackagesLoader
@@ -105,6 +106,7 @@ class IncomingPackagesLoader
         $this->addPackage(IncomingHeaders::$requestRoomDataEvent, RequestRoomDataEvent::class);
         $this->addPackage(IncomingHeaders::$requestRoomLoadEvent, RequestRoomLoadEvent::class);
         $this->addPackage(IncomingHeaders::$joinRoomEvent, JoinRoomEvent::class);
+        $this->addPackage(IncomingHeaders::$requestHeightmapEvent, RequestHeightmapEvent::class);
     }
 
     private function loadCatalogEvents(): void

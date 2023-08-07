@@ -28,6 +28,7 @@ abstract class IncomingHeaders
     public static int $requestIgnoredUsersEvent = 1371;
     public static int $requestMeMenuSettingsEvent = 2388;
     public static int $usernameEvent = 3878;
+    public static int $requestUserGroupBadgesEvent = 21;
     # -----
 
     # Navigator Outgoing Events
@@ -46,6 +47,7 @@ abstract class IncomingHeaders
     public static int $requestNewNavigatorRoomsEvent = 249;
     public static int $requestRoomDataEvent = 2230;
     public static int $requestRoomLoadEvent = 2312;
+    public static int $requestHeightmapEvent = 3898;
     public static int $joinRoomEvent = 685;
     # -----
     

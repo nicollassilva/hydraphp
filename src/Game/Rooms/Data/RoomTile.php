@@ -59,4 +59,17 @@ class RoomTile implements IPositionable
     {
         $this->state = $state;
     }
+
+    public function getRelativeHeight(): int
+    {
+        if($this->getState() == RoomTileState::Invalid) {
+            return pow(2, 15) - 1;
+        }
+
+        if(!$this->getCanStack() && ($this->getState() == RoomTileState::Blocked || $this->getState() == RoomTileState::Sit)) {
+            return pow(128, 2);
+        }
+
+        return $this->getCanStack() ? ($this->getStackHeight() * 256) : pow(128, 2);
+    }
 }

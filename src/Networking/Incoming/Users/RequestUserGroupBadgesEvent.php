@@ -1,20 +1,17 @@
 <?php
 
-namespace Emulator\Networking\Incoming\Rooms;
+namespace Emulator\Networking\Incoming\Users;
 
-use Emulator\Game\Rooms\RoomManager;
 use Emulator\Api\Networking\Connections\IClient;
 use Emulator\Networking\Connections\ClientMessage;
 use Emulator\Api\Networking\Incoming\IIncomingMessage;
+use Emulator\Networking\Outgoing\User\ModToolSanctionInfoComposer;
 
-class RequestRoomLoadEvent implements IIncomingMessage
+class RequestUserGroupBadgesEvent implements IIncomingMessage
 {
     public function handle(IClient $client, ClientMessage $message): void
     {
-        $roomId = $message->readInt32();
-        $password = $message->readString();
-
-        RoomManager::getInstance()->sendInitialRoomData($client->getUser(), $roomId, $password);
+        $client->send(new ModToolSanctionInfoComposer);
     }
     
     public function needsAuthentication(): bool

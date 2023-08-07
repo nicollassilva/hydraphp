@@ -230,7 +230,7 @@ class RoomData implements IRoomData
         return $this->allowWalkthrough;
     }
 
-    public function hideWall(): bool
+    public function isHideWall(): bool
     {
         return $this->hideWall;
     }

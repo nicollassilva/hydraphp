@@ -32,7 +32,7 @@ interface IRoomData
     public function allowPets(): bool;
     public function allowPetsEat(): bool;
     public function allowWalkthrough(): bool;
-    public function hideWall(): bool;
+    public function isHideWall(): bool;
     public function getChatMode(): int;
     public function getChatWeight(): int;
     public function getChatSpeed(): int;

@@ -33,6 +33,8 @@ abstract class OutgoingHeaders
 
     public static int $roomUsersComposer = 374;
     public static int $roomUserStatusComposer = 1640;
+    public static int $roomRightsComposer = 780;
+    public static int $roomOwnerComposer = 339;
     # -----
 
     # Hotel View Outgoing Events
@@ -68,6 +70,14 @@ abstract class OutgoingHeaders
     public static int $roomPaintComposer = 2454;
     public static int $roomScoreComposer = 482;
     public static int $roomPromotionComposer = 1840;
+    public static int $roomPaneComposer = 749;
+    public static int $roomThicknessComposer = 3547;
+    public static int $roomWallItemsComposer = 1369;
+    public static int $roomFloorItemsComposer = 1778;
+    public static int $roomGroupBadgesComposer = 2402;
+    public static int $roomRightsListComposer = 1284;
+    public static int $roomRelativeMapComposer = 2753;
+    public static int $roomHeightmapComposer = 1301;
     # -----
 
     # Catalog Outgoing Events

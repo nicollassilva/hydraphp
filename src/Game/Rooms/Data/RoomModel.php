@@ -176,6 +176,11 @@ class RoomModel implements IRoomModel
         return !($x < 0 || $y < 0 || $x >= $this->getMapSizeX() || $y >= $this->getMapSizeY());
     }
 
+    public function getRelativeMap(): string
+    {
+        return str_replace("\r\n", "\r", $this->heightmap);
+    }
+
     public function getMapSizeX(): int
     {
         return $this->mapSizeX;
@@ -184,5 +189,10 @@ class RoomModel implements IRoomModel
     public function getMapSizeY(): int
     {
         return $this->mapSizeY;
+    }
+
+    public function getMapSize(): int
+    {
+        return $this->mapSize;
     }
 }

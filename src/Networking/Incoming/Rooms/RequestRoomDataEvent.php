@@ -12,16 +12,22 @@ class RequestRoomDataEvent implements IIncomingMessage
 {
     public function handle(IClient $client, ClientMessage $message): void
     {
-        $roomId = $message->readInt32();
-
-        $room = RoomManager::getInstance()->loadRoom(58);
+        $room = RoomManager::getInstance()->loadRoom($message->readInt32());
 
         $something = $message->readInt32();
         $somethingTwo = $message->readInt32();
 
         if(empty($room)) return;
 
-        $client->send(new RoomDataComposer($room, $client->getUser(), true, !($something == 0 && $somethingTwo == 1)));
+        if(!empty($room)) {
+            $unknow = true;
+
+            if($something == 0 && $somethingTwo == 1) {
+                $unknow = false;
+            }
+        }
+
+        $client->send(new RoomDataComposer($room, $client->getUser(), true, $unknow));
     }
     
     public function needsAuthentication(): bool

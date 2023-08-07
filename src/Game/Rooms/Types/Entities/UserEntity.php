@@ -6,6 +6,8 @@ use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Users\IUser;
 use Emulator\Game\Utilities\Position;
+use Emulator\Game\Rooms\Enums\RoomRightLevels;
+use Emulator\Game\Rooms\Enums\RoomEntityStatus;
 use Emulator\Api\Game\Rooms\Types\Entities\IUserEntity;
 
 class UserEntity extends RoomEntity implements IUserEntity
@@ -15,6 +17,8 @@ class UserEntity extends RoomEntity implements IUserEntity
 
     private array $status;
     private bool $isKicked;
+
+    private RoomRightLevels $roomRightLevel;
 
     public function __construct(
         int $identifier,
@@ -39,6 +43,7 @@ class UserEntity extends RoomEntity implements IUserEntity
         parent::__construct($identifier, $room, $startPosition, $startBodyRotation, $startHeadRotation);
 
         $this->user = $user;
+        $this->roomRightLevel = RoomRightLevels::None;
 
         $this->logger = new Logger(get_class($this));
     }
@@ -66,5 +71,25 @@ class UserEntity extends RoomEntity implements IUserEntity
     public function getStatus(): array
     {
         return $this->status;
+    }
+
+    public function setStatus(RoomEntityStatus $status, string $key): void
+    {
+        $this->status[$status->value] = $key;
+    }
+
+    public function removeStatus(RoomEntityStatus $status): void
+    {
+        unset($this->status[$status->value]);
+    }
+
+    public function getRoomRightLevel(): RoomRightLevels
+    {
+        return $this->roomRightLevel;
+    }
+    
+    public function setRoomRightLevel(RoomRightLevels $roomRightLevel): void
+    {
+        $this->roomRightLevel = $roomRightLevel;
     }
 }

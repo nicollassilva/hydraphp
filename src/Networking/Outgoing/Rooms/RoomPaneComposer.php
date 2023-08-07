@@ -6,13 +6,13 @@ use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Networking\Outgoing\MessageComposer;
 use Emulator\Networking\Outgoing\OutgoingHeaders;
 
-class RoomModelComposer extends MessageComposer
+class RoomPaneComposer extends MessageComposer
 {
-    public function __construct(IRoom &$room)
+    public function __construct(IRoom &$room, bool $isOwner)
     {
-        $this->header = OutgoingHeaders::$roomModelComposer;
+        $this->header = OutgoingHeaders::$roomPaneComposer;
 
-        $this->writeString($room->getData()->getModel());
         $this->writeInt32($room->getData()->getId());
+        $this->writeBoolean($isOwner);
     }
 }

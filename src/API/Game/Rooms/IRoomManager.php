@@ -15,5 +15,5 @@ interface IRoomManager
     public function loadRoom(int $roomId): ?IRoom;
     public function getChatBubblesComponent(): ChatBubblesComponent;
     public function getRoomModelsComponent(): RoomModelsComponent;
-    public function enterRoom(IUser $user, int $roomId, string $password): void;
+    public function sendInitialRoomData(IUser $user, int $roomId, string $password): void;
 }
