@@ -1,32 +1,23 @@
 <?php
 
-namespace CometProject\Server\Game\Rooms\Objects\Entities\Pathfinding;
+namespace Emulator\Game\Rooms\Utils\Pathfinder;
 
 use Emulator\Game\Utilities\Position;
 use Emulator\Game\Rooms\Types\RoomObject;
-use CometProject\Server\Game\Rooms\Objects\Entities\Pathfinding\PathfinderNode;
+use Emulator\Game\Rooms\Utils\Pathfinder\PathfinderNode;
 
 class Pathfinder
 {
-    public static Pathfinder $instance;
+    public static ?Pathfinder $instance = null;
     
-    private $diagonalMovePoints = [
-        ['x' => -1, 'y' => -1],
-        ['x' => 0, 'y' => -1],
-        ['x' => 1, 'y' => 1],
-        ['x' => 0, 'y' => 1],
-        ['x' => 1, 'y' => -1],
-        ['x' => 1, 'y' => 0],
-        ['x' => -1, 'y' => 1],
-        ['x' => -1, 'y' => 0],
-    ];
-    
-    public const movePoints = [
-        ['x' => 0, 'y' => -1],
-        ['x' => 1, 'y' => 0],
-        ['x' => 0, 'y' => 1],
-        ['x' => -1, 'y' => 0],
-    ];
+    private array $diagonalMovePoints = [];
+    public array $movePoints = [];
+
+    public function __construct()
+    {
+        $this->setDiagonalMovePoints();
+        $this->setMovePoints();
+    }
 
     public static function getInstance(): Pathfinder
     {
@@ -35,6 +26,30 @@ class Pathfinder
         }
 
         return self::$instance;
+    }
+
+    private function setDiagonalMovePoints(): void
+    {
+        $this->diagonalMovePoints = [
+            new Position(-1, -1),
+            new Position(0, -1),
+            new Position(1, 1),
+            new Position(0, 1),
+            new Position(1, -1),
+            new Position(1, 0),
+            new Position(-1, 1),
+            new Position(-1, 0)
+        ];
+    }
+
+    private function setMovePoints(): void
+    {
+        $this->diagonalMovePoints = [
+            new Position(0,  -1),
+            new Position(1, 0),
+            new Position(0, 1),
+            new Position(-1, 0),
+        ];
     }
 
     public function makePath(RoomObject $roomObject, Position $end): array
@@ -80,17 +95,17 @@ class Pathfinder
             $current = $openList->extract();
             $current->setInClosed(true);
 
-            for ($i = 0; $i < count(self::movePoints); $i++) {
-                $tmp = $current->getPosition()->add(self::movePoints)[$i];
-                $isFinalMove = ($tmp['x'] === $end->getX() && $tmp['y'] === $end->getY());
+            for ($i = 0; $i < count($this->diagonalMovePoints); $i++) {
+                $tmpPosition = $current->getPosition()->add($this->diagonalMovePoints[$i]);
+                $isFinalMove = ($tmpPosition->getX() === $end->getX() && $tmpPosition->getY() === $end->getY());
 
-                if ($this->isValidStep($roomObject, new Position($current->getPosition()->getX(), $current->getPosition()->getY(), $current->getPosition()->getZ()), $tmp, $isFinalMove, $isRetry)) {
+                if ($this->isValidStep($roomObject, new Position($current->getPosition()->getX(), $current->getPosition()->getY(), $current->getPosition()->getZ()), $tmpPosition, $isFinalMove, $isRetry)) {
                     try {
-                        if ($map[$tmp['x']][$tmp['y']] === null) {
-                            $node = new PathfinderNode(new Position($tmp['x'], $tmp['y'], $tmp['z']));
-                            $map[$tmp['x']][$tmp['y']] = $node;
+                        if ($map[$tmpPosition->getX()][$tmpPosition->getY()] === null) {
+                            $node = new PathfinderNode(new Position($tmpPosition->getX(), $tmpPosition->getY(), $tmpPosition->getZ()));
+                            $map[$tmpPosition->getX()][$tmpPosition->getY()] = $node;
                         } else {
-                            $node = $map[$tmp['x']][$tmp['y']];
+                            $node = $map[$tmpPosition->getX()][$tmpPosition->getY()];
                         }
                     } catch (\Exception $e) {
                         continue;
@@ -99,7 +114,7 @@ class Pathfinder
                     if (!$node->isInClosed()) {
                         $diff = 0;
 
-                        $cost = $current->getCost() + $diff + $node->getPosition()->getDistanceSquared($end);
+                        $cost = $current->getCost() + $diff + $node->getPosition()->getDistanceTo($end);
 
                         if ($cost < $node->getCost()) {
                             $node->setCost($cost);

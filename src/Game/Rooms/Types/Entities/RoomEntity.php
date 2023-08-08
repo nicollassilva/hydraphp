@@ -2,16 +2,15 @@
 
 namespace Emulator\Game\Rooms\Types\Entities;
 
-use CometProject\Server\Game\Rooms\Objects\Entities\Pathfinding\Pathfinder;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Game\Utilities\Position;
 use Emulator\Game\Rooms\Types\RoomObject;
 use Emulator\Api\Game\Utilities\IMoveable;
+use Emulator\Game\Rooms\Enums\RoomTileState;
 use Emulator\Game\Rooms\Enums\RoomEntityType;
 use Emulator\Game\Rooms\Types\Entities\UserEntity;
+use Emulator\Game\Rooms\Utils\Pathfinder\Pathfinder;
 use Emulator\Api\Game\Rooms\Types\Entities\IRoomEntity;
-use Emulator\Game\Rooms\Data\RoomTile;
-use Emulator\Game\Rooms\Enums\RoomTileState;
 
 class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
 {
@@ -24,6 +23,8 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
     private array $walkingPath = [];
 
     private int $previousSteps = 0;
+
+    private bool $needsUpdate = false;
 
     private ?Position $futureStep = null;
 
@@ -98,6 +99,7 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
     {
         $roomTile = $this->getRoom()->getModel()->getTile($x, $y);
 
+        print_r($roomTile);
         if(empty($roomTile) || in_array($roomTile->getState(), [RoomTileState::Invalid, RoomTileState::Blocked])) return;
 
         $path = Pathfinder::getInstance()->makePath($this, new Position($x, $y, 0));
@@ -106,6 +108,7 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
 
         $this->previousSteps = 0;
 
+        print_r($path);
         $this->setWalkingPath($path);
     }
 
@@ -132,5 +135,25 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
     public function getFutureStep(): ?Position
     {
         return $this->futureStep;
+    }
+
+    public function calculateNextRotation(Position $position): int
+    {
+        return $this->getPosition()->calculateRotation($position);
+    }
+
+    public function setNeedsUpdate(bool $needsUpdate): void
+    {
+        $this->needsUpdate = $needsUpdate;
+    }
+
+    public function getAndRemoveNextProcessingPath(): Position
+    {
+        
+    }
+
+    public function getNeedsUpdate(): bool
+    {
+        return $this->needsUpdate;
     }
 }

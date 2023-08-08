@@ -25,5 +25,10 @@ interface IRoomEntity
     public function incrementPreviousStep(): void;
     public function getPreviousStep(): int;
     public function setFutureStep(Position $futurePosition): void;
+    
     public function getFutureStep(): ?Position;
+    public function calculateNextRotation(Position $position): int;
+
+    public function setNeedsUpdate(bool $needsUpdate): void;
+    public function getNeedsUpdate(): bool;
 }

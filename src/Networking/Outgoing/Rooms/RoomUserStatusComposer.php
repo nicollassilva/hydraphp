@@ -8,11 +8,26 @@ use Emulator\Networking\Outgoing\OutgoingHeaders;
 
 class RoomUserStatusComposer extends MessageComposer
 {
-    public function __construct(UserEntity &$entity)
+    public function __construct(?UserEntity $entity, ?array $entitiesToUpdate = null)
     {
         $this->header = OutgoingHeaders::$roomUserStatusComposer;
 
-        $this->writeInt32(1);
+        if($entity) {
+            $this->writeInt32(1);
+            $this->composeEntity($entity);
+
+            return;
+        }
+
+        $this->writeInt32(count($entitiesToUpdate));
+
+        foreach ($entitiesToUpdate as $entity) {
+            $this->composeEntity($entity);
+        }
+    }
+
+    private function composeEntity(UserEntity $entity): void
+    {
         $this->writeInt32($entity->getId());
         $this->writeInt32($entity->getPosition()->getX());
         $this->writeInt32($entity->getPosition()->getY());

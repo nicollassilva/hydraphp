@@ -13,7 +13,7 @@ class UserWalkingEvent implements IIncomingMessage
     {
         $entity = $client->getUser()->getEntity();
 
-        if(!$entity || $entity->getRoom()) return;
+        if(!$entity || !$entity->getRoom()) return;
 
         $posX = $message->readInt32();
         $posY = $message->readInt32();

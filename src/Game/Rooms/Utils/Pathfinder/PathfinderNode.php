@@ -1,6 +1,6 @@
 <?php
 
-namespace CometProject\Server\Game\Rooms\Objects\Entities\Pathfinding;
+namespace Emulator\Game\Rooms\Utils\Pathfinder;
 
 use Emulator\Game\Utilities\Position;
 
