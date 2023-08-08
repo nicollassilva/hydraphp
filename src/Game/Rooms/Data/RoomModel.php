@@ -65,20 +65,19 @@ class RoomModel implements IRoomModel
             for($x = 0; $x < $this->mapSizeX; $x++) {
                 if(strlen($temporaryModel[$y]) != $this->mapSizeX) break;
 
-                $squareType = strtolower(trim(substr($temporaryModel[$y], $x, $x + 1)));
+                $squareType = strtolower(trim(substr($temporaryModel[$y], $x, 1)));
                 $tileState = RoomTileState::Open;
                 $tileHeight = 0;
 
                 if($squareType == 'x') {
                     $tileState = RoomTileState::Invalid;
+                    continue;
+                }
+
+                if(is_numeric($squareType)) {
+                    $tileHeight = (float) $squareType;
                 } else {
-                    if(empty($squareType)) {
-                        $tileHeight = 0;
-                    } else if(is_numeric($squareType)) {
-                        $tileHeight = (int) $squareType;
-                    } else {
-                        $tileHeight = (10 + strpos("ABCDEFGHIJKLMNOPQRSTUVWXYZ", $squareType));
-                    }
+                    $tileHeight = (float) 10 + strpos("abcdefghijklmnopqrstuvwxyz", $squareType, 1);
                 }
 
                 $this->mapSize += 1;
@@ -90,13 +89,13 @@ class RoomModel implements IRoomModel
         $this->doorTile = $this->roomTiles[$this->doorX][$this->doorY];
 
         if(empty($this->getDoorTile())) return;
-
+        
         $this->getDoorTile()->setCanStack(false);
-
+        
         $frontalTile = $this->getFrontTile($this->getDoorTile(), $this->doorDirection, 0);
-
-        if(empty($frontalTile) || $this->tileExists($frontalTile->getPosition()->getX(), $frontalTile->getPosition()->getY())) return;
-
+        
+        if(empty($frontalTile) || !$this->tileExists($frontalTile->getPosition()->getX(), $frontalTile->getPosition()->getY())) return;
+        
         if($frontalTile->getState() == RoomTileState::Invalid) return;
 
         if($this->getDoorZ() == $frontalTile->getPosition()->getZ() || $this->getDoorTile()->getState() == $frontalTile->getState()) return;

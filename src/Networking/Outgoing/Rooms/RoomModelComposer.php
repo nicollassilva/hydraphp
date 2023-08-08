@@ -13,6 +13,6 @@ class RoomModelComposer extends MessageComposer
         $this->header = OutgoingHeaders::$roomModelComposer;
 
         $this->writeString($room->getData()->getModel());
-        $this->writeInt32($room->getData()->getId());
+        $this->writeInt($room->getData()->getId());
     }
 }

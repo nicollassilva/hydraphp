@@ -12,7 +12,7 @@ class RoomScoreComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$roomScoreComposer;
 
-        $this->writeInt32($room->getData()->getScore());
+        $this->writeInt($room->getData()->getScore());
         $this->writeBoolean(true); // can vote
     }
 }

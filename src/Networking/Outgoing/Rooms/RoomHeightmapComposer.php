@@ -13,7 +13,7 @@ class RoomHeightmapComposer extends MessageComposer
         $this->header = OutgoingHeaders::$roomHeightmapComposer;
 
         $this->writeBoolean(true);
-        $this->writeInt32($room->getData()->getWallHeight());
+        $this->writeInt($room->getData()->getWallHeight());
         $this->writeString($room->getModel()->getRelativeMap());
     }
 }

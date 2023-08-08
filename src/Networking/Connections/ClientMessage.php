@@ -20,14 +20,14 @@ class ClientMessage
     }
 
     private function readLength(): int {
-        $this->length = EncodingService::decode32Byte($this->currentPackage);
+        $this->length = EncodingService::decodeInteger($this->currentPackage);
         $this->resetStringOn(4);
 
         return $this->length;
     }
 
     private function readHeader(): int {
-        $this->header = EncodingService::decode16Byte($this->currentPackage);
+        $this->header = EncodingService::decodeShort($this->currentPackage);
         $this->resetStringOn(2);
 
         return $this->header;
@@ -38,7 +38,7 @@ class ClientMessage
     }
 
     public function readString() {
-        $length = EncodingService::decode16Byte($this->currentPackage);
+        $length = EncodingService::decodeShort($this->currentPackage);
         $string = substr($this->currentPackage, 2, $length);
         $this->resetStringOn($length + 2);
 
@@ -52,15 +52,15 @@ class ClientMessage
         return $boolean;
     }
 
-    public function readInt32() {
-        $int = EncodingService::decode32Byte($this->currentPackage);
+    public function readInt() {
+        $int = EncodingService::decodeInteger($this->currentPackage);
         $this->resetStringOn(4);
 
         return $int;
     }
 
-    public function readInt16() {
-        $int = EncodingService::decode16Byte($this->currentPackage);
+    public function readShort() {
+        $int = EncodingService::decodeShort($this->currentPackage);
         $this->resetStringOn(2);
 
         return $int;

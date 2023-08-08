@@ -11,20 +11,20 @@ class GameCenterAchievementsConfigurationComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$gameCenterAchievementsConfigurationComposer;
 
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(3);
-        $this->writeInt32(1);
-        $this->writeInt32(1);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(3);
+        $this->writeInt(1);
+        $this->writeInt(1);
         $this->writeString("BaseJumpBigParachute");
-        $this->writeInt32(1);
+        $this->writeInt(1);
     }
 }

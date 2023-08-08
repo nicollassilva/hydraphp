@@ -12,7 +12,7 @@ class UserTalkEvent implements IIncomingMessage
     public function handle(IClient $client, ClientMessage $message): void
     {
         $userMessage = $message->readString();
-        $bubbleId = $message->readInt32();
+        $bubbleId = $message->readInt();
 
         if($userMessage == 'cpu') {
             $client->send(new UserTalkComposer($client->getUser()->getEntity(), 'CPU: ' . round(memory_get_usage() / 1024 / 1024, 2) . 'MB', $bubbleId));

@@ -15,8 +15,8 @@ class UserWalkingEvent implements IIncomingMessage
 
         if(!$entity || !$entity->getRoom()) return;
 
-        $posX = $message->readInt32();
-        $posY = $message->readInt32();
+        $posX = $message->readInt();
+        $posY = $message->readInt();
 
         if($entity->getPosition()->getX() == $posX && $entity->getPosition()->getY() == $posY) return;
 

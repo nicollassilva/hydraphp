@@ -44,7 +44,7 @@ class Pathfinder
 
     private function setMovePoints(): void
     {
-        $this->diagonalMovePoints = [
+        $this->movePoints = [
             new Position(0,  -1),
             new Position(1, 0),
             new Position(0, 1),
@@ -99,10 +99,10 @@ class Pathfinder
                 $tmpPosition = $current->getPosition()->add($this->diagonalMovePoints[$i]);
                 $isFinalMove = ($tmpPosition->getX() === $end->getX() && $tmpPosition->getY() === $end->getY());
 
-                if ($this->isValidStep($roomObject, new Position($current->getPosition()->getX(), $current->getPosition()->getY(), $current->getPosition()->getZ()), $tmpPosition, $isFinalMove, $isRetry)) {
+                if ($this->isValidStep($roomObject, $current->getPosition(), $tmpPosition, $isFinalMove, $isRetry)) {
                     try {
                         if (!isset($map[$tmpPosition->getX()][$tmpPosition->getY()])) {
-                            $node = new PathfinderNode(new Position($tmpPosition->getX(), $tmpPosition->getY(), $tmpPosition->getZ()));
+                            $node = new PathfinderNode($tmpPosition);
                             $map[$tmpPosition->getX()][$tmpPosition->getY()] = $node;
                         } else {
                             $node = $map[$tmpPosition->getX()][$tmpPosition->getY()];

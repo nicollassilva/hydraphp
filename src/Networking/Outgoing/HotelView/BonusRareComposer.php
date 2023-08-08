@@ -12,8 +12,8 @@ class BonusRareComposer extends MessageComposer
         $this->header = OutgoingHeaders::$bonusRareComposer;
 
         $this->writeString("prizetrophy_breed_gold");
-        $this->writeInt32(0);
-        $this->writeInt32(120);
-        $this->writeInt32(0);
+        $this->writeInt(0);
+        $this->writeInt(120);
+        $this->writeInt(0);
     }
 }

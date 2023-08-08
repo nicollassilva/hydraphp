@@ -11,6 +11,6 @@ class NewNavigatorLiftedRoomsComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$newNavigatorLiftedRoomsComposer;
 
-        $this->writeInt32(0);
+        $this->writeInt(0);
     }
 }

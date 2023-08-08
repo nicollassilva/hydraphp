@@ -11,6 +11,6 @@ class NewNavigatorEventCategoriesComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$newNavigatorEventCategoriesComposer;
 
-        $this->writeInt32(0);
+        $this->writeInt(0);
     }
 }

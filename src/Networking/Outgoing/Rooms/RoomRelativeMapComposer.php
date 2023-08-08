@@ -12,17 +12,17 @@ class RoomRelativeMapComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$roomRelativeMapComposer;
 
-        $this->writeInt32($room->getModel()->getMapSize() / $room->getModel()->getMapSizeY());
-        $this->writeInt32($room->getModel()->getMapSize());
+        $this->writeInt(round($room->getModel()->getMapSize() / $room->getModel()->getMapSizeY()));
+        $this->writeInt($room->getModel()->getMapSize());
 
         for ($y = 0; $y < $room->getModel()->getMapSizeY(); $y++) {
             for ($x = 0; $x < $room->getModel()->getMapSizeX(); $x++) {
                 $roomTile = $room->getModel()->getTile($x, $y);
 
                 if(!empty($roomTile)) {
-                    $this->writeInt16($roomTile->getRelativeHeight());
+                    $this->writeShort($roomTile->getRelativeHeight());
                 } else {
-                    $this->writeInt16(pow(2, 15) - 1);
+                    $this->writeShort(pow(2, 15) - 1);
                 }
             }
         }

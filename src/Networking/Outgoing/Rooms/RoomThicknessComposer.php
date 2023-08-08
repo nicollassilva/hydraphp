@@ -13,7 +13,7 @@ class RoomThicknessComposer extends MessageComposer
         $this->header = OutgoingHeaders::$roomThicknessComposer;
 
         $this->writeBoolean($room->getData()->isHideWall());
-        $this->writeInt32($room->getData()->getThicknessWall());
-        $this->writeInt32($room->getData()->getThicknessFloor());
+        $this->writeInt($room->getData()->getThicknessWall());
+        $this->writeInt($room->getData()->getThicknessFloor());
     }
 }

@@ -12,15 +12,15 @@ class UserClubComposer extends MessageComposer
         $this->header = OutgoingHeaders::$userClubComposer;
         
         $this->writeString(strtolower($subscriptionType));
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
         $this->writeBoolean(false);
         $this->writeBoolean(false);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
     }
 }

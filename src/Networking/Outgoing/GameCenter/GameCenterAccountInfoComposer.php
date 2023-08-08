@@ -11,7 +11,7 @@ class GameCenterAccountInfoComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$gameCenterAccountInfoComposer;
 
-        $this->writeInt32($gameId);
-        $this->writeInt32($gamesLeft);
+        $this->writeInt($gameId);
+        $this->writeInt($gamesLeft);
     }
 }

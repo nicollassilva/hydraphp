@@ -11,19 +11,19 @@ class PrivateRoomsComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$privateRoomsComposer;
 
-        $this->writeInt32(2);
+        $this->writeInt(2);
         $this->writeString("");
-        $this->writeInt32(0);
+        $this->writeInt(0);
         $this->writeBoolean(true);
-        $this->writeInt32(0);
+        $this->writeInt(0);
         $this->writeString("A");
         $this->writeString("B");
-        $this->writeInt32(1);
+        $this->writeInt(1);
         $this->writeString("C");
         $this->writeString("D");
-        $this->writeInt32(1);
-        $this->writeInt32(1);
-        $this->writeInt32(1);
+        $this->writeInt(1);
+        $this->writeInt(1);
+        $this->writeInt(1);
         $this->writeString("E");
     }
 }

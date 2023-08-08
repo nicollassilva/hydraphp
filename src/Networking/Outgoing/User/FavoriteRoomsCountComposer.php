@@ -11,7 +11,7 @@ class FavoriteRoomsCountComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$favoriteRoomsCountComposer;
 
-        $this->writeInt32(30);
-        $this->writeInt32(0);
+        $this->writeInt(30);
+        $this->writeInt(0);
     }
 }

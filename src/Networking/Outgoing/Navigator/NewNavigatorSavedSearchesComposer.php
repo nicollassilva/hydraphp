@@ -11,6 +11,6 @@ class NewNavigatorSavedSearchesComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$newNavigatorSavedSearchesComposer;
 
-        $this->writeInt32(0);
+        $this->writeInt(0);
     }
 }

@@ -11,6 +11,6 @@ class RoomGroupBadgesComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$roomGroupBadgesComposer;
 
-        $this->writeInt32(0);
+        $this->writeInt(0);
     }
 }

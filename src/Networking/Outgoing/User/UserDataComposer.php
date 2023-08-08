@@ -12,16 +12,16 @@ class UserDataComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$userDataComposer;
 
-        $this->writeInt32($user->getData()->getId());
+        $this->writeInt($user->getData()->getId());
         $this->writeString($user->getData()->getUsername());
         $this->writeString($user->getData()->getLook());
         $this->writeString($user->getData()->getGender());
         $this->writeString($user->getData()->getMotto());
         $this->writeString($user->getData()->getUsername());
         $this->writeBoolean(false);
-        $this->writeInt32($user->getSettings()->getRespectPointsReceived());
-        $this->writeInt32($user->getSettings()->getRespectPointsGiven());
-        $this->writeInt32($user->getSettings()->getPetRespectPointsToGive());
+        $this->writeInt($user->getSettings()->getRespectPointsReceived());
+        $this->writeInt($user->getSettings()->getRespectPointsGiven());
+        $this->writeInt($user->getSettings()->getPetRespectPointsToGive());
         $this->writeBoolean(false);
         $this->writeString("01-01-1970 00:00:00");
         $this->writeString($user->getSettings()->getAllowNameChange());

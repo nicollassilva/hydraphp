@@ -38,7 +38,7 @@ class PackageManager implements IPackageManager
         $groupedPackages = [];
 
         while (strlen($data) > 3) {
-            $length = EncodingService::decode32Byte($data) + 4;
+            $length = EncodingService::decodeInteger($data) + 4;
             $groupedPackages[] = substr($data, 0, $length);
             $data = substr($data, $length);
         }

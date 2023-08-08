@@ -11,8 +11,8 @@ class UserPermissionsComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$userPermissionsComposer;
 
-        $this->writeInt32(2);
-        $this->writeInt32(1);
+        $this->writeInt(2);
+        $this->writeInt(1);
         $this->writeBoolean(false);
     }
 }

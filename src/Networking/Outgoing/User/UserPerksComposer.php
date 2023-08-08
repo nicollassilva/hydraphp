@@ -12,7 +12,7 @@ class UserPerksComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$userPerksComposer;
 
-        $this->writeInt32(15);
+        $this->writeInt(15);
 
         $this->writeString("USE_GUIDE_TOOL");
         $this->writeString("requirement.unfulfilled.helper_level_4");

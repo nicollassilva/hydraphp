@@ -11,11 +11,11 @@ class NewNavigatorSettingsComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$newNavigatorSettingsComposer;
 
-        $this->writeInt32(100);
-        $this->writeInt32(100);
-        $this->writeInt32(425);
-        $this->writeInt32(535);
+        $this->writeInt(100);
+        $this->writeInt(100);
+        $this->writeInt(425);
+        $this->writeInt(535);
         $this->writeBoolean(false);
-        $this->writeInt32(0);
+        $this->writeInt(0);
     }
 }

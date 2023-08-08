@@ -11,6 +11,6 @@ class InventoryEffectsComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$inventoryEffectsComposer;
 
-        $this->writeInt32(0);
+        $this->writeInt(0);
     }
 }

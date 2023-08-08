@@ -12,6 +12,6 @@ class RoomRightsComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$roomRightsComposer;
 
-        $this->writeInt32((int) $status->value);
+        $this->writeInt((int) $status->value);
     }
 }

@@ -11,11 +11,11 @@ class UserCurrencyComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$userCurrencyComposer;
 
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(5);
-        $this->writeInt32(100);
-        $this->writeInt32(101);
-        $this->writeInt32(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(5);
+        $this->writeInt(100);
+        $this->writeInt(101);
+        $this->writeInt(0);
     }
 }

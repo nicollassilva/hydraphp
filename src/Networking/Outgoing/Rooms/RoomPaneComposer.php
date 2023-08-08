@@ -12,7 +12,7 @@ class RoomPaneComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$roomPaneComposer;
 
-        $this->writeInt32($room->getData()->getId());
+        $this->writeInt($room->getData()->getId());
         $this->writeBoolean($isOwner);
     }
 }

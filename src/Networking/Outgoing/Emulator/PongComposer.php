@@ -11,6 +11,6 @@ class PongComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$pongComposer;
 
-        $this->writeInt32($id);
+        $this->writeInt($id);
     }
 }

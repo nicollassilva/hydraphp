@@ -11,7 +11,7 @@ class LoadFriendRequestsComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$loadFriendRequestsComposer;
 
-        $this->writeInt32(0);
-        $this->writeInt32(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
     }
 }

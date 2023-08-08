@@ -11,6 +11,6 @@ class CfhTopicsComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$cfhTopicsComposer;
 
-        $this->writeInt32(0);
+        $this->writeInt(0);
     }
 }

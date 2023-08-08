@@ -13,9 +13,9 @@ class AdventCalendarDataComposer extends MessageComposer
 
         $this->writeString("xmas14");
         $this->writeString("");
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
     }
 }

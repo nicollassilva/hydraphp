@@ -11,7 +11,7 @@ class UserClothesComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$userClothesComposer;
 
-        $this->writeInt32(0);
-        $this->writeInt32(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
     }
 }

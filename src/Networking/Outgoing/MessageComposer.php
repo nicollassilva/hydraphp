@@ -15,16 +15,16 @@ class MessageComposer implements IMessageComposer
         return $this->header;
     }
 
-    public function writeInt32(int $value): IMessageComposer
+    public function writeInt(int $value): IMessageComposer
     {
-        $this->packageData .= EncodingService::encode32Byte($value);
+        $this->packageData .= EncodingService::encodeInteger($value);
 
         return $this;
     }
 
-    public function writeInt16(int $value): IMessageComposer
+    public function writeShort(float $value): IMessageComposer
     {
-        $this->packageData .= EncodingService::encode16Byte($value);
+        $this->packageData .= EncodingService::encodeShort($value);
 
         return $this;
     }
@@ -46,8 +46,8 @@ class MessageComposer implements IMessageComposer
     public function compose(): string
     {
         return sprintf('%s%s%s',
-            EncodingService::encode32Byte(strlen($this->packageData) + 2),
-            EncodingService::encode16Byte($this->getHeader()),
+            EncodingService::encodeInteger(strlen($this->packageData) + 2),
+            EncodingService::encodeShort($this->getHeader()),
             $this->packageData
         );
     }

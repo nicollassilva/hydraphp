@@ -12,7 +12,7 @@ class RoomRightsListComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$roomRightsListComposer;
 
-        $this->writeInt32($room->getData()->getId());
-        $this->writeInt32(0);
+        $this->writeInt($room->getData()->getId());
+        $this->writeInt(0);
     }
 }

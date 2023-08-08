@@ -6,8 +6,8 @@ interface IMessageComposer
 {
     public function getHeader(): int;
     
-    public function writeInt32(int $value): IMessageComposer;
-    public function writeInt16(int $value): IMessageComposer;
+    public function writeInt(int $value): IMessageComposer;
+    public function writeShort(float $value): IMessageComposer;
     public function writeString(string $value): IMessageComposer;
     public function writeBoolean(bool $value): IMessageComposer;
 

@@ -11,10 +11,7 @@ class RoomTile implements IPositionable
     private RoomTileState $state;
     
     private bool $canStack;
-    private int $stackHeight;
-
-    private int $gCosts = 0;
-    private int $hCosts = 0;
+    private float $stackHeight;
 
     private ?RoomTile $previousTile = null;
 
@@ -25,7 +22,7 @@ class RoomTile implements IPositionable
         $this->state = $state;
         $this->stackHeight = $position->getZ();
 
-        if($state != RoomTileState::Blocked || $state != RoomTileState::Blocked) {
+        if($state != RoomTileState::Blocked || $state != RoomTileState::Invalid) {
             $this->canStack = true;
         }
     }
@@ -40,7 +37,7 @@ class RoomTile implements IPositionable
         // Position is readonly.
     }
 
-    public function getStackHeight(): int
+    public function getStackHeight(): float
     {
         return $this->stackHeight;
     }
@@ -65,27 +62,17 @@ class RoomTile implements IPositionable
         $this->state = $state;
     }
 
-    public function getRelativeHeight(): int
+    public function getRelativeHeight(): float
     {
         if($this->getState() == RoomTileState::Invalid) {
-            return pow(2, 15) - 1;
+            return (float) (pow(2, 15) - 1);
         }
 
         if(!$this->getCanStack() && ($this->getState() == RoomTileState::Blocked || $this->getState() == RoomTileState::Sit)) {
             return pow(128, 2);
         }
 
-        return $this->getCanStack() ? ($this->getStackHeight() * 256) : pow(128, 2);
-    }
-
-    public function getgCosts(): int
-    {
-        return $this->gCosts;
-    }
-
-    public function getfCosts(): int
-    {
-        return $this->gCosts + $this->hCosts;
+        return $this->getCanStack() ? (float) ($this->getStackHeight() * 256.0) : pow(128, 2);
     }
 
     public function setPreviousTile(RoomTile $previousTile): void

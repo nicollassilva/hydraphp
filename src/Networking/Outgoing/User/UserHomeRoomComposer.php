@@ -11,7 +11,7 @@ class UserHomeRoomComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$userHomeRoomComposer;
 
-        $this->writeInt32(0);
-        $this->writeInt32(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
     }
 }

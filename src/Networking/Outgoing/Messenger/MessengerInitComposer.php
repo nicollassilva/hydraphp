@@ -14,9 +14,9 @@ class MessengerInitComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$messengerInitComposer;
 
-        $this->writeInt32($this->maxFriends);
-        $this->writeInt32(1337);
-        $this->writeInt32($this->maxFriendsHc);
-        $this->writeInt32(0);
+        $this->writeInt($this->maxFriends);
+        $this->writeInt(1337);
+        $this->writeInt($this->maxFriendsHc);
+        $this->writeInt(0);
     }
 }

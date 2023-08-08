@@ -12,10 +12,10 @@ class RequestRoomDataEvent implements IIncomingMessage
 {
     public function handle(IClient $client, ClientMessage $message): void
     {
-        $room = RoomManager::getInstance()->loadRoom($message->readInt32());
+        $room = RoomManager::getInstance()->loadRoom($message->readInt());
 
-        $something = $message->readInt32();
-        $somethingTwo = $message->readInt32();
+        $something = $message->readInt();
+        $somethingTwo = $message->readInt();
 
         if(empty($room)) return;
 

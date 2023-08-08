@@ -13,13 +13,13 @@ class RoomUserStatusComposer extends MessageComposer
         $this->header = OutgoingHeaders::$roomUserStatusComposer;
 
         if($entity) {
-            $this->writeInt32(1);
+            $this->writeInt(1);
             $this->composeEntity($entity);
 
             return;
         }
 
-        $this->writeInt32(count($entitiesToUpdate));
+        $this->writeInt(count($entitiesToUpdate));
 
         foreach ($entitiesToUpdate as $entity) {
             $this->composeEntity($entity);
@@ -28,12 +28,12 @@ class RoomUserStatusComposer extends MessageComposer
 
     private function composeEntity(UserEntity $entity): void
     {
-        $this->writeInt32($entity->getId());
-        $this->writeInt32($entity->getPosition()->getX());
-        $this->writeInt32($entity->getPosition()->getY());
+        $this->writeInt($entity->getId());
+        $this->writeInt($entity->getPosition()->getX());
+        $this->writeInt($entity->getPosition()->getY());
         $this->writeString((string) $entity->getPosition()->getZ());
-        $this->writeInt32($entity->getHeadRotation());
-        $this->writeInt32($entity->getBodyRotation());
+        $this->writeInt($entity->getHeadRotation());
+        $this->writeInt($entity->getBodyRotation());
 
         $status = "/";
 

@@ -11,7 +11,7 @@ class NewNavigatorCollapsedCategoriesComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$newNavigatorCollapsedCategoriesComposer;
 
-        $this->writeInt32(46);
+        $this->writeInt(46);
         $this->writeString("new_ads");
         $this->writeString("friend_finding");
         $this->writeString("staffpicks");

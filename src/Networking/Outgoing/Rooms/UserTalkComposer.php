@@ -13,11 +13,11 @@ class UserTalkComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$userTalkComposer;
 
-        $this->writeInt32($entity->getId());
+        $this->writeInt($entity->getId());
         $this->writeString($message);
-        $this->writeInt32(ChatEmotion::getByMessage($message)->value);
-        $this->writeInt32($bubbleId);
-        $this->writeInt32(0);
-        $this->writeInt32(strlen($message));
+        $this->writeInt(ChatEmotion::getByMessage($message)->value);
+        $this->writeInt($bubbleId);
+        $this->writeInt(0);
+        $this->writeInt(strlen($message));
     }
 }

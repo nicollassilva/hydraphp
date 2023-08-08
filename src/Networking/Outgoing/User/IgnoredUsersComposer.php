@@ -11,6 +11,6 @@ class IgnoredUsersComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$ignoredUsersComposer;
 
-        $this->writeInt32(0);
+        $this->writeInt(0);
     }
 }

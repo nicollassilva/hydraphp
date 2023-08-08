@@ -12,13 +12,13 @@ class MeMenuSettingsComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$meMenuSettingsComposer;
 
-        $this->writeInt32($settings->getVolumeSystem());
-        $this->writeInt32($settings->getVolumeFurni());
-        $this->writeInt32($settings->getVolumeTrax());
+        $this->writeInt($settings->getVolumeSystem());
+        $this->writeInt($settings->getVolumeFurni());
+        $this->writeInt($settings->getVolumeTrax());
         $this->writeBoolean($settings->getPreferOldChat());
         $this->writeBoolean($settings->getBlockRoomInvites());
         $this->writeBoolean($settings->getBlockCameraFollow());
-        $this->writeInt32($settings->getUiFlags());
-        $this->writeInt32($settings->getChatColor()?->getType() ?? 0);
+        $this->writeInt($settings->getUiFlags());
+        $this->writeInt($settings->getChatColor()?->getType() ?? 0);
     }
 }

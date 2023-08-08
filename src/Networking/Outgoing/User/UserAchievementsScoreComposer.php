@@ -11,6 +11,6 @@ class UserAchievementsScoreComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$userAchievementsScoreComposer;
 
-        $this->writeInt32(100);
+        $this->writeInt(100);
     }
 }

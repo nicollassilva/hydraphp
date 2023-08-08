@@ -11,6 +11,6 @@ class InventoryAchievementsComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$inventoryAchievementsComposer;
 
-        $this->writeInt32(0);
+        $this->writeInt(0);
     }
 }

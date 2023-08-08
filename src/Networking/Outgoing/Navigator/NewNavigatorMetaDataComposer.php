@@ -11,14 +11,14 @@ class NewNavigatorMetaDataComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$newNavigatorMetaDataComposer;
 
-        $this->writeInt32(4);
+        $this->writeInt(4);
         $this->writeString("official_view");
-        $this->writeInt32(0);
+        $this->writeInt(0);
         $this->writeString("hotel_view");
-        $this->writeInt32(0);
+        $this->writeInt(0);
         $this->writeString("roomads_view");
-        $this->writeInt32(0);
+        $this->writeInt(0);
         $this->writeString("myworld_view");
-        $this->writeInt32(0);
+        $this->writeInt(0);
     }
 }

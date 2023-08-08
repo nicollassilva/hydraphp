@@ -15,9 +15,9 @@ class Position
 
     private int $x;
     private int $y;
-    private int $z;
+    private float $z;
 
-    public function __construct(int $x, int $y, int $z = 0)
+    public function __construct(int $x, int $y, float $z = 0)
     {
         $this->setX($x);
         $this->setY($y);
@@ -39,12 +39,12 @@ class Position
         return $this->y;
     }
 
-    public function setY(int $y): void
+    public function setY(float $y): void
     {
         $this->y = $y;
     }
 
-    public function getZ(): int
+    public function getZ(): float
     {
         return $this->z;
     }

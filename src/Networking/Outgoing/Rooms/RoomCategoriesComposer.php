@@ -23,10 +23,10 @@ class RoomCategoriesComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$roomCategoriesComposer;
 
-        $this->writeInt32(count($this->categories));
+        $this->writeInt(count($this->categories));
 
         foreach($this->categories as $key => $category) {
-            $this->writeInt32($key);
+            $this->writeInt($key);
             $this->writeString($category);
             $this->writeBoolean(true);
             $this->writeBoolean(false);

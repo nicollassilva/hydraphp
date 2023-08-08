@@ -14,25 +14,25 @@ class RoomDataComposer extends MessageComposer
         $this->header = OutgoingHeaders::$roomDataComposer;
 
         $this->writeBoolean($enterRoom);
-        $this->writeInt32($room->getData()->getId());
+        $this->writeInt($room->getData()->getId());
         $this->writeString($room->getData()->getName());
 
-        $this->writeInt32($room->getData()->isPublic() ? 0 : $room->getData()->getOwnerId());
+        $this->writeInt($room->getData()->isPublic() ? 0 : $room->getData()->getOwnerId());
         $this->writeString($room->getData()->isPublic() ? "" : $room->getData()->getOwnerName());
 
-        $this->writeInt32($room->getData()->getState()->value);
-        $this->writeInt32($room->getData()->getCurrentUsers());
-        $this->writeInt32($room->getData()->getMaxUsers());
+        $this->writeInt($room->getData()->getState()->value);
+        $this->writeInt($room->getData()->getCurrentUsers());
+        $this->writeInt($room->getData()->getMaxUsers());
         $this->writeString($room->getData()->getDescription());
-        $this->writeInt32($room->getData()->getTradeMode());
-        $this->writeInt32($room->getData()->getScore());
-        $this->writeInt32(2);
-        $this->writeInt32($room->getData()->getCategory());
+        $this->writeInt($room->getData()->getTradeMode());
+        $this->writeInt($room->getData()->getScore());
+        $this->writeInt(2);
+        $this->writeInt($room->getData()->getCategory());
 
         if(empty($room->getData()->getTags())) {
-            $this->writeInt32(0);
+            $this->writeInt(0);
         } else {
-            $this->writeInt32(count($room->getData()->getTags()));
+            $this->writeInt(count($room->getData()->getTags()));
             
             foreach($room->getData()->getTags() as $tag) {
                 $this->writeString($tag);
@@ -57,22 +57,22 @@ class RoomDataComposer extends MessageComposer
             $base |= 16;
         }
         
-        $this->writeInt32($base);
+        $this->writeInt($base);
         $this->writeBoolean($roomForward);
         $this->writeBoolean($room->getData()->isStaffPicked());
         $this->writeBoolean(false); // has guild
         $this->writeBoolean(false); // is muted
 
-        $this->writeInt32($room->getData()->getWhoCanMute());
-        $this->writeInt32($room->getData()->getWhoCanKick());
-        $this->writeInt32($room->getData()->getWhoCanBan());
+        $this->writeInt($room->getData()->getWhoCanMute());
+        $this->writeInt($room->getData()->getWhoCanKick());
+        $this->writeInt($room->getData()->getWhoCanBan());
 
         $this->writeBoolean(true); // has rights
 
-        $this->writeInt32($room->getData()->getChatMode());
-        $this->writeInt32($room->getData()->getChatWeight());
-        $this->writeInt32($room->getData()->getChatSpeed());
-        $this->writeInt32($room->getData()->getChatDistance());
-        $this->writeInt32($room->getData()->getChatProtection());
+        $this->writeInt($room->getData()->getChatMode());
+        $this->writeInt($room->getData()->getChatWeight());
+        $this->writeInt($room->getData()->getChatSpeed());
+        $this->writeInt($room->getData()->getChatDistance());
+        $this->writeInt($room->getData()->getChatProtection());
     }
 }

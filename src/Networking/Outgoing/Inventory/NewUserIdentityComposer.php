@@ -11,6 +11,6 @@ class NewUserIdentityComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$newUserIdentityComposer;
 
-        $this->writeInt32(1);
+        $this->writeInt(1);
     }
 }

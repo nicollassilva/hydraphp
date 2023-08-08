@@ -11,10 +11,10 @@ class BuildersClubExpiredComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$buildersClubExpiredComposer;
 
-        $this->writeInt32(2147483647);
-        $this->writeInt32(0);
-        $this->writeInt32(100);
-        $this->writeInt32(2147483647);
-        $this->writeInt32(0);
+        $this->writeInt(2147483647);
+        $this->writeInt(0);
+        $this->writeInt(100);
+        $this->writeInt(2147483647);
+        $this->writeInt(0);
     }
 }

@@ -11,15 +11,15 @@ class RoomPromotionComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$roomPromotionComposer;
 
-        $this->writeInt32(-1);
-        $this->writeInt32(-1);
+        $this->writeInt(-1);
+        $this->writeInt(-1);
         $this->writeString("");
-        $this->writeInt32(0);
-        $this->writeInt32(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
         $this->writeString("");
         $this->writeString("");
-        $this->writeInt32(0);
-        $this->writeInt32(0);
-        $this->writeInt32(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
+        $this->writeInt(0);
     }
 }
