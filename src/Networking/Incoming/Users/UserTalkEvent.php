@@ -14,6 +14,16 @@ class UserTalkEvent implements IIncomingMessage
         $userMessage = $message->readString();
         $bubbleId = $message->readInt32();
 
+        if($userMessage == 'cpu') {
+            $client->send(new UserTalkComposer($client->getUser()->getEntity(), 'CPU: ' . round(memory_get_usage() / 1024 / 1024, 2) . 'MB', $bubbleId));
+            return;
+        }
+
+        if($userMessage == 'memory') {
+            $client->send(new UserTalkComposer($client->getUser()->getEntity(), 'Memory: ' . round(memory_get_usage() / 1024 / 1024, 2) . 'MB', $bubbleId));
+            return;
+        }
+
         $client->getUser()
             ->getEntity()
             ->getRoom()

@@ -6,4 +6,5 @@ enum RoomEntityStatus: string
 {
     case FlatCtrl = "flatctrl";
     case Move = "mv";
+    case Gesture = "gst";
 }

@@ -27,6 +27,7 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
     private bool $needsUpdate = false;
 
     private ?Position $futureStep = null;
+    private ?Position $nextPosition = null;
 
     public function __construct(
         int $id,
@@ -99,7 +100,6 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
     {
         $roomTile = $this->getRoom()->getModel()->getTile($x, $y);
 
-        print_r($roomTile);
         if(empty($roomTile) || in_array($roomTile->getState(), [RoomTileState::Invalid, RoomTileState::Blocked])) return;
 
         $path = Pathfinder::getInstance()->makePath($this, new Position($x, $y, 0));
@@ -108,7 +108,6 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
 
         $this->previousSteps = 0;
 
-        print_r($path);
         $this->setWalkingPath($path);
     }
 
@@ -149,11 +148,23 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
 
     public function getAndRemoveNextProcessingPath(): Position
     {
-        
+        $nextProcessingPath = array_shift($this->processingPath);
+
+        return $nextProcessingPath;
     }
 
     public function getNeedsUpdate(): bool
     {
         return $this->needsUpdate;
+    }
+
+    public function setNextPosition(Position $position): void
+    {
+        $this->nextPosition = $position;
+    }
+
+    public function getNextPosition(): ?Position
+    {
+        return $this->nextPosition;
     }
 }

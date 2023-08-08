@@ -73,6 +73,11 @@ class UserEntity extends RoomEntity implements IUserEntity
         return $this->status;
     }
 
+    public function hasStatus(RoomEntityStatus $status): bool
+    {
+        return isset($this->status[$status->value]);
+    }
+
     public function setStatus(RoomEntityStatus $status, string $key): void
     {
         $this->status[$status->value] = $key;

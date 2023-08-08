@@ -31,4 +31,8 @@ interface IRoomEntity
 
     public function setNeedsUpdate(bool $needsUpdate): void;
     public function getNeedsUpdate(): bool;
+
+    public function getAndRemoveNextProcessingPath(): Position;
+    public function setNextPosition(Position $position): void;
+    public function getNextPosition(): ?Position;
 }

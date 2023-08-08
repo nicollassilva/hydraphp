@@ -78,7 +78,7 @@ class Pathfinder
         $map = array_fill(0, $roomObject->getRoom()->getModel()->getMapSizeX(), array_fill(0, $roomObject->getRoom()->getModel()->getMapSizeY(), null));
 
         $node = null;
-        $tmp = [];
+        $tmpPosition = [];
 
         $cost = 0;
         $diff = 0;
@@ -101,7 +101,7 @@ class Pathfinder
 
                 if ($this->isValidStep($roomObject, new Position($current->getPosition()->getX(), $current->getPosition()->getY(), $current->getPosition()->getZ()), $tmpPosition, $isFinalMove, $isRetry)) {
                     try {
-                        if ($map[$tmpPosition->getX()][$tmpPosition->getY()] === null) {
+                        if (!isset($map[$tmpPosition->getX()][$tmpPosition->getY()])) {
                             $node = new PathfinderNode(new Position($tmpPosition->getX(), $tmpPosition->getY(), $tmpPosition->getZ()));
                             $map[$tmpPosition->getX()][$tmpPosition->getY()] = $node;
                         } else {

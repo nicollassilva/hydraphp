@@ -8,6 +8,7 @@ use Emulator\Game\Utilities\PeriodicExecution;
 use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Api\Game\Rooms\Components\IProcessComponent;
 use Emulator\Game\Rooms\Enums\RoomEntityStatus;
+use Emulator\Game\Rooms\Types\Entities\RoomEntity;
 use Emulator\Networking\Outgoing\Rooms\RoomUserStatusComposer;
 
 class ProcessComponent extends PeriodicExecution implements IProcessComponent
@@ -40,12 +41,28 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
             $this->getRoom()->sendForAll(new RoomUserStatusComposer(null, $this->entitiesToUpdate));
         }
 
+        foreach ($this->entitiesToUpdate as $entity) {
+            $entity->setNeedsUpdate(false);
+
+            if($nextPosition = $entity->getNextPosition()) {
+                $entity->setPosition($nextPosition);
+                unset($nextPosition);
+            }
+        }
+
         $this->entitiesToUpdate = [];
         $this->isProcessing = false;
     }
 
     private function processUserEntity(UserEntity $entity): void
     {
+        if($entity->hasStatus(RoomEntityStatus::Move)) {
+            $entity->removeStatus(RoomEntityStatus::Move);
+            $entity->removeStatus(RoomEntityStatus::Gesture);
+
+            $this->markEntityNeedsUpdate($entity);
+        }
+
         if(!empty($entity->getWalkingPath())) {
             $entity->setProcessingPath($entity->getWalkingPath());
 
@@ -71,10 +88,18 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
             $entity->setHeadRotation($entity->getBodyRotation());
 
             $entity->setStatus(RoomEntityStatus::Move, "{$nextPosition->getX()},{$nextPosition->getY()},0");
-            $entity->setNeedsUpdate(true);
 
-            $this->entitiesToUpdate[] = $entity;
+            $this->markEntityNeedsUpdate($entity);
+            $entity->setNextPosition($nextPosition);
         }
+    }
+
+    public function markEntityNeedsUpdate(RoomEntity $entity): void
+    {
+        if(in_array($entity, $this->entitiesToUpdate)) return;
+
+        $entity->setNeedsUpdate(true);
+        $this->entitiesToUpdate[] = $entity;
     }
 
     public function getRoom(): IRoom
