@@ -90,6 +90,7 @@ abstract class OutgoingHeaders
     public static int $recyclerLogicComposer = 3164;
     public static int $giftConfigurationComposer = 2234;
     public static int $catalogDiscountComposer = 2347;
+    public static int $catalogPageComposer = 804;
     # -----
     
     # Navigator Outgoing Events

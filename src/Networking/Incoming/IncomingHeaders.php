@@ -68,6 +68,7 @@ abstract class IncomingHeaders
     public static int $requestRecylerLogicEvent = 398;
     public static int $requestDiscountEvent = 223;
     public static int $requestGiftConfigurationEvent = 418;
+    public static int $requestCatalogPageEvent = 412;
     # -----
 
 }

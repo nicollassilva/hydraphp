@@ -7,6 +7,8 @@ use React\MySQL\QueryResult;
 use Emulator\Game\Catalog\Data\CatalogPage;
 use Emulator\Api\Game\Catalog\Data\ICatalogPage;
 use Emulator\Storage\Repositories\EmulatorRepository;
+use Emulator\Api\Game\Catalog\Data\ICatalogFeaturedPage;
+use Emulator\Game\Catalog\Data\CatalogFeaturedPage;
 
 abstract class CatalogRepository extends EmulatorRepository
 {
@@ -60,5 +62,21 @@ abstract class CatalogRepository extends EmulatorRepository
         }
 
         return $pages;
+    }
+    
+    /** @return array<int,ICatalogFeaturedPage> */
+    public static function loadFeaturedPages(): array
+    {
+        $featuredPages = [];
+
+        self::encapsuledSelect("SELECT * FROM catalog_featured_pages ORDER BY slot_id ASC", function(QueryResult $result) use (&$featuredPages) {
+            if(empty($result->resultRows)) return;
+
+            foreach($result->resultRows as $pageData) {
+                $featuredPages[$pageData['slot_id']] = new CatalogFeaturedPage($pageData);
+            }
+        });
+
+        return $featuredPages;
     }
 }

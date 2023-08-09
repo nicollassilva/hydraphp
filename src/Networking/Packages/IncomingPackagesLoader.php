@@ -10,7 +10,7 @@ use Emulator\Networking\Incoming\Catalog\RequestCatalogModeEvent;
 use Emulator\Networking\Incoming\Emulator\{PingEvent, PongEvent};
 use Emulator\Networking\Incoming\Catalog\RequestRecylerLogicEvent;
 use Emulator\Networking\Incoming\Catalog\GetMarketplaceConfigEvent;
-use Emulator\Networking\Incoming\Catalog\{RequestTargetOfferEvent};
+use Emulator\Networking\Incoming\Catalog\{RequestCatalogPageEvent, RequestTargetOfferEvent};
 use Emulator\Networking\Incoming\Catalog\RequestGiftConfigurationEvent;
 use Emulator\Networking\Incoming\HotelView\{HotelViewRequestBonusRareEvent,HotelViewDataEvent};
 use Emulator\Networking\Incoming\GameCenter\{GetGameListMessageEvent,GameCenterRequestGamesEvent};
@@ -129,5 +129,6 @@ class IncomingPackagesLoader
         $this->addPackage(IncomingHeaders::$requestRecylerLogicEvent, RequestRecylerLogicEvent::class);
         $this->addPackage(IncomingHeaders::$requestGiftConfigurationEvent, RequestGiftConfigurationEvent::class);
         $this->addPackage(IncomingHeaders::$requestDiscountEvent, RequestDiscountEvent::class);
+        $this->addPackage(IncomingHeaders::$requestCatalogPageEvent, RequestCatalogPageEvent::class);
     }
 }
