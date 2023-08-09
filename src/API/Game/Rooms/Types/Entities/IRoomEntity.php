@@ -2,9 +2,10 @@
 
 namespace Emulator\Api\Game\Rooms\Types\Entities;
 
+use Emulator\Game\Utilities\Position;
 use Emulator\Game\Rooms\Data\RoomTile;
 use Emulator\Game\Rooms\Enums\RoomEntityType;
-use Emulator\Game\Utilities\Position;
+use Emulator\Game\Rooms\Enums\RoomEntityStatus;
 
 interface IRoomEntity
 {
@@ -34,4 +35,10 @@ interface IRoomEntity
     public function getAndRemoveNextTile(): RoomTile;
     public function setNextTile(RoomTile $tile): void;
     public function getNextTile(): ?RoomTile;
+    
+    public function getStatus(): array;
+    public function clearStatus(): void;
+    public function hasStatus(RoomEntityStatus $status): bool;
+    public function removeStatus(RoomEntityStatus $status): void;
+    public function setStatus(RoomEntityStatus $status, string $key): void;
 }

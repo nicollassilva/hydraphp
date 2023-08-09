@@ -15,7 +15,6 @@ class UserEntity extends RoomEntity implements IUserEntity
     private readonly IUser $user;
     private readonly Logger $logger;
 
-    private array $status;
     private bool $isKicked;
 
     private RoomRightLevels $roomRightLevel;
@@ -42,31 +41,6 @@ class UserEntity extends RoomEntity implements IUserEntity
     public function getLogger(): Logger
     {
         return $this->logger;
-    }
-
-    public function clearStatus(): void
-    {
-        $this->status = [];
-    }
-
-    public function getStatus(): array
-    {
-        return $this->status;
-    }
-
-    public function hasStatus(RoomEntityStatus $status): bool
-    {
-        return isset($this->status[$status->value]);
-    }
-
-    public function setStatus(RoomEntityStatus $status, string $key): void
-    {
-        $this->status[$status->value] = $key;
-    }
-
-    public function removeStatus(RoomEntityStatus $status): void
-    {
-        unset($this->status[$status->value]);
     }
 
     public function getRoomRightLevel(): RoomRightLevels

@@ -13,7 +13,7 @@ use Emulator\Networking\Incoming\Messenger\{RequestFriendRequestsEvent, RequestF
 use Emulator\Networking\Incoming\Handshake\{UniqueIdEvent, SSOTicketEvent, ReleaseVersionEvent, ClientVariablesEvent};
 use Emulator\Networking\Incoming\Navigator\{RequestNavigatorSettingsEvent, RequestNewNavigatorDataEvent, RequestNewNavigatorRoomsEvent};
 use Emulator\Networking\Incoming\Rooms\{JoinRoomEvent, RequestPromotedRoomsEvent, RequestRoomCategoriesEvent, RequestRoomDataEvent, RequestRoomLoadEvent};
-use Emulator\Networking\Incoming\Users\{UserActivityEvent,RequestUserDataEvent,MySanctionStatusEvent, RequestIgnoredUsersEvent, RequestMeMenuSettingsEvent, RequestUserClubEvent, RequestUserCreditsEvent, UsernameEvent, UserStartTypingEvent, UserStopTypingEvent, UserTalkEvent};
+use Emulator\Networking\Incoming\Users\{UserActivityEvent,RequestUserDataEvent,MySanctionStatusEvent, RequestIgnoredUsersEvent, RequestMeMenuSettingsEvent, RequestUserClubEvent, RequestUserCreditsEvent, UserLookToEvent, UsernameEvent, UserStartTypingEvent, UserStopTypingEvent, UserTalkEvent};
 
 class IncomingPackagesLoader
 {
@@ -89,6 +89,7 @@ class IncomingPackagesLoader
         $this->addPackage(IncomingHeaders::$userStopTypingEvent, UserStopTypingEvent::class);
         $this->addPackage(IncomingHeaders::$userTalkEvent, UserTalkEvent::class);
         $this->addPackage(IncomingHeaders::$userWalkingEvent, UserWalkingEvent::class);
+        $this->addPackage(IncomingHeaders::$userLookToEvent, UserLookToEvent::class);
     }
 
     private function loadGameCenterEvents(): void

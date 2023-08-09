@@ -33,6 +33,7 @@ abstract class IncomingHeaders
     public static int $userStopTypingEvent = 1474;
     public static int $userTalkEvent = 1314;
     public static int $userWalkingEvent = 3320;
+    public static int $userLookToEvent = 3301;
     # -----
 
     # Navigator Outgoing Events

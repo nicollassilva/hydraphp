@@ -9,6 +9,7 @@ use Emulator\Game\Rooms\Types\RoomObject;
 use Emulator\Api\Game\Utilities\IMoveable;
 use Emulator\Game\Rooms\Enums\RoomTileState;
 use Emulator\Game\Rooms\Enums\RoomEntityType;
+use Emulator\Game\Rooms\Enums\RoomEntityStatus;
 use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Game\Rooms\Utils\Pathfinder\Pathfinder;
 use Emulator\Api\Game\Rooms\Types\Entities\IRoomEntity;
@@ -25,6 +26,8 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
     
     /** @var RoomTile[] */
     private array $walkingPath = [];
+
+    private array $status;
 
     private int $previousSteps = 0;
 
@@ -155,5 +158,47 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
     public function getNextTile(): ?RoomTile
     {
         return $this->nextTile;
+    }
+
+    public function lookToPoint(int $x, int $y, bool $updateBodyRotation): void
+    {
+        $rotation = $this->calculateNextRotation(new Position($x, $y));
+
+        if($this->hasStatus(RoomEntityStatus::Lay)) return;
+
+        if(!$this->hasStatus(RoomEntityStatus::Sit) && $updateBodyRotation) {
+            $this->setBodyRotation($rotation);
+        }
+        
+        if(abs($rotation - $this->getBodyRotation()) <= 1) {
+            $this->setHeadRotation($rotation);
+        }
+
+        $this->setNeedsUpdate(true);
+    }
+
+    public function clearStatus(): void
+    {
+        $this->status = [];
+    }
+
+    public function getStatus(): array
+    {
+        return $this->status;
+    }
+
+    public function hasStatus(RoomEntityStatus $status): bool
+    {
+        return isset($this->status[$status->value]);
+    }
+
+    public function setStatus(RoomEntityStatus $status, string $key): void
+    {
+        $this->status[$status->value] = $key;
+    }
+
+    public function removeStatus(RoomEntityStatus $status): void
+    {
+        unset($this->status[$status->value]);
     }
 }

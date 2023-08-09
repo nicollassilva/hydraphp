@@ -9,6 +9,7 @@ use Emulator\Game\Rooms\RoomManager;
 use Emulator\Storage\ConnectorManager;
 use Emulator\Networking\NetworkManager;
 use Emulator\Api\Networking\INetworkManager;
+use Emulator\Game\Users\UserManager;
 use Emulator\Storage\Compositions\IConnectorManager;
 
 class Emulator
@@ -28,6 +29,7 @@ class Emulator
             $this->getConfigManager()->loadEmulatorSettings();
 
             RoomManager::getInstance()->initialize();
+            UserManager::getInstance()->initialize();
 
             $this->startNetworkManager();
         });

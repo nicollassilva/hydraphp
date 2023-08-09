@@ -13,12 +13,6 @@ interface IUserEntity
 
     public function isKicked(): bool;
 
-    public function getStatus(): array;
-    public function clearStatus(): void;
-    public function hasStatus(RoomEntityStatus $status): bool;
-    public function removeStatus(RoomEntityStatus $status): void;
-    public function setStatus(RoomEntityStatus $status, string $key): void;
-
     public function getRoomRightLevel(): RoomRightLevels;
     public function setRoomRightLevel(RoomRightLevels $roomRightLevel): void;
 }

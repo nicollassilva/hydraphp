@@ -75,7 +75,7 @@ class RoomManager implements IRoomManager
 
         RoomRepository::initialize();
 
-        $this->logger->info('Room manager initialized.');
+        $this->logger->info('RoomManager initialized.');
     }
 
     public function loadRoom(int $roomId): ?IRoom

@@ -2,10 +2,9 @@
 
 namespace Emulator\Game\Users;
 
-use Closure;
 use Emulator\Utils\Logger;
-use Emulator\Api\Game\Users\IUserManager;
 use Emulator\Api\Game\Users\IUser;
+use Emulator\Api\Game\Users\IUserManager;
 use Emulator\Storage\Repositories\Users\UserDataRepository;
 
 class UserManager implements IUserManager
@@ -19,6 +18,8 @@ class UserManager implements IUserManager
     public function __construct()
     {
         $this->logger = new Logger(get_class($this));
+
+        $this->initialize();
     }
 
     public static function getInstance(): UserManager
@@ -35,7 +36,7 @@ class UserManager implements IUserManager
         UserDataRepository::initialize();
 
         $this->isStarted = true;
-        $this->logger->info("User manager initialized.");
+        $this->logger->info("UserManager initialized.");
     }
 
     public function getLogger(): Logger
