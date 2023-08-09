@@ -69,6 +69,15 @@ class RoomModel implements IRoomModel
 
                 $this->mapSize += 1;
 
+                if($this->getData()->getName() == 'model_1') {
+                    print_r($squareType);
+                    print_r(PHP_EOL);
+                    print_r($tileHeight);
+                    print_r(PHP_EOL);
+                    print_r('---------');
+                    print_r(PHP_EOL);
+                }
+
                 $this->roomTiles[$x][$y] = new RoomTile(new Position($x, $y, $tileHeight), $tileState);
             }
         }
