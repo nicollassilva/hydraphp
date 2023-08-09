@@ -19,7 +19,10 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
     private int $bodyRotation;
     private int $headRotation;
 
+    /** @var Position[] */
     private array $processingPath = [];
+    
+    /** @var Position[] */
     private array $walkingPath = [];
 
     private int $previousSteps = 0;

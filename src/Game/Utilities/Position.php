@@ -49,7 +49,7 @@ class Position
         return $this->z;
     }
 
-    public function setZ(int $z): void
+    public function setZ(float $z): void
     {
         $this->z = $z;
     }

@@ -93,6 +93,7 @@ class Pathfinder
         $openList->insert($current, -$current->getCost());
 
         while (!$openList->isEmpty()) {
+            /** @var PathfinderNode */
             $current = $openList->extract();
             $current->setInClosed(true);
 
@@ -106,6 +107,7 @@ class Pathfinder
                             $node = new PathfinderNode($tmpPosition);
                             $map[$tmpPosition->getX()][$tmpPosition->getY()] = $node;
                         } else {
+                            /** @var PathfinderNode */
                             $node = $map[$tmpPosition->getX()][$tmpPosition->getY()];
                         }
                     } catch (\Exception $ignored) {

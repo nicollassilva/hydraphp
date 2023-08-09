@@ -17,6 +17,7 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
     
     private bool $isProcessing = false;
 
+    /** @var RoomEntity[] */
     private array $entitiesToUpdate = [];
 
     public function __construct(
@@ -72,6 +73,9 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
         if($entity->isWalking()) {
             $nextPosition = $entity->getAndRemoveNextProcessingPath();
             $entity->incrementPreviousStep();
+
+            $tile = $this->room->getModel()->getTile($nextPosition->getX(), $nextPosition->getY());
+            $nextPosition->setZ($tile->getWalkHeight());
 
             if(count($entity->getProcessingPath()) > 1) {
                 $entity->setFutureStep($entity->getProcessingPath()[1]);

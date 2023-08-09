@@ -17,13 +17,15 @@ class RoomTile implements IPositionable
 
     public function __construct(
         private readonly Position $position,
-        RoomTileState &$state = RoomTileState::Invalid
+        RoomTileState &$state = RoomTileState::Invalid,
+        bool $allowStack = true
     ) {
         $this->state = $state;
         $this->stackHeight = $position->getZ();
+        $this->canStack = $allowStack;
 
-        if($state != RoomTileState::Blocked || $state != RoomTileState::Invalid) {
-            $this->canStack = true;
+        if($state === RoomTileState::Invalid) {
+            $this->canStack = false;
         }
     }
 
@@ -64,11 +66,11 @@ class RoomTile implements IPositionable
 
     public function getRelativeHeight(): float
     {
-        if($this->getState() == RoomTileState::Invalid) {
+        if($this->getState() === RoomTileState::Invalid) {
             return (float) (pow(2, 15) - 1);
         }
 
-        if(!$this->getCanStack() && ($this->getState() == RoomTileState::Blocked || $this->getState() == RoomTileState::Sit)) {
+        if(!$this->getCanStack() && ($this->getState() === RoomTileState::Blocked || $this->getState() === RoomTileState::Sit)) {
             return pow(128, 2);
         }
 

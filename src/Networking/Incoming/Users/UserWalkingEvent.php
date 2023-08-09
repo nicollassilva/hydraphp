@@ -20,6 +20,8 @@ class UserWalkingEvent implements IIncomingMessage
 
         if($entity->getPosition()->getX() == $posX && $entity->getPosition()->getY() == $posY) return;
 
+        // $tile = $entity->getRoom()->getModel()->getTile()
+
         $entity->moveTo($posX, $posY);
     }
     
