@@ -20,27 +20,8 @@ class UserEntity extends RoomEntity implements IUserEntity
 
     private RoomRightLevels $roomRightLevel;
 
-    public function __construct(
-        int $identifier,
-        IUser $user,
-        IRoom $room,
-        ?Position $startPosition = null,
-        ?int $startBodyRotation = null,
-        ?int $startHeadRotation = null
-    ) {
-        if(!$startPosition) {
-            $startPosition = $room->getModel()->getDoorTile()->getPosition();
-        }
-
-        if(!$startBodyRotation) {
-            $startBodyRotation = $room->getModel()->getData()->getDoorDirection();
-        }
-
-        if(!$startHeadRotation) {
-            $startHeadRotation = $room->getModel()->getData()->getDoorDirection();
-        }
-
-        parent::__construct($identifier, $room, $startPosition, $startBodyRotation, $startHeadRotation);
+    public function __construct(int $identifier, IUser $user, IRoom $room) {
+        parent::__construct($identifier, $room);
 
         $this->user = $user;
         $this->roomRightLevel = RoomRightLevels::None;

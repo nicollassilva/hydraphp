@@ -4,6 +4,7 @@ namespace Emulator\Game\Rooms\Types\Entities;
 
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Game\Utilities\Position;
+use Emulator\Game\Rooms\Data\RoomTile;
 use Emulator\Game\Rooms\Types\RoomObject;
 use Emulator\Api\Game\Utilities\IMoveable;
 use Emulator\Game\Rooms\Enums\RoomTileState;
@@ -19,34 +20,29 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
     private int $bodyRotation;
     private int $headRotation;
 
-    /** @var Position[] */
+    /** @var RoomTile[] */
     private array $processingPath = [];
     
-    /** @var Position[] */
+    /** @var RoomTile[] */
     private array $walkingPath = [];
 
     private int $previousSteps = 0;
 
     private bool $needsUpdate = false;
 
-    private ?Position $futureStep = null;
-    private ?Position $nextPosition = null;
+    private ?RoomTile $nextTile = null;
 
-    public function __construct(
-        int $id,
-        IRoom $room,
-        Position $startPosition,
-        int $bodyRotation,
-        int $headRotation
-    ) {
-        parent::__construct($id, $room, $startPosition);
+    public function __construct(int $id, IRoom $room) {
+        $doorTile = $room->getModel()->getDoorTile();
+
+        parent::__construct($id, $room, $doorTile);
         
         $this->type = match (true) {
             $this instanceof UserEntity => RoomEntityType::User,
         };
 
-        $this->bodyRotation = $bodyRotation;
-        $this->headRotation = $headRotation;
+        $this->bodyRotation = $doorTile->getPosition()->calculateRotation($this->getPosition());
+        $this->headRotation = $this->bodyRotation;
     }
 
     public function getProcessingPath(): array
@@ -105,7 +101,7 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
 
         if(empty($roomTile) || in_array($roomTile->getState(), [RoomTileState::Invalid, RoomTileState::Blocked])) return;
 
-        $path = Pathfinder::getInstance()->makePath($this, new Position($x, $y, $roomTile->getWalkHeight()));
+        $path = Pathfinder::getInstance()->makePath($this, $roomTile);
 
         if(empty($path)) return;
 
@@ -129,16 +125,6 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
         return $this->previousSteps;
     }
 
-    public function setFutureStep(Position $futurePosition): void
-    {
-        $this->futureStep = $futurePosition;
-    }
-
-    public function getFutureStep(): ?Position
-    {
-        return $this->futureStep;
-    }
-
     public function calculateNextRotation(Position $position): int
     {
         return $this->getPosition()->calculateRotation($position);
@@ -149,7 +135,7 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
         $this->needsUpdate = $needsUpdate;
     }
 
-    public function getAndRemoveNextProcessingPath(): Position
+    public function getAndRemoveNextTile(): RoomTile
     {
         $nextProcessingPath = array_shift($this->processingPath);
 
@@ -161,13 +147,13 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
         return $this->needsUpdate;
     }
 
-    public function setNextPosition(Position $position): void
+    public function setNextTile(RoomTile $tile): void
     {
-        $this->nextPosition = $position;
+        $this->nextTile = $tile;
     }
 
-    public function getNextPosition(): ?Position
+    public function getNextTile(): ?RoomTile
     {
-        return $this->nextPosition;
+        return $this->nextTile;
     }
 }

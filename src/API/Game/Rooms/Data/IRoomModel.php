@@ -20,4 +20,5 @@ interface IRoomModel
     public function isValid(Position $position): bool;
     public function positionIsDoor(Position $position): bool;
     public function getTiles(?int $x = null): array;
+    public function getTileForPathfinder(Position $current, Position $movePoint): ?RoomTile;
 }

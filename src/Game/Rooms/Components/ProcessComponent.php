@@ -45,9 +45,9 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
         foreach ($this->entitiesToUpdate as $entity) {
             $entity->setNeedsUpdate(false);
 
-            if($nextPosition = $entity->getNextPosition()) {
-                $entity->setPosition($nextPosition);
-                unset($nextPosition);
+            if($nextTile = $entity->getNextTile()) {
+                $entity->setCurrentTile($nextTile);
+                unset($nextTile);
             }
         }
 
@@ -71,15 +71,8 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
         }
 
         if($entity->isWalking()) {
-            $nextPosition = $entity->getAndRemoveNextProcessingPath();
+            $nextTile = $entity->getAndRemoveNextTile();
             $entity->incrementPreviousStep();
-
-            $tile = $this->room->getModel()->getTile($nextPosition->getX(), $nextPosition->getY());
-            $nextPosition->setZ($tile->getWalkHeight());
-
-            if(count($entity->getProcessingPath()) > 1) {
-                $entity->setFutureStep($entity->getProcessingPath()[1]);
-            }
 
             $isLastStep = !$entity->getProcessingPath();
 
@@ -88,13 +81,15 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
                 $entity->setProcessingPath([]);
             }
 
-            $entity->setBodyRotation($entity->calculateNextRotation($nextPosition));
+            $entity->setBodyRotation($entity->calculateNextRotation($nextTile->getPosition()));
             $entity->setHeadRotation($entity->getBodyRotation());
 
-            $entity->setStatus(RoomEntityStatus::Move, "{$nextPosition->getX()},{$nextPosition->getY()},{$nextPosition->getZ()}");
+            $entity->setStatus(RoomEntityStatus::Move,
+                sprintf("%s,%s,%s", $nextTile->getPosition()->getX(), $nextTile->getPosition()->getY(), $nextTile->getPosition()->getZ())
+            );
 
             $this->markEntityNeedsUpdate($entity);
-            $entity->setNextPosition($nextPosition);
+            $entity->setNextTile($nextTile);
         }
     }
 

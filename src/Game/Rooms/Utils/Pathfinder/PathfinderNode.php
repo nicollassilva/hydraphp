@@ -2,20 +2,24 @@
 
 namespace Emulator\Game\Rooms\Utils\Pathfinder;
 
+use Emulator\Game\Rooms\Data\RoomTile;
 use Emulator\Game\Utilities\Position;
 
 class PathfinderNode
 {
-    private $position;
-    private $nextNode;
+    private RoomTile $current;
+    private Position $position;
+    private ?PathfinderNode $nextNode = null;
 
-    private $cost = PHP_INT_MAX;
-    private $inOpen = false;
-    private $inClosed = false;
+    private int $cost;
+    private bool $inOpen = false;
+    private bool $inClosed = false;
 
-    public function __construct(Position $current)
+    public function __construct(RoomTile $current, int $cost = PHP_INT_MAX)
     {
-        $this->position = $current;
+        $this->current = $current;
+        $this->position = $current->getPosition();
+        $this->cost = $cost;
     }
 
     public function getPosition(): Position
@@ -31,6 +35,11 @@ class PathfinderNode
     public function getNextNode(): ?PathfinderNode
     {
         return $this->nextNode;
+    }
+
+    public function getCurrent(): RoomTile
+    {
+        return $this->current;
     }
 
     public function setNextNode(?PathfinderNode $nextNode): void

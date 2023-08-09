@@ -54,11 +54,6 @@ class Position
         $this->z = $z;
     }
 
-    public function add(Position $otherPosition): Position
-    {
-        return new Position($this->getX() + $otherPosition->getX(), $this->getY() + $otherPosition->getY(), $this->getZ() + $otherPosition->getZ());
-    }
-
     public function isEquals(Position $positionToCompare): bool
     {
         return $this->getX() == $positionToCompare->getX() && $this->getY() == $positionToCompare->getY();

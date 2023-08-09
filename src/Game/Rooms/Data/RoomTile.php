@@ -3,10 +3,9 @@
 namespace Emulator\Game\Rooms\Data;
 
 use Emulator\Game\Utilities\Position;
-use Emulator\Api\Game\Utilities\IPositionable;
 use Emulator\Game\Rooms\Enums\RoomTileState;
 
-class RoomTile implements IPositionable
+class RoomTile
 {
     private RoomTileState $state;
     

@@ -2,6 +2,7 @@
 
 namespace Emulator\Game\Rooms\Utils\Pathfinder;
 
+use Emulator\Game\Rooms\Data\RoomTile;
 use Emulator\Game\Rooms\Types\Entities\RoomEntity;
 use Emulator\Game\Utilities\Position;
 use Emulator\Game\Rooms\Types\RoomObject;
@@ -53,62 +54,57 @@ class Pathfinder
         ];
     }
 
-    public function makePath(RoomObject $roomObject, Position $end, bool $isRetry = false): array
+    public function makePath(RoomObject $roomObject, RoomTile $end, bool $isRetry = false): array
     {
         return $this->makePathWithMode($roomObject, $end, $isRetry);
     }
 
-    public function makePathWithMode(RoomObject $roomObject, Position $end, bool $isRetry): array
+    public function makePathWithMode(RoomObject $roomObject, RoomTile $end, bool $isRetry): array
     {
-        $positions = [];
+        $tiles = [];
         $nodes = $this->makePathReversed($roomObject, $end, $isRetry);
 
         if ($nodes !== null) {
             while ($nodes->getNextNode() !== null) {
-                $positions[] = new Position($nodes->getPosition()->getX(), $nodes->getPosition()->getY(), $nodes->getPosition()->getZ());
+                $tiles[] = $nodes->getCurrent();
                 $nodes = $nodes->getNextNode();
             }
         }
 
-        return array_reverse($positions);
+        return array_reverse($tiles);
     }
 
-    private function makePathReversed(RoomObject $roomObject, Position $end, bool $isRetry): ?PathfinderNode
+    private function makePathReversed(RoomObject $roomObject, RoomTile $end, bool $isRetry): ?PathfinderNode
     {
         $openList = new \SplPriorityQueue();
         $map = array_fill(0, $roomObject->getRoom()->getModel()->getMapSizeX(), array_fill(0, $roomObject->getRoom()->getModel()->getMapSizeY(), null));
 
-        $node = null;
-        $tmpPosition = [];
+        $currentNode = new PathfinderNode($roomObject->getCurrentTile(), 0);
+        $finishNode = new PathfinderNode($end);
 
-        $cost = 0;
-        $diff = 0;
-
-        $current = new PathfinderNode($roomObject->getPosition());
-        $current->setCost(0);
-
-        $finish = new PathfinderNode($end);
-
-        $map[$current->getPosition()->getX()][$current->getPosition()->getY()] = $current;
-        $openList->insert($current, -$current->getCost());
+        $map[$currentNode->getPosition()->getX()][$currentNode->getPosition()->getY()] = $currentNode;
+        $openList->insert($currentNode, -$currentNode->getCost());
 
         while (!$openList->isEmpty()) {
             /** @var PathfinderNode */
-            $current = $openList->extract();
-            $current->setInClosed(true);
+            $currentNode = $openList->extract();
+            $currentNode->setInClosed(true);
 
             for ($i = 0; $i < count($this->diagonalMovePoints); $i++) {
-                $tmpPosition = $current->getPosition()->add($this->diagonalMovePoints[$i]);
-                $isFinalMove = ($tmpPosition->getX() === $end->getX() && $tmpPosition->getY() === $end->getY());
+                $tmpTile = $roomObject->getRoom()->getModel()->getTileForPathfinder($currentNode->getPosition(), $this->diagonalMovePoints[$i]);
 
-                if ($this->isValidStep($roomObject, $current->getPosition(), $tmpPosition, $isFinalMove, $isRetry)) {
+                if(empty($tmpTile)) continue;
+
+                $isFinalMove = ($tmpTile->getPosition()->getX() === $end->getPosition()->getX() && $tmpTile->getPosition()->getY() === $end->getPosition()->getY());
+
+                if ($this->isValidStep($roomObject, $currentNode->getPosition(), $tmpTile->getPosition(), $isFinalMove, $isRetry)) {
                     try {
-                        if (!isset($map[$tmpPosition->getX()][$tmpPosition->getY()])) {
-                            $node = new PathfinderNode($tmpPosition);
-                            $map[$tmpPosition->getX()][$tmpPosition->getY()] = $node;
+                        if (!isset($map[$tmpTile->getPosition()->getX()][$tmpTile->getPosition()->getY()])) {
+                            $node = new PathfinderNode($tmpTile);
+                            $map[$tmpTile->getPosition()->getX()][$tmpTile->getPosition()->getY()] = $node;
                         } else {
                             /** @var PathfinderNode */
-                            $node = $map[$tmpPosition->getX()][$tmpPosition->getY()];
+                            $node = $map[$tmpTile->getPosition()->getX()][$tmpTile->getPosition()->getY()];
                         }
                     } catch (\Exception $ignored) {
                         continue;
@@ -116,16 +112,16 @@ class Pathfinder
 
                     if (!$node->isInClosed()) {
                         $diff = 0;
-                        $cost = $current->getCost() + $diff + $node->getPosition()->getDistanceTo($end);
+                        $cost = $currentNode->getCost() + $diff + $node->getPosition()->getDistanceTo($end->getPosition());
 
                         if ($cost < $node->getCost()) {
                             $node->setCost($cost);
-                            $node->setNextNode($current);
+                            $node->setNextNode($currentNode);
                         }
 
                         if (!$node->isInOpen()) {
-                            if ($node->getPosition()->getX() === $finish->getPosition()->getX() && $node->getPosition()->getY() === $finish->getPosition()->getY()) {
-                                $node->setNextNode($current);
+                            if ($node->getPosition()->getX() === $finishNode->getPosition()->getX() && $node->getPosition()->getY() === $finishNode->getPosition()->getY()) {
+                                $node->setNextNode($currentNode);
                                 return $node;
                             }
 

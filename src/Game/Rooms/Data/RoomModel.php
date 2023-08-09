@@ -189,4 +189,9 @@ class RoomModel implements IRoomModel
 
         return $this->roomTiles;
     }
+
+    public function getTileForPathfinder(Position $current, Position $movePoint): ?RoomTile
+    {
+        return $this->getTile($current->getX() + $movePoint->getX(), $current->getY() + $movePoint->getY());
+    }
 }

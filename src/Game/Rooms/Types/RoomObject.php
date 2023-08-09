@@ -6,17 +6,18 @@ use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Game\Utilities\Position;
 use Emulator\Api\Game\Rooms\Types\IRoomObject;
 use Emulator\Api\Game\Utilities\IPositionable;
+use Emulator\Game\Rooms\Data\RoomTile;
 
 class RoomObject implements IRoomObject, IPositionable
 {
-    private Position $position;
+    private RoomTile $currentTile;
 
     public function __construct(
         private readonly int $id,
         private readonly IRoom $room,
-        Position $startPosition
+        RoomTile $currentTile
     ) {
-        $this->position = $startPosition;
+        $this->currentTile = $currentTile;
     }
 
     public function getId(): int
@@ -31,11 +32,16 @@ class RoomObject implements IRoomObject, IPositionable
 
     public function getPosition(): Position
     {
-        return $this->position;
+        return $this->currentTile->getPosition();
     }
 
-    public function setPosition(Position $position): void
+    public function getCurrentTile(): RoomTile
     {
-        $this->position = $position;
+        return $this->currentTile;
+    }
+
+    public function setCurrentTile(RoomTile $tile): void
+    {
+        $this->currentTile = $tile;
     }
 }

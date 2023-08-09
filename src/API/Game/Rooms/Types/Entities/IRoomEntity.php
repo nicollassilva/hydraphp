@@ -2,6 +2,7 @@
 
 namespace Emulator\Api\Game\Rooms\Types\Entities;
 
+use Emulator\Game\Rooms\Data\RoomTile;
 use Emulator\Game\Rooms\Enums\RoomEntityType;
 use Emulator\Game\Utilities\Position;
 
@@ -24,15 +25,13 @@ interface IRoomEntity
     public function isWalking(): bool;
     public function incrementPreviousStep(): void;
     public function getPreviousStep(): int;
-    public function setFutureStep(Position $futurePosition): void;
-    
-    public function getFutureStep(): ?Position;
+
     public function calculateNextRotation(Position $position): int;
 
     public function setNeedsUpdate(bool $needsUpdate): void;
     public function getNeedsUpdate(): bool;
 
-    public function getAndRemoveNextProcessingPath(): Position;
-    public function setNextPosition(Position $position): void;
-    public function getNextPosition(): ?Position;
+    public function getAndRemoveNextTile(): RoomTile;
+    public function setNextTile(RoomTile $tile): void;
+    public function getNextTile(): ?RoomTile;
 }
