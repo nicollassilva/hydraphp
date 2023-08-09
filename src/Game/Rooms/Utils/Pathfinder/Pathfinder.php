@@ -2,6 +2,7 @@
 
 namespace Emulator\Game\Rooms\Utils\Pathfinder;
 
+use Emulator\Game\Rooms\Types\Entities\RoomEntity;
 use Emulator\Game\Utilities\Position;
 use Emulator\Game\Rooms\Types\RoomObject;
 use Emulator\Game\Rooms\Utils\Pathfinder\PathfinderNode;
@@ -52,9 +53,9 @@ class Pathfinder
         ];
     }
 
-    public function makePath(RoomObject $roomObject, Position $end): array
+    public function makePath(RoomObject $roomObject, Position $end, bool $isRetry = false): array
     {
-        return $this->makePathWithMode($roomObject, $end, false);
+        return $this->makePathWithMode($roomObject, $end, $isRetry);
     }
 
     public function makePathWithMode(RoomObject $roomObject, Position $end, bool $isRetry): array
@@ -64,7 +65,7 @@ class Pathfinder
 
         if ($nodes !== null) {
             while ($nodes->getNextNode() !== null) {
-                $positions[] = new Position($nodes->getPosition()->getX(), $nodes->getPosition()->getY(), 0);
+                $positions[] = new Position($nodes->getPosition()->getX(), $nodes->getPosition()->getY(), $nodes->getPosition()->getZ());
                 $nodes = $nodes->getNextNode();
             }
         }
@@ -107,13 +108,12 @@ class Pathfinder
                         } else {
                             $node = $map[$tmpPosition->getX()][$tmpPosition->getY()];
                         }
-                    } catch (\Exception $e) {
+                    } catch (\Exception $ignored) {
                         continue;
                     }
 
                     if (!$node->isInClosed()) {
                         $diff = 0;
-
                         $cost = $current->getCost() + $diff + $node->getPosition()->getDistanceTo($end);
 
                         if ($cost < $node->getCost()) {
@@ -138,8 +138,12 @@ class Pathfinder
         return null;
     }
 
-    public function isValidStep(RoomObject $object, Position $from, Position $to, bool $lastStep, bool $isRetry): bool
+    public function isValidStep(RoomObject $object, Position $from, Position $to, bool $isLastStep, bool $isRetry): bool
     {
-        return true;
+        if($object instanceof RoomEntity) {
+            return $object->getRoom()->getMappingComponent()->isValidEntityStep($object, $from, $to, $isLastStep, $isRetry);
+        }
+
+        return $object->getRoom()->getMappingComponent()->isValidStep($object, $from, $to, $isLastStep, $isRetry);
     }
 }

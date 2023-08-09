@@ -33,11 +33,11 @@ class UserEntity extends RoomEntity implements IUserEntity
         }
 
         if(!$startBodyRotation) {
-            $startBodyRotation = $room->getModel()->getDoorDirection();
+            $startBodyRotation = $room->getModel()->getData()->getDoorDirection();
         }
 
         if(!$startHeadRotation) {
-            $startHeadRotation = $room->getModel()->getDoorDirection();
+            $startHeadRotation = $room->getModel()->getData()->getDoorDirection();
         }
 
         parent::__construct($identifier, $room, $startPosition, $startBodyRotation, $startHeadRotation);

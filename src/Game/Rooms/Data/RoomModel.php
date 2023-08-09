@@ -3,6 +3,7 @@
 namespace Emulator\Game\Rooms\Data;
 
 use Emulator\Api\Game\Rooms\Data\IRoomModel;
+use Emulator\Game\Rooms\Data\RoomModel\RoomModelData;
 use Emulator\Game\Rooms\Enums\RoomTileState;
 use Emulator\Game\Utilities\Position;
 
@@ -11,14 +12,7 @@ class RoomModel implements IRoomModel
     public CONST BASIC_MOVEMENT_COST = 10;
     public CONST DIAGONAL_MOVEMENT_COST = 14;
 
-    private string $name;
-
-    private int $doorX;
-    private int $doorY;
-    private int $doorZ;
-    private int $doorDirection;
-
-    private string $heightmap;
+    private RoomModelData $data;
 
     private int $mapSize;
     private int $mapSizeX;
@@ -31,21 +25,14 @@ class RoomModel implements IRoomModel
 
     public function __construct(array &$data)
     {
-        $this->name = $data['name'];
-
-        $this->doorX = $data['door_x'];
-        $this->doorY = $data['door_y'];
-        $this->doorZ = 0;
-        $this->doorDirection = $data['door_dir'];
-
-        $this->heightmap = $data['heightmap'];
+        $this->data = new RoomModelData($data);
 
         $this->calculateModel();
     }
 
     private function calculateModel(): void
     {
-        $temporaryModel = explode("\r", str_replace("\n", "", $this->heightmap));
+        $temporaryModel = explode("\r", str_replace("\n", "", $this->getData()->getHeightmap()));
 
         $this->mapSize = 0;
         $this->mapSizeX = strlen($temporaryModel[0]);
@@ -86,47 +73,28 @@ class RoomModel implements IRoomModel
             }
         }
 
-        $this->doorTile = $this->roomTiles[$this->doorX][$this->doorY];
+        $this->doorTile = $this->roomTiles[$this->getData()->getDoorX()][$this->getData()->getDoorY()];
 
         if(empty($this->getDoorTile())) return;
         
         $this->getDoorTile()->setCanStack(false);
         
-        $frontalTile = $this->getFrontTile($this->getDoorTile(), $this->doorDirection, 0);
+        $frontalTile = $this->getFrontTile($this->getDoorTile(), $this->getData()->getDoorDirection(), 0);
         
         if(empty($frontalTile) || !$this->tileExists($frontalTile->getPosition()->getX(), $frontalTile->getPosition()->getY())) return;
         
         if($frontalTile->getState() == RoomTileState::Invalid) return;
 
-        if($this->getDoorZ() == $frontalTile->getPosition()->getZ() || $this->getDoorTile()->getState() == $frontalTile->getState()) return;
+        if($this->getData()->getDoorZ() == $frontalTile->getPosition()->getZ() || $this->getDoorTile()->getState() == $frontalTile->getState()) return;
 
-        $this->setDoorZ($frontalTile->getPosition()->getZ());
+        $this->getData()->setDoorZ($frontalTile->getPosition()->getZ());
+
         $frontalTile->setState(RoomTileState::Open);
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
     }
 
     public function getDoorTile(): RoomTile
     {
         return $this->doorTile;
-    }
-
-    public function getDoorDirection(): int
-    {
-        return $this->doorDirection;
-    }
-
-    public function getDoorZ(): int
-    {
-        return $this->doorZ;
-    }
-
-    public function setDoorZ(int $doorZ): void
-    {
-        $this->doorZ = $doorZ;
     }
 
     public function getFrontTile(RoomTile $tile, int $rotation, int $offset): ?RoomTile
@@ -175,11 +143,6 @@ class RoomModel implements IRoomModel
         return !($x < 0 || $y < 0 || $x >= $this->getMapSizeX() || $y >= $this->getMapSizeY());
     }
 
-    public function getRelativeMap(): string
-    {
-        return str_replace("\r\n", "\r", $this->heightmap);
-    }
-
     public function getMapSizeX(): int
     {
         return $this->mapSizeX;
@@ -193,5 +156,37 @@ class RoomModel implements IRoomModel
     public function getMapSize(): int
     {
         return $this->mapSize;
+    }
+
+    public function getTileHeight(int $x, int $y): float
+    {
+        return $this->roomTiles[$x][$y]->getPosition()->getZ();
+    }
+
+    public function getData(): RoomModelData
+    {
+        return $this->data;
+    }
+
+    public function getTilesLength(): int
+    {
+        return count($this->roomTiles);
+    }
+
+    public function isValid(Position $position): bool
+    {
+        return $this->tileExists($position->getX(), $position->getY()) && $this->roomTiles[$position->getX()][$position->getY()]->getState() != RoomTileState::Invalid;
+    }
+
+    public function positionIsDoor(Position $position): bool
+    {
+        return $position->getX() == $this->getData()->getDoorX() && $position->getY() == $this->getData()->getDoorY();
+    }
+
+    public function getTiles(?int $x = null): array
+    {
+        if(is_numeric($x)) return $this->roomTiles[$x];
+
+        return $this->roomTiles;
     }
 }

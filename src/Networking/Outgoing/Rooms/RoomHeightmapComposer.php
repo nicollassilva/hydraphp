@@ -14,6 +14,6 @@ class RoomHeightmapComposer extends MessageComposer
 
         $this->writeBoolean(true);
         $this->writeInt($room->getData()->getWallHeight());
-        $this->writeString($room->getModel()->getRelativeMap());
+        $this->writeString($room->getModel()->getData()->getRelativeMap());
     }
 }

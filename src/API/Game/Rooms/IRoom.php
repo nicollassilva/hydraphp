@@ -7,7 +7,7 @@ use Emulator\Api\Game\Users\IUser;
 use Emulator\Game\Rooms\Types\Entities\RoomEntity;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
 use Emulator\Api\Game\Rooms\Data\{IRoomData,IRoomModel};
-use Emulator\Game\Rooms\Components\ProcessComponent;
+use Emulator\Game\Rooms\Components\{MappingComponent,ProcessComponent};
 
 interface IRoom
 {
@@ -25,4 +25,5 @@ interface IRoom
     public function getNextEntityId(): int;
 
     public function getProcessComponent(): ProcessComponent;
+    public function getMappingComponent(): MappingComponent;
 }

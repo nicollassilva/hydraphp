@@ -87,7 +87,7 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
             $entity->setBodyRotation($entity->calculateNextRotation($nextPosition));
             $entity->setHeadRotation($entity->getBodyRotation());
 
-            $entity->setStatus(RoomEntityStatus::Move, "{$nextPosition->getX()},{$nextPosition->getY()},0");
+            $entity->setStatus(RoomEntityStatus::Move, "{$nextPosition->getX()},{$nextPosition->getY()},{$nextPosition->getZ()}");
 
             $this->markEntityNeedsUpdate($entity);
             $entity->setNextPosition($nextPosition);

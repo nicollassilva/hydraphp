@@ -72,7 +72,12 @@ class RoomTile implements IPositionable
             return pow(128, 2);
         }
 
-        return $this->getCanStack() ? (float) ($this->getStackHeight() * 256.0) : pow(128, 2);
+        return $this->getCanStack() ? (float) ($this->getStackHeight() * 256) : pow(128, 2);
+    }
+
+    public function getWalkHeight(): float
+    {
+        return $this->getPosition()->getZ();
     }
 
     public function setPreviousTile(RoomTile $previousTile): void

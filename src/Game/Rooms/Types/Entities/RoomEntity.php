@@ -102,7 +102,7 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
 
         if(empty($roomTile) || in_array($roomTile->getState(), [RoomTileState::Invalid, RoomTileState::Blocked])) return;
 
-        $path = Pathfinder::getInstance()->makePath($this, new Position($x, $y, 0));
+        $path = Pathfinder::getInstance()->makePath($this, new Position($x, $y, $roomTile->getWalkHeight()));
 
         if(empty($path)) return;
 

@@ -7,9 +7,9 @@ use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Users\IUser;
 use Emulator\Game\Rooms\Enums\RoomEntityType;
 use Emulator\Game\Rooms\Types\Entities\RoomEntity;
-use Emulator\Game\Rooms\Components\ProcessComponent;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
 use Emulator\Api\Game\Rooms\Data\{IRoomData, IRoomModel};
+use Emulator\Game\Rooms\Components\{MappingComponent,ProcessComponent};
 
 class Room implements IRoom
 {
@@ -19,17 +19,20 @@ class Room implements IRoom
     private readonly IRoomModel $model;
 
     private ProcessComponent $processComponent;
+    private MappingComponent $mappingComponent;
 
     // @param array<RoomEntity>
     private array $entities = [];
 
     public function __construct(IRoomData &$roomData)
     {
-        $this->data = $roomData;
         $this->logger = new Logger($roomData->getName(), false);
 
+        $this->data = $roomData;
         $this->model = RoomManager::getInstance()->getRoomModelsComponent()->getRoomModelByName($this->data->getModel());
+
         $this->processComponent = new ProcessComponent($this);
+        $this->mappingComponent = new MappingComponent($this);
 
         $this->loadHeightmap();
     }
@@ -59,6 +62,11 @@ class Room implements IRoom
         return $this->model;
     }
 
+    public function getMappingComponent(): MappingComponent
+    {
+        return $this->mappingComponent;
+    }
+
     public function sendForAll(IMessageComposer $message): IRoom
     {
         foreach($this->getUserEntities() as $userEntity) {
@@ -79,6 +87,13 @@ class Room implements IRoom
     {
         return array_filter($this->entities, 
             fn (RoomEntity $entity) => $entity->getType() == RoomEntityType::User
+        );
+    }
+
+    public function getDisposedUserEntities(): array
+    {
+        return array_filter($this->getUserEntities(), 
+            fn (RoomEntity $entity) => $entity->getUser()->isDisposed()
         );
     }
 

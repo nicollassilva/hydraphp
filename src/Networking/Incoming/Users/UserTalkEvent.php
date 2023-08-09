@@ -20,7 +20,13 @@ class UserTalkEvent implements IIncomingMessage
         }
 
         if($userMessage == 'memory') {
-            $client->send(new UserTalkComposer($client->getUser()->getEntity(), 'Memory: ' . round(memory_get_usage() / 1024 / 1024, 2) . 'MB', $bubbleId));
+            $client->send(new UserTalkComposer($client->getUser()->getEntity(), 'Memory: ' . round(memory_get_peak_usage() / 1024 / 1024, 2) . 'MB', $bubbleId));
+            return;
+        }
+
+        if($userMessage == 'gc') {
+            $number = gc_collect_cycles();
+            $client->send(new UserTalkComposer($client->getUser()->getEntity(), 'PHP GC collected ' . $number . ' memory cycles.', $bubbleId));
             return;
         }
 
