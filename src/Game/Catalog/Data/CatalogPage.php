@@ -15,8 +15,8 @@ class CatalogPage implements ICatalogPage
     private readonly string $pageLayout;
     private readonly int $iconColor;
     private readonly int $iconImage;
-    private readonly int $minRank;
-    private int $orderNum;
+    private int $minRank;
+    private readonly int $orderNum;
     private readonly bool $isVisible;
     private readonly bool $isEnabled;
     private readonly bool $isClubOnly;

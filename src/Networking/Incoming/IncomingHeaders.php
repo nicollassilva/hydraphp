@@ -62,8 +62,12 @@ abstract class IncomingHeaders
     # -----
 
     # Catalog Events
+    public static int $requestTargetOfferEvent = 2487;
     public static int $requestCatalogModeEvent = 1195;
+    public static int $getMarketplaceConfigEvent = 2597;
+    public static int $requestRecylerLogicEvent = 398;
+    public static int $requestDiscountEvent = 223;
+    public static int $requestGiftConfigurationEvent = 418;
     # -----
 
-    public static int $requestTargetOfferEvent = 2487;
 }

@@ -56,4 +56,10 @@ class CatalogManager
     {
         return $this->pages;
     }
+
+    /** @return array<int,ICatalogPage> */
+    public function getPagesByParent(int $parentId): array
+    {
+        return $this->pages[$parentId]?->getChildPages() ?? null;
+    }
 }

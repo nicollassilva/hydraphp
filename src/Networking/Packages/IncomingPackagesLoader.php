@@ -5,9 +5,13 @@ namespace Emulator\Networking\Packages;
 use Emulator\Networking\Incoming\IncomingHeaders;
 use Emulator\Networking\Incoming\Users\UserWalkingEvent;
 use Emulator\Networking\Incoming\Rooms\RequestHeightmapEvent;
+use Emulator\Networking\Incoming\Catalog\RequestDiscountEvent;
 use Emulator\Networking\Incoming\Catalog\RequestCatalogModeEvent;
 use Emulator\Networking\Incoming\Emulator\{PingEvent, PongEvent};
+use Emulator\Networking\Incoming\Catalog\RequestRecylerLogicEvent;
+use Emulator\Networking\Incoming\Catalog\GetMarketplaceConfigEvent;
 use Emulator\Networking\Incoming\Catalog\{RequestTargetOfferEvent};
+use Emulator\Networking\Incoming\Catalog\RequestGiftConfigurationEvent;
 use Emulator\Networking\Incoming\HotelView\{HotelViewRequestBonusRareEvent,HotelViewDataEvent};
 use Emulator\Networking\Incoming\GameCenter\{GetGameListMessageEvent,GameCenterRequestGamesEvent};
 use Emulator\Networking\Incoming\Messenger\{RequestFriendRequestsEvent, RequestFriendsEvent,RequestInitFriendsEvent};
@@ -121,5 +125,9 @@ class IncomingPackagesLoader
     {
         $this->addPackage(IncomingHeaders::$requestTargetOfferEvent, RequestTargetOfferEvent::class);
         $this->addPackage(IncomingHeaders::$requestCatalogModeEvent, RequestCatalogModeEvent::class);
+        $this->addPackage(IncomingHeaders::$getMarketplaceConfigEvent, GetMarketplaceConfigEvent::class);
+        $this->addPackage(IncomingHeaders::$requestRecylerLogicEvent, RequestRecylerLogicEvent::class);
+        $this->addPackage(IncomingHeaders::$requestGiftConfigurationEvent, RequestGiftConfigurationEvent::class);
+        $this->addPackage(IncomingHeaders::$requestDiscountEvent, RequestDiscountEvent::class);
     }
 }

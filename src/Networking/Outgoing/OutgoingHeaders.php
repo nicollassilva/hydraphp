@@ -86,6 +86,10 @@ abstract class OutgoingHeaders
     public static int $targetedOfferComposer = 119;
     public static int $catalogModeComposer = 3828;
     public static int $catalogPagesListComposer = 1032;
+    public static int $marketplaceConfigComposer = 1823;
+    public static int $recyclerLogicComposer = 3164;
+    public static int $giftConfigurationComposer = 2234;
+    public static int $catalogDiscountComposer = 2347;
     # -----
     
     # Navigator Outgoing Events
