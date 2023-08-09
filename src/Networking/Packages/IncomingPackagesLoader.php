@@ -5,6 +5,7 @@ namespace Emulator\Networking\Packages;
 use Emulator\Networking\Incoming\IncomingHeaders;
 use Emulator\Networking\Incoming\Users\UserWalkingEvent;
 use Emulator\Networking\Incoming\Rooms\RequestHeightmapEvent;
+use Emulator\Networking\Incoming\Catalog\RequestCatalogModeEvent;
 use Emulator\Networking\Incoming\Emulator\{PingEvent, PongEvent};
 use Emulator\Networking\Incoming\Catalog\{RequestTargetOfferEvent};
 use Emulator\Networking\Incoming\HotelView\{HotelViewRequestBonusRareEvent,HotelViewDataEvent};
@@ -90,6 +91,7 @@ class IncomingPackagesLoader
         $this->addPackage(IncomingHeaders::$userTalkEvent, UserTalkEvent::class);
         $this->addPackage(IncomingHeaders::$userWalkingEvent, UserWalkingEvent::class);
         $this->addPackage(IncomingHeaders::$userLookToEvent, UserLookToEvent::class);
+        $this->addPackage(IncomingHeaders::$usernameEvent, UsernameEvent::class);
     }
 
     private function loadGameCenterEvents(): void
@@ -118,6 +120,6 @@ class IncomingPackagesLoader
     private function loadCatalogEvents(): void
     {
         $this->addPackage(IncomingHeaders::$requestTargetOfferEvent, RequestTargetOfferEvent::class);
-        $this->addPackage(IncomingHeaders::$usernameEvent, UsernameEvent::class);
+        $this->addPackage(IncomingHeaders::$requestCatalogModeEvent, RequestCatalogModeEvent::class);
     }
 }

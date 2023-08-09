@@ -61,5 +61,9 @@ abstract class IncomingHeaders
     public static int $pingEvent = 295;
     # -----
 
+    # Catalog Events
+    public static int $requestCatalogModeEvent = 1195;
+    # -----
+
     public static int $requestTargetOfferEvent = 2487;
 }

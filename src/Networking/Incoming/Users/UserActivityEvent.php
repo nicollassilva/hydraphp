@@ -14,6 +14,8 @@ class UserActivityEvent implements IIncomingMessage
         $value = $message->readString();
         $action = $message->readString();
 
+        print_r('Tipo: ' . $type . ' - Valor: ' . $value . ' - Ação: ' . $action . PHP_EOL);
+
         if($type == 'Quiz' && $value == '7') {
             // progress action
         }
