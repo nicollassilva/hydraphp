@@ -7,5 +7,5 @@ use Emulator\Api\Networking\Outgoing\IMessageComposer;
 
 interface ICatalogLayout
 {
-    public static function composeLayout(IMessageComposer $message, ICatalogPage $page): void;
+    public static function composeLayout(IMessageComposer $message, ICatalogPage &$page): void;
 }

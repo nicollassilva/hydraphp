@@ -8,7 +8,7 @@ use Emulator\Api\Networking\Outgoing\IMessageComposer;
 
 abstract class LoyaltyVipBuyLayout implements ICatalogLayout
 {
-    public static function composeLayout(IMessageComposer $message, ICatalogPage $page): void
+    public static function composeLayout(IMessageComposer $message, ICatalogPage &$page): void
     {
         $message->writeString("loyalty_vip_buy");
         $message->writeInt(3);

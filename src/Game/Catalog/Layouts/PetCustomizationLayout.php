@@ -8,7 +8,7 @@ use Emulator\Api\Networking\Outgoing\IMessageComposer;
 
 abstract class PetCustomizationLayout implements ICatalogLayout
 {
-    public static function composeLayout(IMessageComposer $message, ICatalogPage $page): void
+    public static function composeLayout(IMessageComposer $message, ICatalogPage &$page): void
     {
         $message->writeString("petcustomization");
         $message->writeInt(3);

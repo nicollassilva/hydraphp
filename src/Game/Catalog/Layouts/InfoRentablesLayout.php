@@ -8,7 +8,7 @@ use Emulator\Api\Networking\Outgoing\IMessageComposer;
 
 abstract class InfoRentablesLayout implements ICatalogLayout
 {
-    public static function composeLayout(IMessageComposer $message, ICatalogPage $page): void
+    public static function composeLayout(IMessageComposer $message, ICatalogPage &$page): void
     {
         $data = explode("\\|\\|", $page->getPageText1());
         

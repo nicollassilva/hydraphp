@@ -3,6 +3,7 @@
 namespace Emulator\Game\Catalog\Data;
 
 use Emulator\Game\Catalog\CatalogManager;
+use Emulator\Api\Game\Catalog\Data\ICatalogItem;
 use Emulator\Api\Game\Catalog\Data\ICatalogPage;
 
 class CatalogPage implements ICatalogPage
@@ -34,6 +35,9 @@ class CatalogPage implements ICatalogPage
     private readonly int $roomId;
 
     private readonly array $includes;
+
+    /** @var array<int,ICatalogItem> */
+    private array $items = [];
 
     /** @var array<int,CatalogPage> */	
     private array $childPages = [];
@@ -187,11 +191,6 @@ class CatalogPage implements ICatalogPage
         return $this->includes;
     }
 
-    public function getItems(): array
-    {
-        return [];
-    }
-
     public function addChildPage(ICatalogPage $childPage): void
     {
         $this->childPages[$childPage->getId()] = $childPage;
@@ -210,5 +209,33 @@ class CatalogPage implements ICatalogPage
     public function setMinRank(int $rank): void
     {
         $this->minRank = $rank;
+    }
+
+    public function addItem(ICatalogItem $item): void
+    {
+        $this->items[$item->getId()] = $item;
+    }
+
+    public function getItemById(int $id): ?ICatalogItem
+    {
+        return $this->items[$id] ?? null;
+    }
+
+    /** @return array<int,ICatalogItem> */
+    public function getItems(): array
+    {
+        return $this->items;
+    }
+
+    /** @return array<int,ICatalogItem> */
+    public function getOrderedItems(): array
+    {
+        $items = $this->getItems();
+
+        usort($items,
+            fn(ICatalogItem $a, ICatalogItem $b) => $a->getId() <=> $b->getId()
+        );
+
+        return $items;
     }
 }

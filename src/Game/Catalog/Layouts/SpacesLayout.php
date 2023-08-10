@@ -8,7 +8,7 @@ use Emulator\Api\Networking\Outgoing\IMessageComposer;
 
 abstract class SpacesLayout implements ICatalogLayout
 {
-    public static function composeLayout(IMessageComposer $message, ICatalogPage $page): void
+    public static function composeLayout(IMessageComposer $message, ICatalogPage &$page): void
     {
         $message->writeString("spaces_new");
         $message->writeInt(3);

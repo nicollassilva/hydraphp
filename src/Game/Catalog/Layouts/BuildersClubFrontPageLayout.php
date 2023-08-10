@@ -8,7 +8,7 @@ use Emulator\Api\Networking\Outgoing\IMessageComposer;
 
 abstract class BuildersClubFrontPageLayout implements ICatalogLayout
 {
-    public static function composeLayout(IMessageComposer $message, ICatalogPage $page): void
+    public static function composeLayout(IMessageComposer $message, ICatalogPage &$page): void
     {
         $message->writeString("builders_club_frontpage");
         $message->writeInt(3);

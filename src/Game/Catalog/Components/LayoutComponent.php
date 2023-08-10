@@ -2,7 +2,7 @@
 
 namespace Emulator\Game\Catalog\Components;
 
-use Emulator\Api\Game\Catalog\Layouts\ICatalogLayout;
+use Emulator\Api\Game\Catalog\Layouts\{ICatalogFrontPage,ICatalogLayout};
 use Emulator\Game\Catalog\Layouts\{
     BadgeDisplayLayout,
     BotsLayout,

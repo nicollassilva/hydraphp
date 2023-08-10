@@ -7,5 +7,5 @@ use Emulator\Api\Game\Catalog\Data\ICatalogFeaturedPage;
 
 interface ICatalogFrontPage
 {
-    public static function composeFrontPage(IMessageComposer $message, ICatalogFeaturedPage $page): void;
+    public static function composeFrontPage(IMessageComposer $message, ICatalogFeaturedPage &$page): void;
 }

@@ -6,11 +6,12 @@ use Closure;
 use Emulator\Utils\Logger;
 use Emulator\Boot\HydraConfig;
 use Emulator\Game\Rooms\RoomManager;
+use Emulator\Game\Users\UserManager;
 use Emulator\Storage\ConnectorManager;
 use Emulator\Networking\NetworkManager;
-use Emulator\Api\Networking\INetworkManager;
 use Emulator\Game\Catalog\CatalogManager;
-use Emulator\Game\Users\UserManager;
+use Emulator\Api\Networking\INetworkManager;
+use Emulator\Game\Rooms\Types\Items\ItemManager;
 use Emulator\Storage\Compositions\IConnectorManager;
 
 class Emulator
@@ -31,6 +32,7 @@ class Emulator
 
             RoomManager::getInstance()->initialize();
             UserManager::getInstance()->initialize();
+            ItemManager::getInstance()->initialize();
             CatalogManager::getInstance()->initialize();
 
             $this->startNetworkManager();

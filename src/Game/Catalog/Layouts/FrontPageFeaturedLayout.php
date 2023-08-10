@@ -10,7 +10,7 @@ use Emulator\Api\Game\Catalog\Layouts\ICatalogFrontPage;
 
 abstract class FrontPageFeaturedLayout implements ICatalogLayout, ICatalogFrontPage
 {
-    public static function composeLayout(IMessageComposer $message, ICatalogPage $page): void
+    public static function composeLayout(IMessageComposer $message, ICatalogPage &$page): void
     {
         $message->writeString("frontpage_featured");
 
@@ -34,7 +34,7 @@ abstract class FrontPageFeaturedLayout implements ICatalogLayout, ICatalogFrontP
         $message->writeString($page->getPageTextTeaser());
     }
 
-    public static function composeFrontPage(IMessageComposer $message, ICatalogFeaturedPage $page): void
+    public static function composeFrontPage(IMessageComposer $message, ICatalogFeaturedPage &$page): void
     {
         $page->compose($message);
     }

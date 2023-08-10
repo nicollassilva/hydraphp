@@ -8,5 +8,5 @@ use Emulator\Api\Networking\Outgoing\IMessageComposer;
 
 abstract class CatalogRootLayout implements ICatalogLayout
 {
-    public static function composeLayout(IMessageComposer $message, ICatalogPage $page): void {}
+    public static function composeLayout(IMessageComposer $message, ICatalogPage &$page): void {}
 }

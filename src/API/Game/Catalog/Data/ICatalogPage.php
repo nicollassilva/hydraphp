@@ -2,6 +2,8 @@
 
 namespace Emulator\Api\Game\Catalog\Data;
 
+use Emulator\Api\Game\Catalog\Data\ICatalogItem;
+
 interface ICatalogPage
 {
     public function getId(): int;
@@ -26,9 +28,15 @@ interface ICatalogPage
     public function getPageTextTeaser(): ?string;
     public function getRoomId(): int;
     public function getIncludes(): array;
-    public function getItems(): array;
 
     public function addChildPage(ICatalogPage $childPage): void;
     public function getChildPages(): array;
     public function setMinRank(int $rank): void;
+
+    public function addItem(ICatalogItem $item): void;
+    public function getItemById(int $id): ?ICatalogItem;
+    public function getItems(): array;
+
+    /** @return array<int,ICatalogItem> */
+    public function getOrderedItems(): array;
 }

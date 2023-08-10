@@ -42,21 +42,16 @@ class CatalogManager
 
         CatalogRepository::initialize();
 
-        $this->loadPages();
-        $this->loadFeaturedPages();
+        CatalogRepository::loadPages($this->pages);
+        CatalogRepository::loadFeaturedPages($this->featuredPages);
+
+        $totalCatalogItems = CatalogRepository::loadCatalogItems($this->pages);
 
         $this->isStarted = true;
-        $this->logger->info("CatalogManager initialized.");
-    }
-
-    private function loadPages(): void
-    {
-        $this->pages = CatalogRepository::loadPages();
-    }
-
-    private function loadFeaturedPages(): void
-    {
-        $this->featuredPages = CatalogRepository::loadFeaturedPages();
+        
+        $this->logger->info(
+            sprintf("CatalogManager initialized with %s pages and %s items.", count($this->pages), $totalCatalogItems)
+        );
     }
 
     public function getLogger(): Logger
