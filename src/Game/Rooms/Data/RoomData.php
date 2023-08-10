@@ -2,8 +2,9 @@
 
 namespace Emulator\Game\Rooms\Data;
 
-use Emulator\Api\Game\Rooms\Data\IRoomData;
+use Emulator\Game\Rooms\RoomManager;
 use Emulator\Game\Rooms\Enums\RoomState;
+use Emulator\Api\Game\Rooms\Data\IRoomData;
 
 class RoomData implements IRoomData
 {
@@ -54,50 +55,54 @@ class RoomData implements IRoomData
 
     public function __construct(array $data = [])
     {
-        $this->id = $data['id'];
-        $this->name = $data['name'];
-        $this->description = $data['description'];
-        $this->model = $data['model'];
-        $this->ownerId = $data['owner_id'];
-        $this->ownerName = $data['owner_name'];
-        $this->currentUsers = $data['users'];
-        $this->maxUsers = $data['users_max'];
-        $this->guildId = $data['guild_id'];
-        $this->score = $data['score'];
-        $this->password = $data['password'];
-        $this->state = RoomState::getState($data['state']);
-        $this->category = $data['category'];
-        $this->paperFloor = $data['paper_floor'];
-        $this->paperWall = $data['paper_wall'];
-        $this->paperLandscape = $data['paper_landscape'];
-        $this->thicknessWall = $data['thickness_wall'];
-        $this->wallHeight = $data['wall_height'];
-        $this->thicknessFloor = $data['thickness_floor'];
-        $this->moodlightData = $data['moodlight_data'];
-        $this->tags = explode(';', $data['tags']);
-        $this->isPublic = (bool) $data['is_public'];
-        $this->isStaffPicked = (bool) $data['is_staff_picked'];
-        $this->allowPets = (bool) $data['allow_other_pets'];
-        $this->allowPetsEat = (bool) $data['allow_other_pets_eat'];
-        $this->allowWalkthrough = (bool) $data['allow_walkthrough'];
-        $this->hideWall = (bool) $data['allow_hidewall'];
-        $this->chatMode = $data['chat_mode'];
-        $this->chatWeight = $data['chat_weight'];
-        $this->chatSpeed = $data['chat_speed'];
-        $this->chatDistance = $data['chat_hearing_distance'];
-        $this->chatProtection = $data['chat_protection'];
-        $this->overrideModel = (bool) $data['override_model'];
-        $this->whoCanMute = $data['who_can_mute'];
-        $this->whoCanKick = $data['who_can_kick'];
-        $this->whoCanBan = $data['who_can_ban'];
-        $this->pollId = $data['poll_id'];
-        $this->rollerSpeed = $data['roller_speed'];
-        $this->isPromoted = (bool) $data['promoted'];
-        $this->tradeMode = $data['trade_mode'];
-        $this->canMoveDiagonally = (bool) $data['move_diagonally'];
-        $this->hasJukeboxActive = (bool) $data['jukebox_active'];
-        $this->hideWireds = (bool) $data['hidewired'];
-        $this->isForSale = (bool) $data['is_forsale'];
+        try {
+            $this->id = $data['id'];
+            $this->name = $data['name'];
+            $this->description = $data['description'];
+            $this->model = $data['model'];
+            $this->ownerId = $data['owner_id'];
+            $this->ownerName = $data['owner_name'];
+            $this->currentUsers = $data['users'];
+            $this->maxUsers = $data['users_max'];
+            $this->guildId = $data['guild_id'];
+            $this->score = $data['score'];
+            $this->password = $data['password'];
+            $this->state = RoomState::getState($data['state']);
+            $this->category = $data['category'];
+            $this->paperFloor = $data['paper_floor'];
+            $this->paperWall = $data['paper_wall'];
+            $this->paperLandscape = $data['paper_landscape'];
+            $this->thicknessWall = $data['thickness_wall'];
+            $this->wallHeight = $data['wall_height'];
+            $this->thicknessFloor = $data['thickness_floor'];
+            $this->moodlightData = $data['moodlight_data'];
+            $this->tags = explode(';', $data['tags']);
+            $this->isPublic = (bool) $data['is_public'];
+            $this->isStaffPicked = (bool) $data['is_staff_picked'];
+            $this->allowPets = (bool) $data['allow_other_pets'];
+            $this->allowPetsEat = (bool) $data['allow_other_pets_eat'];
+            $this->allowWalkthrough = (bool) $data['allow_walkthrough'];
+            $this->hideWall = (bool) $data['allow_hidewall'];
+            $this->chatMode = $data['chat_mode'];
+            $this->chatWeight = $data['chat_weight'];
+            $this->chatSpeed = $data['chat_speed'];
+            $this->chatDistance = $data['chat_hearing_distance'];
+            $this->chatProtection = $data['chat_protection'];
+            $this->overrideModel = (bool) $data['override_model'];
+            $this->whoCanMute = $data['who_can_mute'];
+            $this->whoCanKick = $data['who_can_kick'];
+            $this->whoCanBan = $data['who_can_ban'];
+            $this->pollId = $data['poll_id'];
+            $this->rollerSpeed = $data['roller_speed'];
+            $this->isPromoted = (bool) $data['promoted'];
+            $this->tradeMode = $data['trade_mode'];
+            $this->canMoveDiagonally = (bool) $data['move_diagonally'];
+            $this->hasJukeboxActive = (bool) $data['jukebox_active'];
+            $this->hideWireds = (bool) $data['hidewired'];
+            $this->isForSale = (bool) $data['is_forsale'];
+        } catch (\Throwable $e) {
+            RoomManager::getInstance()->getLogger()->error('Error while loading room data: ' . $e->getMessage());
+        }
     }
 
     public function getId(): int

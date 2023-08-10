@@ -2,6 +2,7 @@
 
 namespace Emulator\Game\Catalog\Data;
 
+use Emulator\Game\Catalog\CatalogManager;
 use Emulator\Api\Game\Catalog\Data\ICatalogPage;
 
 class CatalogPage implements ICatalogPage
@@ -39,36 +40,40 @@ class CatalogPage implements ICatalogPage
 
     public function __construct(array &$data)
     {
-        $this->id = (int) $data['id'];
-        $this->parentId = (int) $data['parent_id'];
-        
-        $this->captionSave = $data['caption_save'];
-        $this->caption = $data['caption'];
-        
-        $this->pageLayout = $data['page_layout'] ?? '';
-        $this->iconColor = (int) $data['icon_color'];
-        $this->iconImage = (int) $data['icon_image'];
-        $this->minRank = (int) $data['min_rank'];
-        $this->orderNum = (int) $data['order_num'];
-        $this->isVisible = (bool) $data['visible'];
-        $this->isEnabled = (bool) $data['enabled'];
-        $this->isClubOnly = (bool) ($data['club_only'] ?? false);
-        $this->isVipOnly = (bool) ($data['vip_only'] ?? false);
+        try {
+            $this->id = (int) $data['id'];
+            $this->parentId = (int) $data['parent_id'];
+            
+            $this->captionSave = $data['caption_save'];
+            $this->caption = $data['caption'];
+            
+            $this->pageLayout = $data['page_layout'] ?? '';
+            $this->iconColor = (int) $data['icon_color'];
+            $this->iconImage = (int) $data['icon_image'];
+            $this->minRank = (int) $data['min_rank'];
+            $this->orderNum = (int) $data['order_num'];
+            $this->isVisible = (bool) $data['visible'];
+            $this->isEnabled = (bool) $data['enabled'];
+            $this->isClubOnly = (bool) ($data['club_only'] ?? false);
+            $this->isVipOnly = (bool) ($data['vip_only'] ?? false);
 
-        $this->pageHeadline = $data['page_headline'] ?? '';
-        $this->pageTeaser = $data['page_teaser'] ?? '';
-        $this->pageSpecial = $data['page_special'] ?? '';
-        $this->pageText1 = $data['page_text1'] ?? '';
-        $this->pageText2 = $data['page_text2'] ?? '';
-        $this->pageTextDetails = $data['page_text_details'] ?? '';
-        $this->pageTextTeaser = $data['page_text_teaser'] ?? '';
+            $this->pageHeadline = $data['page_headline'] ?? '';
+            $this->pageTeaser = $data['page_teaser'] ?? '';
+            $this->pageSpecial = $data['page_special'] ?? '';
+            $this->pageText1 = $data['page_text1'] ?? '';
+            $this->pageText2 = $data['page_text2'] ?? '';
+            $this->pageTextDetails = $data['page_text_details'] ?? '';
+            $this->pageTextTeaser = $data['page_text_teaser'] ?? '';
 
-        $this->roomId = $data['room_id'] ?? 0;
+            $this->roomId = $data['room_id'] ?? 0;
 
-        if(empty($data['includes'])) {
-            $this->includes = [];
-        } else {
-            $this->includes = explode(';', $data['includes']);
+            if(empty($data['includes'])) {
+                $this->includes = [];
+            } else {
+                $this->includes = explode(';', $data['includes']);
+            }
+        } catch (\Throwable $error) {
+            CatalogManager::getInstance()->getLogger()->error('Error while constructing a catalog page: ' . $error->getMessage());
         }
     }
 

@@ -2,6 +2,7 @@
 
 namespace Emulator\Game\Users\Data;
 
+use Emulator\Game\Users\UserManager;
 use Emulator\Api\Game\Users\Data\IUserData;
 
 class UserData implements IUserData
@@ -29,26 +30,30 @@ class UserData implements IUserData
 
     public function __construct(array &$data)
     {
-        $this->id = $data['id'];
-        $this->username = $data['username'];
-        $this->email = $data['mail'];
-        $this->accountCreated = $data['account_created'];
-        $this->lastLogin = $data['last_login'];
-        $this->lastOnline = $data['last_online'];
-        $this->motto = $data['motto'];
-        $this->look = $data['look'];
-        $this->gender = $data['gender'];
-        $this->rank = $data['rank'];
-        $this->credits = $data['credits'];
-        $this->pixels = 0;
-        $this->diamonds = 0;
-        $this->seasonalPoints = 0;
-        $this->isOnline = $data['online'];
-        $this->authTicket = $data['auth_ticket'];
-        $this->registerIp = $data['ip_register'];
-        $this->currentIp = $data['ip_current'];
-        $this->machineId = $data['machine_id'];
-        $this->homeRoom = $data['home_room'];
+        try {
+            $this->id = $data['id'];
+            $this->username = $data['username'];
+            $this->email = $data['mail'];
+            $this->accountCreated = $data['account_created'];
+            $this->lastLogin = $data['last_login'];
+            $this->lastOnline = $data['last_online'];
+            $this->motto = $data['motto'];
+            $this->look = $data['look'];
+            $this->gender = $data['gender'];
+            $this->rank = $data['rank'];
+            $this->credits = $data['credits'];
+            $this->pixels = 0;
+            $this->diamonds = 0;
+            $this->seasonalPoints = 0;
+            $this->isOnline = $data['online'];
+            $this->authTicket = $data['auth_ticket'];
+            $this->registerIp = $data['ip_register'];
+            $this->currentIp = $data['ip_current'];
+            $this->machineId = $data['machine_id'];
+            $this->homeRoom = $data['home_room'];
+        } catch (\Throwable $e) {
+            UserManager::getInstance()->getLogger()->error("Failed to load user data: " . $e->getMessage());
+        }
     }
 
     public function getId(): int

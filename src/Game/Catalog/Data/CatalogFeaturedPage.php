@@ -4,6 +4,7 @@ namespace Emulator\Game\Catalog\Data;
 
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
 use Emulator\Api\Game\Catalog\Data\ICatalogFeaturedPage;
+use Emulator\Game\Catalog\CatalogManager;
 use Emulator\Game\Catalog\Enums\CatalogFeaturedPageType;
 
 class CatalogFeaturedPage implements ICatalogFeaturedPage
@@ -19,14 +20,18 @@ class CatalogFeaturedPage implements ICatalogFeaturedPage
 
     public function __construct(array $data)
     {
-        $this->slotId = (int) $data["slot_id"];
-        $this->caption = $data["caption"];
-        $this->image = $data["image"];
-        $this->expireTimestamp = (int) $data["expire_timestamp"];
-        $this->type = CatalogFeaturedPageType::from((int) $data['type']);
-        $this->pageName = $data["page_name"];
-        $this->pageId = (int) $data["page_id"];
-        $this->productName = $data["product_name"];
+        try {
+            $this->slotId = (int) $data["slot_id"];
+            $this->caption = $data["caption"];
+            $this->image = $data["image"];
+            $this->expireTimestamp = (int) $data["expire_timestamp"];
+            $this->type = CatalogFeaturedPageType::from((int) $data['type']);
+            $this->pageName = $data["page_name"];
+            $this->pageId = (int) $data["page_id"];
+            $this->productName = $data["product_name"];
+        } catch (\Throwable $error) {
+            CatalogManager::getInstance()->getLogger()->error('Error while constructing a catalog feature page: ' . $error->getMessage());
+        }
     }
 
     public function getSlotId(): int

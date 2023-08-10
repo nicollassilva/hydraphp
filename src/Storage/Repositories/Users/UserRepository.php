@@ -8,7 +8,7 @@ use Emulator\Game\Users\User;
 use Emulator\Api\Game\Users\IUser;
 use Emulator\Storage\Repositories\EmulatorRepository;
 
-abstract class UserDataRepository extends EmulatorRepository
+abstract class UserRepository extends EmulatorRepository
 {
     public static Logger $logger;
 

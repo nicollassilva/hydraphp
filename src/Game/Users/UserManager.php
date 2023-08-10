@@ -5,7 +5,7 @@ namespace Emulator\Game\Users;
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Users\IUser;
 use Emulator\Api\Game\Users\IUserManager;
-use Emulator\Storage\Repositories\Users\UserDataRepository;
+use Emulator\Storage\Repositories\Users\UserRepository;
 
 class UserManager implements IUserManager
 {
@@ -33,7 +33,7 @@ class UserManager implements IUserManager
     {
         if ($this->isStarted) return;
 
-        UserDataRepository::initialize();
+        UserRepository::initialize();
 
         $this->isStarted = true;
         $this->logger->info("UserManager initialized.");
@@ -46,6 +46,6 @@ class UserManager implements IUserManager
 
     public function loadUser(string $ticket): IUser
     {
-        return UserDataRepository::loadUser($ticket);
+        return UserRepository::loadUser($ticket);
     }
 }

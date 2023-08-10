@@ -2,10 +2,11 @@
 
 namespace Emulator\Game\Rooms\Data;
 
-use Emulator\Api\Game\Rooms\Data\IRoomModel;
-use Emulator\Game\Rooms\Data\RoomModel\RoomModelData;
-use Emulator\Game\Rooms\Enums\RoomTileState;
+use Emulator\Game\Rooms\RoomManager;
 use Emulator\Game\Utilities\Position;
+use Emulator\Api\Game\Rooms\Data\IRoomModel;
+use Emulator\Game\Rooms\Enums\RoomTileState;
+use Emulator\Game\Rooms\Data\RoomModel\RoomModelData;
 
 class RoomModel implements IRoomModel
 {
@@ -27,7 +28,11 @@ class RoomModel implements IRoomModel
     {
         $this->data = new RoomModelData($data);
 
-        $this->calculateModel();
+        try {
+            $this->calculateModel();
+        } catch (\Throwable $e) {
+            RoomManager::getInstance()->getLogger()->error("Failed to parse room model [{$this->data->getName()}]: " . $e->getMessage());
+        }
     }
 
     private function calculateModel(): void

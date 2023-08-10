@@ -4,7 +4,7 @@ namespace Emulator\Game\Users\Data;
 
 use Emulator\Api\Game\Rooms\Data\IChatBubble;
 use Emulator\Api\Game\Users\Data\IUserSettings;
-use Emulator\Game\Rooms\RoomManager;
+use Emulator\Game\Rooms\{RoomManager,UserManager};
 
 class UserSettings implements IUserSettings
 {
@@ -50,45 +50,49 @@ class UserSettings implements IUserSettings
 
     public function __construct(array &$data)
     {
-        $this->achievementScore = $data["achievement_score"];
-        $this->respectPointsReceived = $data["respects_received"];
-        $this->respectPointsGiven = $data["respects_given"];
-        $this->petRespectPointsToGive = $data["daily_pet_respect_points"];
-        $this->respectPointsToGive = $data["daily_respect_points"];
-        $this->blockFollowing = (bool) $data["block_following"];
-        $this->blockFriendRequests = (bool) $data["block_friendrequests"];
-        $this->blockRoomInvites = (bool) $data["block_roominvites"];
-        $this->preferOldChat = (bool) $data["old_chat"];
-        $this->blockCameraFollow = (bool) $data["block_camera_follow"];
-        $this->guild = $data["guild_id"];
-        $this->tags = explode(';', $data["tags"]);
-        $this->allowTrade = (bool) $data["can_trade"];
-        $this->votedRooms = [];
-        $this->clubExpireTimestamp = $data["club_expire_timestamp"];
-        $this->loginStreak = $data["login_streak"];
-        $this->rentedItemId = $data["rent_space_id"];
-        $this->rentedTimeEnd = $data["rent_space_endtime"];
-        $this->volumeSystem = $data["volume_system"];
-        $this->volumeFurni = $data["volume_furni"];
-        $this->volumeTrax = $data["volume_trax"];
-        $this->chatColor = RoomManager::getInstance()->getChatBubblesComponent()->getChatBubbleById($data["chat_color"]);
-        $this->hofPoints = $data["hof_points"];
-        $this->blockStaffAlerts = $data["block_alerts"];
-        $this->citizenshipLevel = $data["talent_track_citizenship_level"];
-        $this->helpersLevel = $data["talent_track_helpers_level"];
-        $this->ignoreBots = $data["ignore_bots"];
-        $this->ignorePets = $data["ignore_pets"];
-        $this->nux = $data["nux"];
-        $this->muteEndTime = $data["mute_end_timestamp"];
-        $this->allowNameChange = $data["allow_name_change"];
-        $this->perkTrade = $data["perk_trade"];
-        $this->forumPostsCount = $data["forums_post_count"];
-        $this->uiFlags = $data["ui_flags"];
-        $this->hasGottenDefaultSavedSearches = (bool) $data["has_gotten_default_saved_searches"];
-        $this->maxFriends = $data["max_friends"];
-        $this->maxRooms = $data["max_rooms"];
-        $this->lastHCPayday = $data["last_hc_payday"];
-        $this->hcGiftsClaimed = $data["hc_gifts_claimed"];
+        try {
+            $this->achievementScore = $data["achievement_score"];
+            $this->respectPointsReceived = $data["respects_received"];
+            $this->respectPointsGiven = $data["respects_given"];
+            $this->petRespectPointsToGive = $data["daily_pet_respect_points"];
+            $this->respectPointsToGive = $data["daily_respect_points"];
+            $this->blockFollowing = (bool) $data["block_following"];
+            $this->blockFriendRequests = (bool) $data["block_friendrequests"];
+            $this->blockRoomInvites = (bool) $data["block_roominvites"];
+            $this->preferOldChat = (bool) $data["old_chat"];
+            $this->blockCameraFollow = (bool) $data["block_camera_follow"];
+            $this->guild = $data["guild_id"];
+            $this->tags = explode(';', $data["tags"]);
+            $this->allowTrade = (bool) $data["can_trade"];
+            $this->votedRooms = [];
+            $this->clubExpireTimestamp = $data["club_expire_timestamp"];
+            $this->loginStreak = $data["login_streak"];
+            $this->rentedItemId = $data["rent_space_id"];
+            $this->rentedTimeEnd = $data["rent_space_endtime"];
+            $this->volumeSystem = $data["volume_system"];
+            $this->volumeFurni = $data["volume_furni"];
+            $this->volumeTrax = $data["volume_trax"];
+            $this->chatColor = RoomManager::getInstance()->getChatBubblesComponent()->getChatBubbleById($data["chat_color"]);
+            $this->hofPoints = $data["hof_points"];
+            $this->blockStaffAlerts = $data["block_alerts"];
+            $this->citizenshipLevel = $data["talent_track_citizenship_level"];
+            $this->helpersLevel = $data["talent_track_helpers_level"];
+            $this->ignoreBots = $data["ignore_bots"];
+            $this->ignorePets = $data["ignore_pets"];
+            $this->nux = $data["nux"];
+            $this->muteEndTime = $data["mute_end_timestamp"];
+            $this->allowNameChange = $data["allow_name_change"];
+            $this->perkTrade = $data["perk_trade"];
+            $this->forumPostsCount = $data["forums_post_count"];
+            $this->uiFlags = $data["ui_flags"];
+            $this->hasGottenDefaultSavedSearches = (bool) $data["has_gotten_default_saved_searches"];
+            $this->maxFriends = $data["max_friends"];
+            $this->maxRooms = $data["max_rooms"];
+            $this->lastHCPayday = $data["last_hc_payday"];
+            $this->hcGiftsClaimed = $data["hc_gifts_claimed"];
+        } catch (\Throwable $error) {
+            UserManager::getInstance()->getLogger()->error('Error while constructing a user settings: ' . $error->getMessage());
+        }
     }
 
     public function getAchievementScore(): int

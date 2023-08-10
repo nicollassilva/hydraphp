@@ -2,6 +2,8 @@
 
 namespace Emulator\Game\Rooms\Data\RoomModel;
 
+use Emulator\Game\Rooms\RoomManager;
+
 class RoomModelData
 {
     private readonly int $doorX;
@@ -14,14 +16,18 @@ class RoomModelData
 
     public function __construct(array &$data)
     {
-        $this->name = $data['name'];
-        $this->heightmap = $data['heightmap'];
+        try {
+            $this->name = $data['name'];
+            $this->heightmap = $data['heightmap'];
 
-        $this->doorX = $data['door_x'];
-        $this->doorY = $data['door_y'];
-        $this->doorZ = 0;
+            $this->doorX = $data['door_x'];
+            $this->doorY = $data['door_y'];
+            $this->doorZ = 0;
 
-        $this->doorDirection = $data['door_dir'];
+            $this->doorDirection = $data['door_dir'];
+        } catch (\Throwable $error) {
+            RoomManager::getInstance()->getLogger()->error("Failed to parse room model [{$this->name}] data: " . $error->getMessage());
+        }
     }
 
     public function setDoorZ(float $doorZ): void
