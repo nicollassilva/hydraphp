@@ -36,7 +36,7 @@ class CatalogPage implements ICatalogPage
 
     private readonly array $includes;
 
-    /** @var array<int,string> */
+    /** @var array<int,ICatalogItem> */
     private array $items = [];
 
     /** @var array<int,CatalogPage> */	
@@ -213,12 +213,12 @@ class CatalogPage implements ICatalogPage
 
     public function addItem(ICatalogItem $item): void
     {
-        $this->items[$item->getId()] = serialize($item);
+        $this->items[$item->getId()] = $item;
     }
 
     public function getItemById(int $id): ?ICatalogItem
     {
-        return unserialize($this->items[$id]) ?? null;
+        return $this->items[$id] ?? null;
     }
 
     /** @return array<int,ICatalogItem> */
