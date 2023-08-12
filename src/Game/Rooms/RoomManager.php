@@ -2,6 +2,7 @@
 
 namespace Emulator\Game\Rooms;
 
+use ArrayObject;
 use Emulator\Hydra;
 use Emulator\Utils\Logger;
 use Emulator\Game\Rooms\Room;
@@ -22,11 +23,11 @@ class RoomManager implements IRoomManager
 
     private bool $isStarted = false;
 
-    /** @var array<int,IRoom> */
-    private array $loadedRooms = [];
+    /** @var ArrayObject<int,IRoom> */
+    private ArrayObject $loadedRooms;
     
-    /** @var array<int,IRoom> */
-    private array $publicRooms = [];
+    /** @var ArrayObject<int,IRoom> */
+    private ArrayObject $publicRooms;
 
     private readonly ChatBubblesComponent $chatBubblesComponent;
     private readonly RoomModelsComponent $roomModelsComponent;
@@ -37,6 +38,9 @@ class RoomManager implements IRoomManager
 
         $this->chatBubblesComponent = new ChatBubblesComponent();
         $this->roomModelsComponent = new RoomModelsComponent();
+
+        $this->loadedRooms = new ArrayObject();
+        $this->publicRooms = new ArrayObject();
     }
 
     public static function getInstance(): IRoomManager
@@ -110,7 +114,7 @@ class RoomManager implements IRoomManager
         return $room;
     }
 
-    public function getLoadedRooms(): array
+    public function getLoadedRooms(): ArrayObject
     {
         return $this->loadedRooms;
     }
@@ -177,13 +181,13 @@ class RoomManager implements IRoomManager
     /** @return array<int,IRoom> */
     public function getLoadedPublicRooms(): array
     {
-        $publicRooms = $this->publicRooms;
+        $publicRooms = $this->publicRooms->getArrayCopy();
 
         usort($publicRooms,
             fn(IRoom $a, IRoom $b) => $a->getData()->getId() <=> $b->getData()->getId()
         );
 
-        return $this->publicRooms;
+        return $publicRooms;
     }
     
     /** @return array<int,IRoom> */

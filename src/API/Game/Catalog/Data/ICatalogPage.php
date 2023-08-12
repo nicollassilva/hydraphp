@@ -2,6 +2,7 @@
 
 namespace Emulator\Api\Game\Catalog\Data;
 
+use ArrayObject;
 use Emulator\Api\Game\Catalog\Data\ICatalogItem;
 
 interface ICatalogPage
@@ -35,7 +36,7 @@ interface ICatalogPage
 
     public function addItem(ICatalogItem $item): void;
     public function getItemById(int $id): ?ICatalogItem;
-    public function getItems(): array;
+    public function getItems(): ArrayObject;
 
     /** @return array<int,ICatalogItem> */
     public function getOrderedItems(): array;

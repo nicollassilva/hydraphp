@@ -2,6 +2,7 @@
 
 namespace Emulator\Api\Game\Rooms;
 
+use ArrayObject;
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Users\IUser;
@@ -12,7 +13,7 @@ interface IRoomManager
 {
     public function getLogger(): Logger;
     public function initialize(): void;
-    public function getLoadedRooms(): array;
+    public function getLoadedRooms(): ArrayObject;
     public function loadRoom(int $roomId): ?IRoom;
     public function getChatBubblesComponent(): ChatBubblesComponent;
     public function getRoomModelsComponent(): RoomModelsComponent;

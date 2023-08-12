@@ -2,6 +2,7 @@
 
 namespace Emulator\Storage\Repositories\Catalog;
 
+use ArrayObject;
 use Emulator\Utils\Logger;
 use React\MySQL\QueryResult;
 use Emulator\Storage\Repositories\EmulatorRepository;
@@ -22,8 +23,8 @@ abstract class CatalogRepository extends EmulatorRepository
         return self::$logger;
     }
 
-    /** @param array<int,ICatalogPage> $pagesProperty */
-    public static function loadPages(array &$pagesProperty): void
+    /** @param ArrayObject<int,ICatalogPage> $pagesProperty */
+    public static function loadPages(ArrayObject &$pagesProperty): void
     {
         $rootPageData = [
             'id' => -1,
@@ -38,13 +39,13 @@ abstract class CatalogRepository extends EmulatorRepository
             'enabled' => true
         ];
 
-        $pagesProperty[-1] = new CatalogPage($rootPageData);
+        $pagesProperty->offsetSet(-1, new CatalogPage($rootPageData));
 
         self::encapsuledSelect("SELECT * FROM catalog_pages ORDER BY parent_id, id", function(QueryResult $result) use (&$pagesProperty) {
             if(empty($result->resultRows)) return;
 
             foreach($result->resultRows as $pageData) {
-                $pagesProperty[$pageData['id']] = new CatalogPage($pageData);
+                $pagesProperty->offsetSet($pageData['id'], new CatalogPage($pageData));
             }
         });
 
@@ -57,20 +58,20 @@ abstract class CatalogRepository extends EmulatorRepository
         }
     }
     
-    /** @param array<int,ICatalogFeaturedPage> */
-    public static function loadFeaturedPages(array &$featuredPagesProperty): void
+    /** @param ArrayObject<int,ICatalogFeaturedPage> */
+    public static function loadFeaturedPages(ArrayObject &$featuredPagesProperty): void
     {
         self::encapsuledSelect("SELECT * FROM catalog_featured_pages ORDER BY slot_id ASC", function(QueryResult $result) use (&$featuredPagesProperty) {
             if(empty($result->resultRows)) return;
 
             foreach($result->resultRows as $pageData) {
-                $featuredPagesProperty[$pageData['slot_id']] = new CatalogFeaturedPage($pageData);
+                $featuredPagesProperty->offsetSet($pageData['slot_id'], new CatalogFeaturedPage($pageData));
             }
         });
     }
 
-    /** @param array<int,ICatalogPage> $catalogPages */
-    public static function loadCatalogItems(array &$catalogPages): int
+    /** @param ArrayObject<int,ICatalogPage> $catalogPages */
+    public static function loadCatalogItems(ArrayObject &$catalogPages): int
     {
         $itemCount = 0;
 
@@ -80,11 +81,10 @@ abstract class CatalogRepository extends EmulatorRepository
             $itemCount = count($result->resultRows);
 
             foreach($result->resultRows as $catalogItemData) {
-                $catalogPage = &$catalogPages[$catalogItemData['page_id']] ?? null;
+                if(!$catalogPages->offsetExists($catalogItemData['page_id'])) continue;
 
-                if(empty($catalogPage)) continue;
-
-                $catalogPage->addItem(new CatalogItem($catalogItemData));
+                $catalogPages->offsetGet($catalogItemData['page_id'])
+                    ->addItem(new CatalogItem($catalogItemData));
             }
         });
 

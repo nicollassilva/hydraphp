@@ -2,6 +2,7 @@
 
 namespace Emulator\Storage\Repositories\Rooms;
 
+use ArrayObject;
 use Emulator\Utils\Logger;
 use React\MySQL\QueryResult;
 use Emulator\Api\Game\Rooms\IRoom;
@@ -54,8 +55,8 @@ abstract class RoomRepository extends EmulatorRepository
         return $roomModels;
     }
 
-    /** @param array<int,IRoom> */
-    public static function loadPublicRooms(array &$publicRoomsProperty): void
+    /** @param ArrayObject<int,IRoom> */
+    public static function loadPublicRooms(ArrayObject &$publicRoomsProperty): void
     {
         self::encapsuledSelect('SELECT * FROM rooms WHERE is_public = ? OR is_staff_picked = ? ORDER BY id DESC', function(QueryResult $result) use (&$publicRoomsProperty) {
             if(empty($result->resultRows)) return;
@@ -63,7 +64,7 @@ abstract class RoomRepository extends EmulatorRepository
             foreach($result->resultRows as $row) {
                 $room = RoomManager::getInstance()->loadRoomFromData(new RoomData($row));
 
-                $publicRoomsProperty[$room->getData()->getId()] = $room;
+                $publicRoomsProperty->offsetSet($room->getData()->getId(), $room);
             }
         }, ['1', '1']);
     }

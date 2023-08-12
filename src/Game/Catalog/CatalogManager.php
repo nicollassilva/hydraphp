@@ -2,6 +2,7 @@
 
 namespace Emulator\Game\Catalog;
 
+use ArrayObject;
 use Emulator\Utils\Logger;
 use Emulator\Game\Catalog\Components\LayoutComponent;
 use Emulator\Storage\Repositories\Catalog\CatalogRepository;
@@ -16,17 +17,20 @@ class CatalogManager
 
     private bool $isStarted = false;
 
-    /** @var array<int,ICatalogPage> */
-    private array $pages = [];
+    /** @var ArrayObject<int,ICatalogPage> */
+    private ArrayObject $pages;
 
-    /** @var array<int,ICatalogFeaturedPage> */
-    private array $featuredPages = [];
+    /** @var ArrayObject<int,ICatalogFeaturedPage> */
+    private ArrayObject $featuredPages;
 
     public function __construct()
     {
         $this->logger = new Logger(get_class($this));
-
+        
         $this->layoutComponent = new LayoutComponent();
+        
+        $this->pages = new ArrayObject();
+        $this->featuredPages = new ArrayObject();
     }
 
     public static function getInstance()
@@ -59,14 +63,14 @@ class CatalogManager
         return $this->logger;
     }
 
-    /** @return array<int,ICatalogPage> */
-    public function getPages(): array
+    /** @return ArrayObject<int,ICatalogPage> */
+    public function getPages(): ArrayObject
     {
         return $this->pages;
     }
 
-    /** @return array<int,ICatalogFeaturedPage> */
-    public function getFeaturedPages(): array
+    /** @return ArrayObject<int,ICatalogFeaturedPage> */
+    public function getFeaturedPages(): ArrayObject
     {
         return $this->featuredPages;
     }

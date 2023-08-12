@@ -2,6 +2,7 @@
 
 namespace Emulator\Game\Catalog\Data;
 
+use ArrayObject;
 use Emulator\Game\Catalog\CatalogManager;
 use Emulator\Api\Game\Catalog\Data\ICatalogItem;
 use Emulator\Api\Game\Catalog\Data\ICatalogPage;
@@ -36,8 +37,8 @@ class CatalogPage implements ICatalogPage
 
     private readonly array $includes;
 
-    /** @var array<int,ICatalogItem> */
-    private array $items = [];
+    /** @var ArrayObject<int,ICatalogItem> */
+    private ArrayObject $items;
 
     /** @var array<int,CatalogPage> */	
     private array $childPages = [];
@@ -76,6 +77,8 @@ class CatalogPage implements ICatalogPage
             } else {
                 $this->includes = explode(';', $data['includes']);
             }
+
+            $this->items = new ArrayObject;
         } catch (\Throwable $error) {
             CatalogManager::getInstance()->getLogger()->error('Error while constructing a catalog page: ' . $error->getMessage());
         }
@@ -213,16 +216,16 @@ class CatalogPage implements ICatalogPage
 
     public function addItem(ICatalogItem $item): void
     {
-        $this->items[$item->getId()] = $item;
+        $this->items->offsetSet($item->getId(), $item);
     }
 
     public function getItemById(int $id): ?ICatalogItem
     {
-        return $this->items[$id] ?? null;
+        return $this->items->offsetGet($id);
     }
 
-    /** @return array<int,ICatalogItem> */
-    public function getItems(): array
+    /** @return ArrayObject<int,ICatalogItem> */
+    public function getItems(): ArrayObject
     {
         return $this->items;
     }
@@ -230,7 +233,7 @@ class CatalogPage implements ICatalogPage
     /** @return array<int,ICatalogItem> */
     public function getOrderedItems(): array
     {
-        $items = $this->getItems();
+        $items = $this->getItems()->getArrayCopy();
 
         usort($items,
             fn(ICatalogItem $a, ICatalogItem $b) => $a->getId() <=> $b->getId()
