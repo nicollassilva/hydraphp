@@ -4,10 +4,13 @@ namespace Emulator\Storage\Repositories\Rooms;
 
 use Emulator\Utils\Logger;
 use React\MySQL\QueryResult;
-use Emulator\Game\Rooms\Data\RoomData;
-use Emulator\Game\Rooms\Data\RoomModel;
+use Emulator\Api\Game\Rooms\IRoom;
+use Emulator\Game\Rooms\RoomManager;
 use Emulator\Api\Game\Rooms\Data\IRoomData;
+use Emulator\Game\Navigator\NavigatorManager;
+use Emulator\Game\Rooms\Data\{RoomData,RoomModel};
 use Emulator\Storage\Repositories\EmulatorRepository;
+use Emulator\Api\Game\Navigator\Data\INavigatorPublicCategory;
 
 abstract class RoomRepository extends EmulatorRepository
 {
@@ -49,5 +52,39 @@ abstract class RoomRepository extends EmulatorRepository
         });
 
         return $roomModels;
+    }
+
+    /** @param array<int,IRoom> */
+    public static function loadPublicRooms(array &$publicRoomsProperty): void
+    {
+        self::encapsuledSelect('SELECT * FROM rooms WHERE is_public = ? OR is_staff_picked = ? ORDER BY id DESC', function(QueryResult $result) use (&$publicRoomsProperty) {
+            if(empty($result->resultRows)) return;
+
+            foreach($result->resultRows as $row) {
+                $room = RoomManager::getInstance()->loadRoomFromData(new RoomData($row));
+
+                $publicRoomsProperty[$room->getData()->getId()] = $room;
+            }
+        }, ['1', '1']);
+    }
+
+    public static function loadStaffPickedRooms(): void
+    {
+        self::encapsuledSelect("SELECT * FROM navigator_publics JOIN rooms ON rooms.id = navigator_publics.room_id WHERE visible = '1'", function(QueryResult $result) {
+            if(empty($result->resultRows)) return;
+
+            foreach($result->resultRows as $row) {
+                $category = NavigatorManager::getInstance()->getPublicCategoryById($row['public_cat_id']);
+
+                if(!($category instanceof INavigatorPublicCategory)) {
+                    self::getLogger()->error("Navigator public category not found: {$row['public_cat_id']}.");
+                    continue;
+                }
+
+                $room = RoomManager::getInstance()->loadRoomFromData(new RoomData($row));
+
+                $category->addRoom($room);
+            }
+        });
     }
 }

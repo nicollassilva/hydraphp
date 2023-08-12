@@ -215,14 +215,14 @@ class CatalogItem implements ICatalogItem
                 $botFigure = '';
 
                 foreach(explode(';', $this->getExtraData()) as $catalogItemData) {
-                    if(str_starts_with($catalogItemData, 'figure:')) {
-                        $botFigure = str_replace('figure:', '', $catalogItemData);                        
+                    if(str_starts_with(strtolower($catalogItemData), 'figure:')) {
+                        $botFigure = str_ireplace('figure:', '', $catalogItemData);                        
                     }
                 }
 
                 $message->writeString(strlen($botFigure) ? $botFigure : $this->getExtraData());
                 unset($botFigure);
-            } else if($item->getType() === ItemDefinitionType::Robot || $item->getItemName() === 'poster' || str_starts_with($item->getItemName(), 'SONG ')) {
+            } else if($item->getType() === ItemDefinitionType::Robot || strcasecmp($item->getItemName(), 'poster') === 0 || str_starts_with($item->getItemName(), 'SONG ')) {
                 $message->writeString($this->getExtraData());
             } else {
                 $message->writeString('');

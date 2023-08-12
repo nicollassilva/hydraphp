@@ -7,12 +7,10 @@ use Emulator\Game\Utilities\Position;
 use Emulator\Game\Rooms\Data\RoomTile;
 use Emulator\Game\Rooms\Types\RoomObject;
 use Emulator\Api\Game\Utilities\IMoveable;
-use Emulator\Game\Rooms\Enums\RoomTileState;
-use Emulator\Game\Rooms\Enums\RoomEntityType;
-use Emulator\Game\Rooms\Enums\RoomEntityStatus;
 use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Game\Rooms\Utils\Pathfinder\Pathfinder;
 use Emulator\Api\Game\Rooms\Types\Entities\IRoomEntity;
+use Emulator\Game\Rooms\Enums\{RoomEntityType,RoomTileState,RoomEntityStatus};
 
 class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
 {

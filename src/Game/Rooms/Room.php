@@ -5,6 +5,7 @@ namespace Emulator\Game\Rooms;
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Users\IUser;
+use Emulator\Game\Rooms\Writers\RoomWriter;
 use Emulator\Game\Rooms\Enums\RoomEntityType;
 use Emulator\Game\Rooms\Types\Entities\RoomEntity;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
@@ -80,9 +81,7 @@ class Room implements IRoom
         return $this;
     }
 
-    /**
-     * @return array<RoomEntity>
-     */
+    /** @return array<RoomEntity> */
     public function getUserEntities(): array
     {
         return array_filter($this->entities, 
@@ -120,5 +119,10 @@ class Room implements IRoom
     public function getLogger(): Logger
     {
         return $this->logger;
+    }
+
+    public function compose(IMessageComposer $message): void
+    {
+        RoomWriter::forRoom($this, $message);
     }
 }

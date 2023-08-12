@@ -16,6 +16,8 @@ class JoinRoomEvent implements IIncomingMessage
 
         $room = $client->getUser()->getEntity()->getRoom();
 
+        $room->getData()->incrementCurrentUsers();
+
         $client->send(new RoomOpenComposer)
             ->send(new RoomModelComposer($room))
             ->send(new RoomRelativeMapComposer($room))

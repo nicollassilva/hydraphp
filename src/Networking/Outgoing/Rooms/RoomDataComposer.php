@@ -27,7 +27,7 @@ class RoomDataComposer extends MessageComposer
         $this->writeInt($room->getData()->getTradeMode());
         $this->writeInt($room->getData()->getScore());
         $this->writeInt(2);
-        $this->writeInt($room->getData()->getCategory());
+        $this->writeInt($room->getData()->getCategoryId());
 
         if(empty($room->getData()->getTags())) {
             $this->writeInt(0);
@@ -41,21 +41,10 @@ class RoomDataComposer extends MessageComposer
 
         $base = 0;
 
-        if ($room->getData()->getGuildId() > 0) {
-            $base |= 2;
-        }
-
-        if (!$room->getData()->isPublic()) {
-            $base |= 8;
-        }
-
-        if ($room->getData()->isPromoted()) {
-            $base |= 4;
-        }
-
-        if ($room->getData()->allowPets()) {
-            $base |= 16;
-        }
+        if ($room->getData()->getGuildId() > 0) $base |= 2;
+        if (!$room->getData()->isPublic()) $base |= 8;
+        if ($room->getData()->isPromoted()) $base |= 4;
+        if ($room->getData()->allowPets()) $base |= 16;
         
         $this->writeInt($base);
         $this->writeBoolean($roomForward);

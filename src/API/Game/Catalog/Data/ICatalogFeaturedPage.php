@@ -2,10 +2,10 @@
 
 namespace Emulator\Api\Game\Catalog\Data;
 
-use Emulator\Api\Networking\Outgoing\IMessageComposer;
+use Emulator\Api\Game\Utilities\IComposable;
 use Emulator\Game\Catalog\Enums\CatalogFeaturedPageType;
 
-interface ICatalogFeaturedPage
+interface ICatalogFeaturedPage extends IComposable
 {
     public function getSlotId(): int;
     public function getCaption(): string;
@@ -15,5 +15,4 @@ interface ICatalogFeaturedPage
     public function getPageName(): string;
     public function getPageId(): int;
     public function getProductName(): string;
-    public function compose(IMessageComposer $message): void;
 }

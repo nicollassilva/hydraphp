@@ -52,7 +52,7 @@ class RoomModel implements IRoomModel
         }
 
         for ($y = 0; $y < $this->mapSizeY; $y++) {
-            if(empty($temporaryModel[$y]) || $temporaryModel[$y] == "\r") continue;
+            if(empty($temporaryModel[$y]) || strcasecmp($temporaryModel[$y], "\r") === 0) continue;
 
             for($x = 0; $x < $this->mapSizeX; $x++) {
                 if(strlen($temporaryModel[$y]) != $this->mapSizeX) break;
@@ -61,7 +61,7 @@ class RoomModel implements IRoomModel
                 $tileState = RoomTileState::Open;
                 $tileHeight = 0;
 
-                if($squareType == 'x') {
+                if(strcasecmp($squareType, 'x') === 0) {
                     $tileState = RoomTileState::Invalid;
                     continue;
                 }

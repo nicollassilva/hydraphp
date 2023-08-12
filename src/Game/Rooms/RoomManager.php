@@ -5,23 +5,14 @@ namespace Emulator\Game\Rooms;
 use Emulator\Hydra;
 use Emulator\Utils\Logger;
 use Emulator\Game\Rooms\Room;
-use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Users\IUser;
-use Emulator\Api\Game\Rooms\IRoomManager;
-use Emulator\Game\Rooms\Enums\RoomRightLevels;
-use Emulator\Game\Rooms\Enums\RoomEntityStatus;
+use Emulator\Api\Game\Rooms\Data\IRoomData;
+use Emulator\Api\Game\Rooms\{IRoomManager,IRoom};
 use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Storage\Repositories\Rooms\RoomRepository;
-use Emulator\Networking\Outgoing\Rooms\RoomOpenComposer;
-use Emulator\Networking\Outgoing\Rooms\RoomModelComposer;
-use Emulator\Networking\Outgoing\Rooms\RoomOwnerComposer;
-use Emulator\Networking\Outgoing\Rooms\RoomPaintComposer;
-use Emulator\Networking\Outgoing\Rooms\RoomScoreComposer;
-use Emulator\Networking\Outgoing\Rooms\RoomRightsComposer;
-use Emulator\Networking\Outgoing\Rooms\HideDoorbellComposer;
-use Emulator\Networking\Outgoing\Rooms\RoomPromotionComposer;
-use Emulator\Networking\Outgoing\Rooms\RoomRightsListComposer;
+use Emulator\Game\Rooms\Enums\{RoomEntityStatus,RoomRightLevels};
 use Emulator\Game\Rooms\Components\{RoomModelsComponent,ChatBubblesComponent};
+use Emulator\Networking\Outgoing\Rooms\{RoomRightsComposer,RoomScoreComposer,RoomPaintComposer,RoomOwnerComposer,RoomRightsListComposer,RoomPromotionComposer,HideDoorbellComposer};
 
 class RoomManager implements IRoomManager
 {
@@ -31,8 +22,11 @@ class RoomManager implements IRoomManager
 
     private bool $isStarted = false;
 
-    // @param array<int, IRoom>
+    /** @var array<int,IRoom> */
     private array $loadedRooms = [];
+    
+    /** @var array<int,IRoom> */
+    private array $publicRooms = [];
 
     private readonly ChatBubblesComponent $chatBubblesComponent;
     private readonly RoomModelsComponent $roomModelsComponent;
@@ -57,6 +51,19 @@ class RoomManager implements IRoomManager
         return $this->logger;
     }
 
+    public function initialize(): void
+    {
+        if($this->isStarted) return;
+
+        $this->isStarted = true;
+
+        RoomRepository::initialize();
+        RoomRepository::loadPublicRooms($this->publicRooms);
+        RoomRepository::loadStaffPickedRooms();
+
+        $this->logger->info('RoomManager initialized.');
+    }
+
     public function getChatBubblesComponent(): ChatBubblesComponent
     {
         return $this->chatBubblesComponent;
@@ -65,17 +72,6 @@ class RoomManager implements IRoomManager
     public function getRoomModelsComponent(): RoomModelsComponent
     {
         return $this->roomModelsComponent;
-    }
-
-    public function initialize(): void
-    {
-        if($this->isStarted) return;
-
-        $this->isStarted = true;
-
-        RoomRepository::initialize();
-
-        $this->logger->info('RoomManager initialized.');
     }
 
     public function loadRoom(int $roomId): ?IRoom
@@ -94,6 +90,22 @@ class RoomManager implements IRoomManager
         $this->loadedRooms[$roomId] = &$room;
 
         $this->getLogger()->info("Room loaded successfully: {$roomId}.");
+
+        return $room;
+    }
+
+    public function loadRoomFromData(IRoomData $roomData): ?IRoom
+    {
+        if($roomData === null) return null;
+
+        if(isset($this->loadedRooms[$roomData->getId()])) {
+            $this->getLogger()->info("Room already loaded: {$roomData->getId()}.");
+            return $this->loadedRooms[$roomData->getId()];
+        }
+
+        $room = new Room($roomData);
+
+        $this->loadedRooms[$roomData->getId()] = &$room;
 
         return $room;
     }
@@ -160,5 +172,57 @@ class RoomManager implements IRoomManager
         $user->getClient()
             ->send(new RoomScoreComposer($room))
             ->send(new RoomPromotionComposer);
+    }
+
+    /** @return array<int,IRoom> */
+    public function getLoadedPublicRooms(): array
+    {
+        $publicRooms = $this->publicRooms;
+
+        usort($publicRooms,
+            fn(IRoom $a, IRoom $b) => $a->getData()->getId() <=> $b->getData()->getId()
+        );
+
+        return $this->publicRooms;
+    }
+    
+    /** @return array<int,IRoom> */
+    public function getPopularRooms(int $roomsLimit): array
+    {
+        $rooms = [];
+
+        foreach($this->loadedRooms as $room) {
+            if($room->getData()->getCurrentUsers() > 0) {
+                $rooms[] = $room;
+            }
+        }
+
+        usort($rooms, 
+            fn (IRoom $a, IRoom $b) => $a->getData()->getCurrentUsers() < $b->getData()->getCurrentUsers()
+        );
+
+        return array_slice($rooms, 0, $roomsLimit);
+    }
+    
+    /** @return array<int,array<IRoom> */
+    public function getPopularRoomsByCategory(int $roomsLimit): array
+    {
+        $rooms = [];
+
+        foreach($this->loadedRooms as $room) {
+            if($room->getData()->isPublic()) continue;
+
+            if(!array_key_exists($room->getData()->getCategoryId(), $rooms)) {
+                $rooms[$room->getData()->getCategoryId()] = [];
+            }
+            
+            $rooms[$room->getData()->getCategoryId()][] = $room;
+        }
+
+        usort($rooms, 
+            fn (IRoom $a, IRoom $b) => $a->getData()->getCurrentUsers() < $b->getData()->getCurrentUsers()
+        );
+
+        return array_slice($rooms, 0, $roomsLimit);
     }
 }

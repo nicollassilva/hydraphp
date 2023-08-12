@@ -2,10 +2,10 @@
 
 namespace Emulator\Api\Game\Catalog\Data;
 
-use Emulator\Api\Networking\Outgoing\IMessageComposer;
+use Emulator\Api\Game\Utilities\IComposable;
 use Emulator\Api\Game\Rooms\Types\Items\Data\IItemDefinition;
 
-interface ICatalogItem
+interface ICatalogItem extends IComposable
 {
     public function getId(): int;
     public function getItemIds(): array;
@@ -23,7 +23,6 @@ interface ICatalogItem
     public function getExtraData(): string;
     public function haveOffer(): bool;
     public function isClubOnly(): bool;
-    public function compose(IMessageComposer $message): void;
     public function isLimited(): bool;
     public function checkHaveOffer(): bool;
 

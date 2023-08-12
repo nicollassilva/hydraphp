@@ -2,9 +2,11 @@
 
 namespace Emulator\Game\Rooms\Data;
 
+use Emulator\Api\Game\Navigator\Data\INavigatorCategory;
 use Emulator\Game\Rooms\RoomManager;
 use Emulator\Game\Rooms\Enums\RoomState;
 use Emulator\Api\Game\Rooms\Data\IRoomData;
+use Emulator\Game\Navigator\NavigatorManager;
 
 class RoomData implements IRoomData
 {
@@ -20,7 +22,8 @@ class RoomData implements IRoomData
     private string $password;
     private RoomState $state;
     private int $guildId;
-    private string $category;
+    private string $categoryId;
+    private INavigatorCategory $category;
     private string $paperFloor;
     private string $paperWall;
     private string $paperLandscape;
@@ -68,7 +71,7 @@ class RoomData implements IRoomData
             $this->score = $data['score'];
             $this->password = $data['password'];
             $this->state = RoomState::getState($data['state']);
-            $this->category = $data['category'];
+            $this->categoryId = $data['category'];
             $this->paperFloor = $data['paper_floor'];
             $this->paperWall = $data['paper_wall'];
             $this->paperLandscape = $data['paper_landscape'];
@@ -100,6 +103,8 @@ class RoomData implements IRoomData
             $this->hasJukeboxActive = (bool) $data['jukebox_active'];
             $this->hideWireds = (bool) $data['hidewired'];
             $this->isForSale = (bool) $data['is_forsale'];
+
+            $this->category = NavigatorManager::getInstance()->getFlatCategoryById((int) $data['category']);
         } catch (\Throwable $e) {
             RoomManager::getInstance()->getLogger()->error('Error while loading room data: ' . $e->getMessage());
         }
@@ -140,6 +145,11 @@ class RoomData implements IRoomData
         return $this->currentUsers;
     }
 
+    public function incrementCurrentUsers(): void
+    {
+        $this->currentUsers++;
+    }
+
     public function getMaxUsers(): int
     {
         return $this->maxUsers;
@@ -165,7 +175,12 @@ class RoomData implements IRoomData
         return $this->guildId;
     }
 
-    public function getCategory(): string
+    public function getCategoryId(): string
+    {
+        return $this->categoryId;
+    }
+
+    public function getCategory(): INavigatorCategory
     {
         return $this->category;
     }

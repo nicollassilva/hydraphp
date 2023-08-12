@@ -4,12 +4,13 @@ namespace Emulator\Api\Game\Rooms;
 
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Users\IUser;
+use Emulator\Api\Game\Utilities\IComposable;
 use Emulator\Game\Rooms\Types\Entities\RoomEntity;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
 use Emulator\Api\Game\Rooms\Data\{IRoomData,IRoomModel};
 use Emulator\Game\Rooms\Components\{MappingComponent,ProcessComponent};
 
-interface IRoom
+interface IRoom extends IComposable
 {
     public function getData(): IRoomData;
     public function getModel(): IRoomModel;
