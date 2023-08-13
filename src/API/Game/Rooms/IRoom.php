@@ -5,6 +5,7 @@ namespace Emulator\Api\Game\Rooms;
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Users\IUser;
 use Emulator\Api\Game\Utilities\IComposable;
+use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
 use Emulator\Api\Game\Rooms\Data\{IRoomData,IRoomModel};
 use Emulator\Game\Rooms\Components\{MappingComponent,ProcessComponent,EntityComponent};
@@ -27,4 +28,7 @@ interface IRoom extends IComposable
 
     public function dispose(): void;
     public function onIdleCycleChanged(): void;
+
+    public function onUserEntityRemoved(UserEntity $entity): void;
+    public function resetIdleCycle(): void;
 }

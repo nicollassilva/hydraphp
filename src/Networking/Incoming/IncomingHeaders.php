@@ -14,6 +14,7 @@ abstract class IncomingHeaders
     # Hotel View Events
     public static int $hotelViewRequestBonusRareEvent = 957;
     public static int $hotelViewDataEvent = 2912;
+    public static int $hotelViewEvent = 105;
     # -----
     
     # User Events
@@ -54,6 +55,7 @@ abstract class IncomingHeaders
     public static int $requestRoomLoadEvent = 2312;
     public static int $requestHeightmapEvent = 3898;
     public static int $joinRoomEvent = 685;
+    public static int $requestRoomHeightmapEvent = 2300;
     # -----
     
     # Emulator Events

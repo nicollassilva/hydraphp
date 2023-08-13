@@ -80,10 +80,12 @@ class CatalogManager
         return $this->pages[$id];
     }
 
-    /** @return array<int,ICatalogPage> */
-    public function getPagesByParent(int $parentId): array
+    /** @return null|ArrayObject<int,ICatalogPage> */
+    public function getPagesByParent(int $parentId): ?ArrayObject
     {
-        return $this->pages[$parentId]?->getChildPages() ?? null;
+        if(!$this->pages->offsetExists($parentId)) return null;
+
+        return $this->pages->offsetGet($parentId)->getChildPages();
     }
 
     public function getLayoutComponent(): LayoutComponent

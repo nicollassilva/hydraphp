@@ -2,12 +2,15 @@
 
 namespace Emulator\Game\Rooms;
 
+use Emulator\Hydra;
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Users\IUser;
 use Emulator\Game\Rooms\Writers\RoomWriter;
+use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
 use Emulator\Api\Game\Rooms\Data\{IRoomData, IRoomModel};
+use Emulator\Networking\Outgoing\Rooms\RemoveUserComposer;
 use Emulator\Game\Rooms\Components\{EntityComponent,MappingComponent,ProcessComponent};
 
 class Room implements IRoom
@@ -25,7 +28,7 @@ class Room implements IRoom
 
     public function __construct(IRoomData &$roomData)
     {
-        $this->logger = new Logger($roomData->getName(), false);
+        $this->logger = new Logger("[Room {$roomData->getName()}]", false);
 
         $this->data = $roomData;
         $this->model = RoomManager::getInstance()->getRoomModelsComponent()->getRoomModelByName($this->data->getModel());
@@ -112,15 +115,34 @@ class Room implements IRoom
 
     public function onIdleCycleChanged(): void
     {
-        if(++$this->idleCycle >= RoomManager::IDLE_CYCLES_BEFORE_DISPOSE) $this->dispose();
+        $this->idleCycle++;
+
+        if($this->idleCycle >= RoomManager::IDLE_CYCLES_BEFORE_DISPOSE) $this->dispose();
+    }
+
+    public function resetIdleCycle(): void
+    {
+        $this->idleCycle = 0;
     }
 
     public function dispose(): void
     {
+        if($this->getData()->isPublic()) {
+            $this->processComponent->dispose();
+            return;
+        }
+
+        if(Hydra::$isDebugging) $this->getLogger()->info("Disposing room [{$this->data->getName()} #{$this->data->getId()}]");
+
         RoomManager::getInstance()->disposeRoom($this);
 
         $this->processComponent->dispose();
 
-        unset($this->data, $this->processComponent, $this->mappingComponent, $this->entityComponent, $this->logger);
+        unset($this->data, $this->processComponent, $this->mappingComponent, $this->entityComponent);
+    }
+
+    public function onUserEntityRemoved(UserEntity $entity): void
+    {
+        $this->broadcastMessage(new RemoveUserComposer($entity->getId()));
     }
 }

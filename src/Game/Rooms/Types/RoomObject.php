@@ -12,12 +12,15 @@ class RoomObject implements IRoomObject, IPositionable
 {
     private RoomTile $currentTile;
 
+    private ?IRoom $room = null;
+
     public function __construct(
         private readonly int $id,
-        private readonly IRoom $room,
+        IRoom $room,
         RoomTile $currentTile
     ) {
         $this->currentTile = $currentTile;
+        $this->room = $room;
     }
 
     public function getId(): int
@@ -25,7 +28,7 @@ class RoomObject implements IRoomObject, IPositionable
         return $this->id;
     }
 
-    public function getRoom(): IRoom
+    public function getRoom(): ?IRoom
     {
         return $this->room;
     }

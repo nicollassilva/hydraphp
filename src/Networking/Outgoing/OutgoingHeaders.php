@@ -43,7 +43,7 @@ abstract class OutgoingHeaders
     public static int $bonusRareComposer = 1533;
     public static int $hotelViewDataComposer = 1745;
     public static int $adventCalendarDataComposer = 2531;
-    public static int $hotelViewMessageComposer = 122;
+    public static int $hotelViewComposer = 122;
     # -----
     
     # Inventory Outgoing Events

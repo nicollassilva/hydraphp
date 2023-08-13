@@ -6,4 +6,5 @@ enum HandleTypeProcess
 {
     case FirstProcess;
     case SecondProcess;
+    case SingleProcess;
 }

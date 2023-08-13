@@ -8,15 +8,16 @@ use Emulator\Api\Game\Users\IUser;
 use Emulator\Game\Rooms\Enums\RoomRightLevels;
 use Emulator\Api\Game\Rooms\Types\Entities\IUserEntity;
 use Emulator\Networking\Outgoing\Rooms\GenericErrorComposer;
-use Emulator\Networking\Outgoing\Rooms\HotelViewMessageComposer;
+use Emulator\Networking\Outgoing\Rooms\HotelViewComposer;
 use Emulator\Networking\Outgoing\Rooms\RemoveUserComposer;
 
+/** @property ?IRoom $room */
 class UserEntity extends RoomEntity implements IUserEntity
 {
     private readonly IUser $user;
     private readonly Logger $logger;
 
-    private bool $isKicked;
+    private bool $isKicked = false;
 
     private RoomRightLevels $roomRightLevel;
 
@@ -39,9 +40,19 @@ class UserEntity extends RoomEntity implements IUserEntity
         return $this->isKicked;
     }
 
+    public function setIsKicked(bool $isKicked): void
+    {
+        $this->isKicked = $isKicked;
+    }
+
     public function getLogger(): Logger
     {
         return $this->logger;
+    }
+
+    public function setRoom(?IRoom $room): void
+    {
+        $this->room = $room;
     }
 
     public function getRoomRightLevel(): RoomRightLevels
@@ -63,17 +74,16 @@ class UserEntity extends RoomEntity implements IUserEntity
         $this->getRoom()->broadcastMessage(new RemoveUserComposer($this->getId()));
 
         if(!$isOffline && $toHotelView) {
-            $this->getUser()->getClient()->send(new HotelViewMessageComposer);
+            $this->getUser()->getClient()->send(new HotelViewComposer);
         }
 
-        $this->getRoom()->getEntityComponent()->removeUserEntity($this);
-        $this->getUser()->setEntity(null);
-
-        $this->clearStatus();
+        $this->dispose();
     }
 
     public function dispose(): void
     {
-        // $this->getRoom()->getProcessComponent()->markEntityNeedsUpdate($this);
+        $this->getRoom()->getEntityComponent()->removeUserEntity($this);
+        $this->getUser()->setEntity(null);
+        $this->clearStatus();
     }
 }

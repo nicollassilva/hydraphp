@@ -11,6 +11,6 @@ class RemoveUserComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$removeUserComposer;
 
-        $this->writeInt($entityId);
+        $this->writeString("{$entityId}");
     }
 }

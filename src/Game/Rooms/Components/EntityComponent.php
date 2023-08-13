@@ -26,9 +26,11 @@ class EntityComponent
         $this->userEntities->offsetSet($entity->getId(), $entity);
     }
 
-    public function removeUserEntity(UserEntity &$entity): void
+    public function removeUserEntity(UserEntity $entity): void
     {
         $this->userEntities->offsetUnset($entity->getId());
+
+        $this->room->onUserEntityRemoved($entity);
     }
 
     /** @return ArrayObject<int,UserEntity> */

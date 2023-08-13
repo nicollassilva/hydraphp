@@ -13,8 +13,8 @@ class User implements IUser
     private IUserData $data;
     private IUserSettings $settings;
 
-    private IClient $client;
-    private UserEntity $entity;
+    private ?IClient $client = null;
+    private ?UserEntity $entity = null;
 
     private bool $isDisposed = false;
 
@@ -39,7 +39,7 @@ class User implements IUser
         $this->client = $client;
     }
 
-    public function getClient(): IClient
+    public function getClient(): ?IClient
     {
         return $this->client;
     }
@@ -49,7 +49,7 @@ class User implements IUser
         $this->setIsDisposed();
 
         if(!empty($this->getEntity())) {
-            $this->getEntity()->dispose();
+            $this->getEntity()->dispose(true);
         }
         
         $this->getClient()->disconnect();

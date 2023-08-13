@@ -5,10 +5,10 @@ namespace Emulator\Game\Rooms\Components;
 use ArrayObject;
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\IRoom;
+use Emulator\Game\Rooms\RoomManager;
 use Emulator\Game\Utilities\PeriodicExecution;
 use Emulator\Game\Rooms\Enums\RoomEntityStatus;
 use Emulator\Api\Game\Rooms\Components\IProcessComponent;
-use Emulator\Game\Rooms\RoomManager;
 use Emulator\Networking\Outgoing\Rooms\RoomUserStatusComposer;
 use Emulator\Game\Rooms\Types\Entities\{RoomEntity,UserEntity};
 
@@ -36,8 +36,10 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
 
         $this->isProcessing = true;
         
-        if(empty($this->getRoom()->getEntityComponent()->getUserEntities())) {
+        if(!$this->getRoom()->getEntityComponent()->getUserEntities()->count()) {
             $this->getRoom()->onIdleCycleChanged();
+            $this->processComplete(resetRoomIdleCycle: false);
+
             return;
         }
 
@@ -58,8 +60,7 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
             }
         }
 
-        $this->entitiesToUpdate = new ArrayObject;
-        $this->isProcessing = false;
+        $this->processComplete();
     }
 
     private function processUserEntity(UserEntity &$entity): void
@@ -117,6 +118,14 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
     public function getRoom(): IRoom
     {
         return $this->room;
+    }
+
+    private function processComplete(bool $resetEntities = true, bool $resetRoomIdleCycle = true): void
+    {
+        $this->isProcessing = false;
+
+        if($resetEntities) $this->entitiesToUpdate = new ArrayObject;
+        if($resetRoomIdleCycle) $this->getRoom()->resetIdleCycle();
     }
 
     public function dispose(): void

@@ -12,7 +12,7 @@ interface IUser
     public function getSettings(): IUserSettings;
 
     public function setClient(IClient $client): void;
-    public function getClient(): IClient;
+    public function getClient(): ?IClient;
     
     public function dispose(): void;
     public function isDisposed(): bool;

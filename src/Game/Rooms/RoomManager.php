@@ -177,14 +177,17 @@ class RoomManager implements IRoomManager
         return array_slice($rooms, 0, $roomsLimit);
     }
 
-
     public function disposeRoom(IRoom &$room): void
     {
-        if($room === null) return;
+        if($room === null || $room->getData()->isPublic()) return;
 
         if(Hydra::$isDebugging) $this->getLogger()->info("Room [{$room->getData()->getName()} #{$room->getData()->getId()}] disposed successfully.");
 
         $this->loadedRooms->offsetUnset($room->getData()->getId());
+
+        if($this->publicRooms->offsetExists($room->getData()->getId())) {
+            $this->publicRooms->offsetUnset($room->getData()->getId());
+        }
 
         $room = null;
     }

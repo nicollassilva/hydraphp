@@ -10,7 +10,7 @@ use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Game\Utilities\Handlers\AbstractHandler;
 use Emulator\Game\Utilities\Handlers\Enums\HandleTypeProcess;
 use Emulator\Game\Rooms\Enums\{RoomRightLevels,RoomEntityStatus};
-use Emulator\Networking\Outgoing\Rooms\{RoomGroupBadgesComposer,RoomUserStatusComposer,RoomPaneComposer,RoomOwnerComposer,RoomPaintComposer,RoomScoreComposer,RoomUsersComposer,RoomRightsComposer,HideDoorbellComposer,RoomHeightmapComposer,RoomPromotionComposer,RoomThicknessComposer,RoomWallItemsComposer,RoomFloorItemsComposer,RoomRightsListComposer};
+use Emulator\Networking\Outgoing\Rooms\{RoomGroupBadgesComposer,RoomUserStatusComposer,RoomPaneComposer,RoomOwnerComposer,RoomPaintComposer,RoomScoreComposer,RoomUsersComposer,RoomRightsComposer,HideDoorbellComposer, HotelViewComposer, RoomHeightmapComposer,RoomPromotionComposer,RoomThicknessComposer,RoomWallItemsComposer,RoomFloorItemsComposer,RoomRightsListComposer};
 
 /** @property Logger $logger */
 class JoinRoomHandler extends AbstractHandler
@@ -41,6 +41,11 @@ class JoinRoomHandler extends AbstractHandler
         }
 
         $user->getClient()->send(new HideDoorbellComposer(""));
+
+        if($user->getEntity()) {
+            $user->getEntity()->dispose();
+            $user->setEntity(null);
+        }
 
         $userEntity = $user->setEntity(new UserEntity($room->getNextEntityId(), $user, $room));
 
@@ -77,7 +82,7 @@ class JoinRoomHandler extends AbstractHandler
             ->send(new RoomPromotionComposer);
     }
 
-    private function finalizeRoomJoin(IClient $client)
+    private function finalizeRoomJoin(IClient $client): void
     {
         $userEntity = $client->getUser()->getEntity();
 

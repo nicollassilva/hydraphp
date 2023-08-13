@@ -7,5 +7,5 @@ use Emulator\Api\Game\Rooms\IRoom;
 interface IRoomObject
 {
     public function getId(): int;
-    public function getRoom(): IRoom;
+    public function getRoom(): ?IRoom;
 }

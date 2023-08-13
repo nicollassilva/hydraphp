@@ -3,22 +3,15 @@
 namespace Emulator\Networking\Packages;
 
 use Emulator\Networking\Incoming\IncomingHeaders;
-use Emulator\Networking\Incoming\Users\UserWalkingEvent;
-use Emulator\Networking\Incoming\Rooms\RequestHeightmapEvent;
-use Emulator\Networking\Incoming\Catalog\RequestDiscountEvent;
-use Emulator\Networking\Incoming\Catalog\RequestCatalogModeEvent;
 use Emulator\Networking\Incoming\Emulator\{PingEvent, PongEvent};
-use Emulator\Networking\Incoming\Catalog\RequestRecylerLogicEvent;
-use Emulator\Networking\Incoming\Catalog\GetMarketplaceConfigEvent;
-use Emulator\Networking\Incoming\Catalog\{RequestCatalogPageEvent, RequestTargetOfferEvent};
-use Emulator\Networking\Incoming\Catalog\RequestGiftConfigurationEvent;
-use Emulator\Networking\Incoming\HotelView\{HotelViewRequestBonusRareEvent,HotelViewDataEvent};
-use Emulator\Networking\Incoming\GameCenter\{GetGameListMessageEvent,GameCenterRequestGamesEvent};
-use Emulator\Networking\Incoming\Messenger\{RequestFriendRequestsEvent, RequestFriendsEvent,RequestInitFriendsEvent};
+use Emulator\Networking\Incoming\GameCenter\{GetGameListMessageEvent, GameCenterRequestGamesEvent};
+use Emulator\Networking\Incoming\HotelView\{HotelViewRequestBonusRareEvent,HotelViewDataEvent, HotelViewEvent};
 use Emulator\Networking\Incoming\Handshake\{UniqueIdEvent, SSOTicketEvent, ReleaseVersionEvent, ClientVariablesEvent};
+use Emulator\Networking\Incoming\Messenger\{RequestFriendRequestsEvent, RequestFriendsEvent, RequestInitFriendsEvent};
 use Emulator\Networking\Incoming\Navigator\{RequestNavigatorSettingsEvent, RequestNewNavigatorDataEvent, RequestNewNavigatorRoomsEvent};
-use Emulator\Networking\Incoming\Rooms\{JoinRoomEvent, RequestPromotedRoomsEvent, RequestRoomCategoriesEvent, RequestRoomDataEvent, RequestRoomLoadEvent};
-use Emulator\Networking\Incoming\Users\{UserActivityEvent,RequestUserDataEvent,MySanctionStatusEvent, RequestIgnoredUsersEvent, RequestMeMenuSettingsEvent, RequestUserClubEvent, RequestUserCreditsEvent, UserLookToEvent, UsernameEvent, UserStartTypingEvent, UserStopTypingEvent, UserTalkEvent};
+use Emulator\Networking\Incoming\Rooms\{RequestRoomHeightmapEvent, JoinRoomEvent, RequestPromotedRoomsEvent, RequestRoomCategoriesEvent, RequestRoomDataEvent, RequestRoomLoadEvent, RequestHeightmapEvent};
+use Emulator\Networking\Incoming\Catalog\{RequestDiscountEvent, RequestCatalogModeEvent, RequestCatalogPageEvent, RequestTargetOfferEvent, RequestGiftConfigurationEvent, GetMarketplaceConfigEvent, RequestRecylerLogicEvent};
+use Emulator\Networking\Incoming\Users\{UserWalkingEvent, UserActivityEvent, RequestUserDataEvent, MySanctionStatusEvent, RequestIgnoredUsersEvent, RequestMeMenuSettingsEvent, RequestUserClubEvent, RequestUserCreditsEvent, UserLookToEvent, UsernameEvent, UserStartTypingEvent, UserStopTypingEvent, UserTalkEvent};
 
 class IncomingPackagesLoader
 {
@@ -76,6 +69,7 @@ class IncomingPackagesLoader
     {
         $this->addPackage(IncomingHeaders::$hotelViewRequestBonusRareEvent, HotelViewRequestBonusRareEvent::class);
         $this->addPackage(IncomingHeaders::$hotelViewDataEvent, HotelViewDataEvent::class);
+        $this->addPackage(IncomingHeaders::$hotelViewEvent, HotelViewEvent::class);
     }
 
     private function loadUsersEvents(): void
@@ -119,6 +113,7 @@ class IncomingPackagesLoader
         $this->addPackage(IncomingHeaders::$requestRoomLoadEvent, RequestRoomLoadEvent::class);
         $this->addPackage(IncomingHeaders::$joinRoomEvent, JoinRoomEvent::class);
         $this->addPackage(IncomingHeaders::$requestHeightmapEvent, RequestHeightmapEvent::class);
+        $this->addPackage(IncomingHeaders::$requestRoomHeightmapEvent, RequestRoomHeightmapEvent::class);
     }
 
     private function loadCatalogEvents(): void
