@@ -2,19 +2,18 @@
 
 namespace Emulator\Networking\Outgoing\Rooms;
 
+use ArrayObject;
 use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Networking\Outgoing\MessageComposer;
 use Emulator\Networking\Outgoing\OutgoingHeaders;
 
 class RoomUserStatusComposer extends MessageComposer
 {
-    public function __construct(?UserEntity $entity, array $entitiesToUpdate = [])
+    public function __construct(ArrayObject $entitiesToUpdate)
     {
         $this->header = OutgoingHeaders::$roomUserStatusComposer;
 
-        if($entity) $entitiesToUpdate[] = $entity;
-
-        $this->writeInt(count($entitiesToUpdate));
+        $this->writeInt($entitiesToUpdate->count());
 
         foreach ($entitiesToUpdate as $entity) {
             $this->composeEntity($entity);

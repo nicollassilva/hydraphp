@@ -2,6 +2,7 @@
 
 namespace Emulator\Game\Rooms\Components;
 
+use ArrayObject;
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Game\Utilities\PeriodicExecution;
@@ -17,14 +18,16 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
     
     private bool $isProcessing = false;
 
-    /** @var array<RoomEntity> */
-    private array $entitiesToUpdate = [];
+    /** @var ArrayObject<RoomEntity> */
+    private ArrayObject $entitiesToUpdate;
 
     public function __construct(private readonly IRoom $room)
     {
         parent::__construct(RoomManager::ROOM_TICK_MS);
-        
+
         $this->logger = new Logger("Room Process [{$this->room->getData()->getName()} #{$this->room->getData()->getId()}]", false);
+
+        $this->entitiesToUpdate = new ArrayObject;
     }
 
     public function tick(): void
@@ -42,8 +45,8 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
             $this->processUserEntity($entity);
         }
 
-        if(count($this->entitiesToUpdate)) {
-            $this->getRoom()->broadcastMessage(new RoomUserStatusComposer(null, $this->entitiesToUpdate));
+        if($this->entitiesToUpdate->count()) {
+            $this->getRoom()->broadcastMessage(new RoomUserStatusComposer($this->entitiesToUpdate));
         }
 
         foreach ($this->entitiesToUpdate as $entity) {
@@ -55,7 +58,7 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
             }
         }
 
-        $this->entitiesToUpdate = [];
+        $this->entitiesToUpdate = new ArrayObject;
         $this->isProcessing = false;
     }
 
@@ -105,10 +108,10 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
 
     public function markEntityNeedsUpdate(RoomEntity $entity): void
     {
-        if(in_array($entity, $this->entitiesToUpdate)) return;
+        if($this->entitiesToUpdate->offsetExists($entity->getId())) return;
 
         $entity->setNeedsUpdate(true);
-        $this->entitiesToUpdate[] = $entity;
+        $this->entitiesToUpdate->offsetSet($entity->getId(), $entity);
     }
 
     public function getRoom(): IRoom
@@ -116,19 +119,12 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
         return $this->room;
     }
 
-    public function getDisposedEntities(): array
-    {
-        return array_filter($this->entitiesToUpdate, 
-            fn (RoomEntity $entity) => $entity->getUser()->isDisposed()
-        );
-    }
-
     public function dispose(): void
     {
         $this->stop();
 
         foreach($this->entitiesToUpdate as $entity) {
-            $this->getRoom()->removeEntity($entity);
+            $this->getRoom()->getEntityComponent()->removeUserEntity($entity);
         }
     }
 }

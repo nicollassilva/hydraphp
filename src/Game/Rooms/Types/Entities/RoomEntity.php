@@ -42,8 +42,7 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
             $this instanceof UserEntity => RoomEntityType::User,
         };
 
-        $this->bodyRotation = $room->getModel()->getData()->getDoorDirection();
-        $this->headRotation = $this->bodyRotation;
+        $this->bodyRotation = $this->headRotation = $room->getModel()->getData()->getDoorDirection();
     }
 
     public function getProcessingPath(): array

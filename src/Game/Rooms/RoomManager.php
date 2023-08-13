@@ -125,59 +125,6 @@ class RoomManager implements IRoomManager
         return $this->loadedRooms;
     }
 
-    public function sendInitialRoomData(IUser $user, int $roomId, string $password, bool $bypassPermissionVerifications = false): void
-    {
-        $room = $this->loadRoom($roomId);
-
-        if(empty($room)) {
-            if(Hydra::$isDebugging) $this->getLogger()->warning("Room not found: {$roomId}.");
-
-            return;
-        }
-
-        if(empty($room->getModel())) {
-            if(Hydra::$isDebugging) $this->getLogger()->warning("Room model not found: {$roomId}.");
-
-            return;
-        }
-
-        $user->getClient()->send(new HideDoorbellComposer(""));
-
-        $userEntity = $user->setEntity(new UserEntity($room->getNextEntityId(), $user, $room));
-
-        if(!$userEntity) {
-            if(Hydra::$isDebugging) $this->getLogger()->warning("User entity not created for user {$user->getData()->getUsername()}.");
-
-            return;
-        }
-        
-        $userEntity->clearStatus();
-
-        $user->getClient()->send(new RoomPaintComposer($room));
-
-        $flatCtrl = RoomRightLevels::None;
-
-        if($room->isOwner($user)) {
-            $user->getClient()->send(new RoomOwnerComposer);
-            $flatCtrl = RoomRightLevels::Moderator;
-        }
-        
-        $userEntity->setStatus(RoomEntityStatus::FlatCtrl, $flatCtrl->value);
-        $userEntity->setRoomRightLevel($flatCtrl);
-        
-        $user->getClient()->send(new RoomRightsComposer($flatCtrl));
-
-        if($flatCtrl->value == RoomRightLevels::Moderator->value) {
-            $user->getClient()->send(new RoomRightsListComposer($room));
-        }
-
-        $room->getEntityComponent()->addUserEntity($userEntity);
-        
-        $user->getClient()
-            ->send(new RoomScoreComposer($room))
-            ->send(new RoomPromotionComposer);
-    }
-
     /** @return array<int,IRoom> */
     public function getLoadedPublicRooms(): array
     {

@@ -15,7 +15,7 @@ class UserStartTypingEvent implements IIncomingMessage
 
         if(!$userEntity || !$userEntity->getRoom()) return;
 
-        $userEntity->getRoom()->sendForAll(new UserTypingComposer($userEntity, true));
+        $userEntity->getRoom()->broadcastMessage(new UserTypingComposer($userEntity, true));
     }
     
     public function needsAuthentication(): bool

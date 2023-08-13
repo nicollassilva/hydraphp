@@ -15,7 +15,7 @@ class UserStopTypingEvent implements IIncomingMessage
 
         if(!$userEntity || !$userEntity->getRoom()) return;
 
-        $userEntity->getRoom()->sendForAll(new UserTypingComposer($userEntity, false));
+        $userEntity->getRoom()->broadcastMessage(new UserTypingComposer($userEntity, false));
     }
     
     public function needsAuthentication(): bool

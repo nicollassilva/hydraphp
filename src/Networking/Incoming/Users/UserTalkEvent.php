@@ -14,26 +14,24 @@ class UserTalkEvent implements IIncomingMessage
         $userMessage = $message->readString();
         $bubbleId = $message->readInt();
 
-        if($userMessage == 'cpu') {
-            $client->send(new UserTalkComposer($client->getUser()->getEntity(), 'CPU: ' . round(memory_get_usage() / 1024 / 1024, 2) . 'MB', $bubbleId));
+        if($userMessage == ':memory') {
+            $memory = round(memory_get_usage() / 1024 / 1024, 2);
+            $peakMemory = round(memory_get_peak_usage() / 1024 / 1024, 2);
+
+            $client->send(new UserTalkComposer($client->getUser()->getEntity(), "[PHP] Memory status: {$memory}/{$peakMemory}", $bubbleId));
             return;
         }
 
-        if($userMessage == 'memory') {
-            $client->send(new UserTalkComposer($client->getUser()->getEntity(), 'Memory: ' . round(memory_get_peak_usage() / 1024 / 1024, 2) . 'MB', $bubbleId));
-            return;
-        }
-
-        if($userMessage == 'gc') {
+        if($userMessage == ':gc') {
             $number = gc_collect_cycles();
-            $client->send(new UserTalkComposer($client->getUser()->getEntity(), 'PHP GC collected ' . $number . ' memory cycles.', $bubbleId));
+            $client->send(new UserTalkComposer($client->getUser()->getEntity(), '[PHP Garbage Collector] Collected ' . $number . ' memory cycles.', $bubbleId));
             return;
         }
 
         $client->getUser()
             ->getEntity()
             ->getRoom()
-            ->sendForAll(new UserTalkComposer($client->getUser()->getEntity(), $userMessage, $bubbleId));
+            ->broadcastMessage(new UserTalkComposer($client->getUser()->getEntity(), $userMessage, $bubbleId));
     }
     
     public function needsAuthentication(): bool
