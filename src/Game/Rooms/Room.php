@@ -6,11 +6,9 @@ use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Users\IUser;
 use Emulator\Game\Rooms\Writers\RoomWriter;
-use Emulator\Game\Rooms\Enums\RoomEntityType;
-use Emulator\Game\Rooms\Types\Entities\RoomEntity;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
 use Emulator\Api\Game\Rooms\Data\{IRoomData, IRoomModel};
-use Emulator\Game\Rooms\Components\{MappingComponent,ProcessComponent};
+use Emulator\Game\Rooms\Components\{EntityComponent,MappingComponent,ProcessComponent};
 
 class Room implements IRoom
 {
@@ -21,9 +19,9 @@ class Room implements IRoom
 
     private ProcessComponent $processComponent;
     private MappingComponent $mappingComponent;
+    private EntityComponent $entityComponent;
 
-    // @param array<RoomEntity>
-    private array $entities = [];
+    private int $idleCycle = 0;
 
     public function __construct(IRoomData &$roomData)
     {
@@ -34,6 +32,7 @@ class Room implements IRoom
 
         $this->processComponent = new ProcessComponent($this);
         $this->mappingComponent = new MappingComponent($this);
+        $this->entityComponent = new EntityComponent($this);
 
         $this->loadHeightmap();
     }
@@ -68,9 +67,14 @@ class Room implements IRoom
         return $this->mappingComponent;
     }
 
-    public function sendForAll(IMessageComposer $message): IRoom
+    public function getEntityComponent(): EntityComponent
     {
-        foreach($this->getUserEntities() as $userEntity) {
+        return $this->entityComponent;
+    }
+
+    public function broadcastMessage(IMessageComposer $message): IRoom
+    {
+        foreach($this->entityComponent->getUserEntities() as $userEntity) {
             if(empty($userEntity->getUser()?->getClient()) || $userEntity->getUser()->isDisposed()) {
                 continue;
             }
@@ -81,29 +85,9 @@ class Room implements IRoom
         return $this;
     }
 
-    /** @return array<RoomEntity> */
-    public function getUserEntities(): array
-    {
-        return array_filter($this->entities, 
-            fn (RoomEntity $entity) => $entity->getType() == RoomEntityType::User
-        );
-    }
-
-    public function getDisposedUserEntities(): array
-    {
-        return array_filter($this->getUserEntities(), 
-            fn (RoomEntity $entity) => $entity->getUser()->isDisposed()
-        );
-    }
-
-    public function addEntity(RoomEntity &$entity): void
-    {
-        $this->entities[$entity->getId()] = $entity;
-    }
-
     public function getNextEntityId(): int
     {
-        return count($this->entities);
+        return $this->entityComponent->getNextEntityId();
     }
 
     public function isOwner(IUser $user): bool
@@ -124,5 +108,19 @@ class Room implements IRoom
     public function compose(IMessageComposer $message): void
     {
         RoomWriter::forRoom($this, $message);
+    }
+
+    public function onIdleCycleChanged(): void
+    {
+        if(++$this->idleCycle >= RoomManager::IDLE_CYCLES_BEFORE_DISPOSE) $this->dispose();
+    }
+
+    public function dispose(): void
+    {
+        RoomManager::getInstance()->disposeRoom($this);
+
+        $this->processComponent->dispose();
+
+        unset($this->data, $this->processComponent, $this->mappingComponent, $this->entityComponent, $this->logger);
     }
 }

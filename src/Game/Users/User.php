@@ -47,6 +47,11 @@ class User implements IUser
     public function dispose(): void
     {
         $this->setIsDisposed();
+
+        if(!empty($this->getEntity())) {
+            $this->getEntity()->dispose();
+        }
+        
         $this->getClient()->disconnect();
 
         unset($this->client, $this->settings, $this->data);
@@ -62,14 +67,14 @@ class User implements IUser
         return $this->isDisposed;
     }
 
-    public function setEntity(UserEntity $entity): UserEntity
+    public function setEntity(?UserEntity $entity): ?UserEntity
     {
         $this->entity = $entity;
 
         return $this->entity;
     }
 
-    public function getEntity(): UserEntity
+    public function getEntity(): ?UserEntity
     {
         return $this->entity;
     }

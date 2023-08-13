@@ -50,14 +50,12 @@ class Client implements IClient
         if($message == null) return $this;
 
         if($message->getHeader() <= 0) {
-            $this->logger->error(sprintf('[%s] Invalid composer header: %s', get_class($message), $message->getHeader()));
+            if(Hydra::$isDebugging) $this->logger->error(sprintf('[%s] Invalid composer header: %s', get_class($message), $message->getHeader()));
             
             return $this;
         }
 
-        if(Hydra::$isDebugging) {
-            $this->logger->info(sprintf('[O] [%s] %s', $message->getHeader(), get_class($message)));
-        }
+        if(Hydra::$isDebugging) $this->logger->info(sprintf('[O] [%s] %s', $message->getHeader(), get_class($message)));
 
         $this->getConnection()->write($message->compose());
 

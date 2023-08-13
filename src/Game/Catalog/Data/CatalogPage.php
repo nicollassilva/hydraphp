@@ -40,8 +40,8 @@ class CatalogPage implements ICatalogPage
     /** @var ArrayObject<int,ICatalogItem> */
     private ArrayObject $items;
 
-    /** @var array<int,CatalogPage> */	
-    private array $childPages = [];
+    /** @var ArrayObject<int,CatalogPage> */	
+    private ArrayObject $childPages;
 
     public function __construct(array &$data)
     {
@@ -71,6 +71,7 @@ class CatalogPage implements ICatalogPage
             $this->pageTextTeaser = $data['page_text_teaser'] ?? '';
 
             $this->roomId = $data['room_id'] ?? 0;
+            $this->childPages = new ArrayObject;
 
             if(empty($data['includes'])) {
                 $this->includes = [];
@@ -194,17 +195,19 @@ class CatalogPage implements ICatalogPage
         return $this->includes;
     }
 
-    public function addChildPage(ICatalogPage $childPage): void
+    public function addChildPage(ICatalogPage &$childPage): void
     {
-        $this->childPages[$childPage->getId()] = $childPage;
+        if($this->childPages->offsetExists($childPage->getId())) return;
+
+        $this->childPages->offsetSet($childPage->getId(), $childPage);
 
         if($childPage->getMinRank() < $this->getMinRank()) {
             $childPage->setMinRank($this->getMinRank());
         }
     }
 
-    /** @return array<int,ICatalogPage> */
-    public function getChildPages(): array
+    /** @return ArrayObject<int,ICatalogPage> */
+    public function getChildPages(): ArrayObject
     {
         return $this->childPages;
     }
@@ -221,7 +224,7 @@ class CatalogPage implements ICatalogPage
 
     public function getItemById(int $id): ?ICatalogItem
     {
-        return $this->items->offsetGet($id);
+        return $this->items->offsetGet($id) ?? null;
     }
 
     /** @return ArrayObject<int,ICatalogItem> */

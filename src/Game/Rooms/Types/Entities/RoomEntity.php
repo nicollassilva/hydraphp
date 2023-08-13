@@ -42,7 +42,7 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
             $this instanceof UserEntity => RoomEntityType::User,
         };
 
-        $this->bodyRotation = $doorTile->getPosition()->calculateRotation($this->getPosition());
+        $this->bodyRotation = $room->getModel()->getData()->getDoorDirection();
         $this->headRotation = $this->bodyRotation;
     }
 
@@ -198,5 +198,10 @@ class RoomEntity extends RoomObject implements IRoomEntity, IMoveable
     public function removeStatus(RoomEntityStatus $status): void
     {
         unset($this->status[$status->value]);
+    }
+
+    public function dispose(): void
+    {
+        // Override this.
     }
 }

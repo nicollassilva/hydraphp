@@ -43,6 +43,7 @@ abstract class OutgoingHeaders
     public static int $bonusRareComposer = 1533;
     public static int $hotelViewDataComposer = 1745;
     public static int $adventCalendarDataComposer = 2531;
+    public static int $hotelViewMessageComposer = 122;
     # -----
     
     # Inventory Outgoing Events
@@ -80,6 +81,7 @@ abstract class OutgoingHeaders
     public static int $roomRightsListComposer = 1284;
     public static int $roomRelativeMapComposer = 2753;
     public static int $roomHeightmapComposer = 1301;
+    public static int $removeUserComposer = 2661;
     # -----
 
     # Catalog Outgoing Events
@@ -105,4 +107,5 @@ abstract class OutgoingHeaders
     public static int $availabilityStatusComposer = 2033;
     public static int $pingComposer = 3928;
     public static int $pongComposer = 10;
+    public static int $genericErrorComposer = 1600;
 }

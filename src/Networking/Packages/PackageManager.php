@@ -51,9 +51,7 @@ class PackageManager implements IPackageManager
         if(empty($client)) return;
 
         if($package = $this->incomingPackagesLoader->getPackageByHeader($message->getHeader())) {
-            if(Hydra::$isDebugging) {
-                $this->logger->info(sprintf('[I] [%s] %s', $message->getHeader(), $package));
-            }
+            if(Hydra::$isDebugging) $this->logger->info(sprintf('[I] [%s] %s', $message->getHeader(), $package));
 
             $package = new $package();
 
@@ -65,9 +63,7 @@ class PackageManager implements IPackageManager
 
             $package->handle($client, $message);
         } else {
-            if(Hydra::$isDebugging) {
-                $this->logger->warning(sprintf('[%s] %s', $message->getHeader(), "Unhandled package"));
-            }
+            if(Hydra::$isDebugging) $this->logger->warning(sprintf('[%s] %s', $message->getHeader(), "Unhandled package"));
         }
     }
 

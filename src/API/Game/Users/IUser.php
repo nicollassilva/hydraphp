@@ -17,7 +17,7 @@ interface IUser
     public function dispose(): void;
     public function isDisposed(): bool;
 
-    public function setEntity(UserEntity $entity): UserEntity;
-    public function getEntity(): UserEntity;
+    public function setEntity(?UserEntity $entity): ?UserEntity;
+    public function getEntity(): ?UserEntity;
 
 }

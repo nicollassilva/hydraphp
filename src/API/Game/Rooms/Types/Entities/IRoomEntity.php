@@ -41,4 +41,6 @@ interface IRoomEntity
     public function hasStatus(RoomEntityStatus $status): bool;
     public function removeStatus(RoomEntityStatus $status): void;
     public function setStatus(RoomEntityStatus $status, string $key): void;
+
+    public function dispose(): void;
 }

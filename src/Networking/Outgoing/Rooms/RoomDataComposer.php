@@ -21,7 +21,7 @@ class RoomDataComposer extends MessageComposer
         $this->writeString($room->getData()->isPublic() ? "" : $room->getData()->getOwnerName());
 
         $this->writeInt($room->getData()->getState()->value);
-        $this->writeInt($room->getData()->getCurrentUsers());
+        $this->writeInt($room->getEntityComponent()->getUserEntitiesCount());
         $this->writeInt($room->getData()->getMaxUsers());
         $this->writeString($room->getData()->getDescription());
         $this->writeInt($room->getData()->getTradeMode());

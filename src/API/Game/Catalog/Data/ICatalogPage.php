@@ -30,8 +30,8 @@ interface ICatalogPage
     public function getRoomId(): int;
     public function getIncludes(): array;
 
-    public function addChildPage(ICatalogPage $childPage): void;
-    public function getChildPages(): array;
+    public function addChildPage(ICatalogPage &$childPage): void;
+    public function getChildPages(): ArrayObject;
     public function setMinRank(int $rank): void;
 
     public function addItem(ICatalogItem $item): void;

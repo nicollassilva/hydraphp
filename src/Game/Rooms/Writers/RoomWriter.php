@@ -16,7 +16,7 @@ abstract class RoomWriter
         $message->writeString($room->getData()->isPublic() ? "" : $room->getData()->getOwnerName());
 
         $message->writeInt($room->getData()->getState()->value);
-        $message->writeInt($room->getData()->getCurrentUsers());
+        $message->writeInt($room->getEntityComponent()->getUserEntitiesCount());
         $message->writeInt($room->getData()->getMaxUsers());
         $message->writeString($room->getData()->getDescription());
         $message->writeInt($room->getData()->getTradeMode());

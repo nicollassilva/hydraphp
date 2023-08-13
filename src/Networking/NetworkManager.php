@@ -54,7 +54,7 @@ class NetworkManager implements INetworkManager
         $this->tcpServer->on('connection', function (ConnectionInterface $connection) {
             $client = $this->clientManager->addIfAbsent($connection);
 
-            $this->logger->info(sprintf('[%s] connected. Total of connections: [%s]', $client->getId(), count($this->clientManager->getClients())));
+            if(Hydra::$isDebugging) $this->logger->info(sprintf('[%s] connected. Total of connections: [%s]', $client->getId(), count($this->clientManager->getClients())));
 
             $connection->on('data', function ($data) use (&$client) {
                 $this->packageManager->handle($data, $client);

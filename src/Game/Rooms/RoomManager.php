@@ -17,6 +17,9 @@ use Emulator\Networking\Outgoing\Rooms\{RoomRightsComposer,RoomScoreComposer,Roo
 
 class RoomManager implements IRoomManager
 {
+    public CONST IDLE_CYCLES_BEFORE_DISPOSE = 60;
+    public CONST ROOM_TICK_MS = 0.5;
+
     public static IRoomManager $instance;
 
     private readonly Logger $logger;
@@ -80,9 +83,10 @@ class RoomManager implements IRoomManager
 
     public function loadRoom(int $roomId): ?IRoom
     {
-        if(isset($this->loadedRooms[$roomId])) {
-            $this->getLogger()->info("Room already loaded: {$roomId}.");
-            return $this->loadedRooms[$roomId];
+        if($this->loadedRooms->offsetExists($roomId)) {
+            if(Hydra::$isDebugging) $this->getLogger()->info("Room already loaded: {$roomId}.");
+
+            return $this->loadedRooms->offsetGet($roomId);
         }
 
         $roomData = RoomRepository::loadRoomData($roomId);
@@ -93,7 +97,6 @@ class RoomManager implements IRoomManager
 
         $this->loadedRooms[$roomId] = &$room;
 
-        $this->getLogger()->info("Room loaded successfully: {$roomId}.");
 
         return $room;
     }
@@ -102,14 +105,17 @@ class RoomManager implements IRoomManager
     {
         if($roomData === null) return null;
 
-        if(isset($this->loadedRooms[$roomData->getId()])) {
-            $this->getLogger()->info("Room already loaded: {$roomData->getId()}.");
-            return $this->loadedRooms[$roomData->getId()];
+        if($this->loadedRooms->offsetExists($roomData->getId())) {
+            if(Hydra::$isDebugging) $this->getLogger()->info("Room already loaded: {$roomData->getId()}.");
+
+            return $this->loadedRooms->offsetGet($roomData->getId());
         }
 
         $room = new Room($roomData);
 
-        $this->loadedRooms[$roomData->getId()] = &$room;
+        $this->loadedRooms->offsetSet($roomData->getId(), $room);
+
+        if(Hydra::$isDebugging) $this->getLogger()->info("Room loaded successfully: {$roomData->getName()}.");
 
         return $room;
     }
@@ -124,17 +130,13 @@ class RoomManager implements IRoomManager
         $room = $this->loadRoom($roomId);
 
         if(empty($room)) {
-            if(Hydra::$isDebugging) {
-                $this->getLogger()->warning("Room not found: {$roomId}.");
-            }
+            if(Hydra::$isDebugging) $this->getLogger()->warning("Room not found: {$roomId}.");
 
             return;
         }
 
         if(empty($room->getModel())) {
-            if(Hydra::$isDebugging) {
-                $this->getLogger()->warning("Room model not found: {$roomId}.");
-            }
+            if(Hydra::$isDebugging) $this->getLogger()->warning("Room model not found: {$roomId}.");
 
             return;
         }
@@ -144,9 +146,7 @@ class RoomManager implements IRoomManager
         $userEntity = $user->setEntity(new UserEntity($room->getNextEntityId(), $user, $room));
 
         if(!$userEntity) {
-            if(Hydra::$isDebugging) {
-                $this->getLogger()->warning("User entity not created for user {$user->getData()->getUsername()}.");
-            }
+            if(Hydra::$isDebugging) $this->getLogger()->warning("User entity not created for user {$user->getData()->getUsername()}.");
 
             return;
         }
@@ -171,7 +171,7 @@ class RoomManager implements IRoomManager
             $user->getClient()->send(new RoomRightsListComposer($room));
         }
 
-        $room->addEntity($userEntity);
+        $room->getEntityComponent()->addUserEntity($userEntity);
         
         $user->getClient()
             ->send(new RoomScoreComposer($room))
@@ -196,13 +196,13 @@ class RoomManager implements IRoomManager
         $rooms = [];
 
         foreach($this->loadedRooms as $room) {
-            if($room->getData()->getCurrentUsers() > 0) {
+            if($room->getEntityComponent()->getUserEntitiesCount() > 0) {
                 $rooms[] = $room;
             }
         }
 
         usort($rooms, 
-            fn (IRoom $a, IRoom $b) => $a->getData()->getCurrentUsers() < $b->getData()->getCurrentUsers()
+            fn (IRoom $a, IRoom $b) => $a->getEntityComponent()->getUserEntitiesCount() < $b->getEntityComponent()->getUserEntitiesCount()
         );
 
         return array_slice($rooms, 0, $roomsLimit);
@@ -224,9 +224,21 @@ class RoomManager implements IRoomManager
         }
 
         usort($rooms, 
-            fn (IRoom $a, IRoom $b) => $a->getData()->getCurrentUsers() < $b->getData()->getCurrentUsers()
+            fn (IRoom $roomA, IRoom $roomB) => $roomA->getEntityComponent()->getUserEntitiesCount() < $roomB->getEntityComponent()->getUserEntitiesCount()
         );
 
         return array_slice($rooms, 0, $roomsLimit);
+    }
+
+
+    public function disposeRoom(IRoom &$room): void
+    {
+        if($room === null) return;
+
+        if(Hydra::$isDebugging) $this->getLogger()->info("Room [{$room->getData()->getName()} #{$room->getData()->getId()}] disposed successfully.");
+
+        $this->loadedRooms->offsetUnset($room->getData()->getId());
+
+        $room = null;
     }
 }

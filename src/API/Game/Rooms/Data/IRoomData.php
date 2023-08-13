@@ -13,8 +13,6 @@ interface IRoomData
     public function getModel(): string;
     public function getOwnerId(): int;
     public function getOwnerName(): string;
-    public function getCurrentUsers(): int;
-    public function incrementCurrentUsers(): void;
     public function getMaxUsers(): int;
     public function getScore(): int;
     public function getPassword(): string;

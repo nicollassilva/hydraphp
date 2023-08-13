@@ -16,7 +16,6 @@ class RoomData implements IRoomData
     private string $model;
     private int $ownerId;
     private string $ownerName;
-    private int $currentUsers;
     private int $maxUsers;
     private int $score;
     private string $password;
@@ -65,7 +64,6 @@ class RoomData implements IRoomData
             $this->model = $data['model'];
             $this->ownerId = $data['owner_id'];
             $this->ownerName = $data['owner_name'];
-            $this->currentUsers = $data['users'];
             $this->maxUsers = $data['users_max'];
             $this->guildId = $data['guild_id'];
             $this->score = $data['score'];
@@ -138,16 +136,6 @@ class RoomData implements IRoomData
     public function getOwnerName(): string
     {
         return $this->ownerName;
-    }
-
-    public function getCurrentUsers(): int
-    {
-        return $this->currentUsers;
-    }
-
-    public function incrementCurrentUsers(): void
-    {
-        $this->currentUsers++;
     }
 
     public function getMaxUsers(): int
