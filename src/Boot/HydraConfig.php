@@ -2,9 +2,9 @@
 
 namespace Emulator\Boot;
 
+use Emulator\Utils\Logger;
 use Emulator\Api\Boot\IHydraConfig;
 use Emulator\Storage\Repositories\EmulatorRepository;
-use Emulator\Utils\Logger;
 
 class HydraConfig implements IHydraConfig
 {   

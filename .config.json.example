@@ -8,7 +8,7 @@
     "hydra.db.port": 3306,
     "hydra.db.user": "root",
     "hydra.db.password": "password",
-    "hydra.db.name": "orioncms",
+    "hydra.db.name": "habbo",
     "hydra.db.tcpKeepAlive": true,
     "hydra.db.autoReconnect": true
 }
