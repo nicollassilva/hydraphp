@@ -18,7 +18,7 @@ class UserTalkEvent implements IIncomingMessage
             $memory = round(memory_get_usage() / 1024 / 1024, 2);
             $peakMemory = round(memory_get_peak_usage() / 1024 / 1024, 2);
 
-            $client->send(new UserTalkComposer($client->getUser()->getEntity(), "[PHP] Memory status: {$memory}/{$peakMemory}", $bubbleId));
+            $client->send(new UserTalkComposer($client->getUser()->getEntity(), "[PHP] Memory status: {$memory}MB with {$peakMemory}MB peak", $bubbleId));
             return;
         }
 

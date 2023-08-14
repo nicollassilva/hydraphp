@@ -135,16 +135,10 @@ class RoomManager implements IRoomManager
         foreach($this->loadedRooms as $room) {
             if($rooms->count() >= $roomsLimit) break;
 
-            if($room->getData()->isPublic()) continue;
-
             if($room->getEntityComponent()->getUserEntitiesCount() > 0) {
                 $rooms->append($room);
             }
         }
-
-        $rooms->uasort(
-            fn (IRoom $a, IRoom $b) => $a->getEntityComponent()->getUserEntitiesCount() < $b->getEntityComponent()->getUserEntitiesCount() ? -1 : 1
-        );
 
         return $rooms;
     }
@@ -156,8 +150,6 @@ class RoomManager implements IRoomManager
         $sortedRooms = $this->getSortedLoadedRooms(LoadedRoomSort::UsersCount);
 
         foreach($sortedRooms as $room) {
-            if(!($room instanceof IRoom) || $room->getData()->isPublic()) continue;
-
             if(!$popularRooms->offsetExists($room->getData()->getCategoryId())) {
                 $popularRooms->offsetSet($room->getData()->getCategoryId(), new ArrayObject);
             }
@@ -168,10 +160,6 @@ class RoomManager implements IRoomManager
 
             $popularRooms->offsetGet($room->getData()->getCategoryId())->append($room);
         }
-
-        $popularRooms->uasort(
-            fn (IRoom $roomA, IRoom $roomB) => $roomA->getEntityComponent()->getUserEntitiesCount() < $roomB->getEntityComponent()->getUserEntitiesCount() ? 1 : -1
-        );
         
         return $popularRooms;
     }

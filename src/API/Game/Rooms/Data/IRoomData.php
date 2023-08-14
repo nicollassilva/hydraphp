@@ -29,6 +29,7 @@ interface IRoomData
     public function getMoodlightData(): string;
     public function getTags(): array;
     public function isPublic(): bool;
+    public function setIsPublic(bool $isPublic): void;
     public function isStaffPicked(): bool;
     public function allowPets(): bool;
     public function allowPetsEat(): bool;

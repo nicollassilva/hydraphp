@@ -48,6 +48,10 @@ class NavigatorSearchList implements IComposable
 
         $message->writeInt($this->rooms->count());
 
+        $this->rooms->uasort(
+            fn (IRoom $roomA, IRoom $roomB) => $roomA->getEntityComponent()->getUserEntitiesCount() < $roomB->getEntityComponent()->getUserEntitiesCount() ? 1 : -1
+        );
+
         foreach ($this->rooms as $room) {
             $room->compose($message);
         }

@@ -218,6 +218,11 @@ class RoomData implements IRoomData
         return $this->isPublic;
     }
 
+    public function setIsPublic(bool $isPublic): void
+    {
+        $this->isPublic = $isPublic;
+    }
+
     public function isStaffPicked(): bool
     {
         return $this->isStaffPicked;

@@ -88,6 +88,8 @@ abstract class RoomRepository extends EmulatorRepository
 
                 if(!$room) continue;
 
+                $room->getData()->setIsPublic(true);
+
                 $category->addRoom($room);
             }
         });
