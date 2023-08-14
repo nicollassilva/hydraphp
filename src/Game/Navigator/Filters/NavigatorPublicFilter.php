@@ -2,6 +2,7 @@
 
 namespace Emulator\Game\Navigator\Filters;
 
+use ArrayObject;
 use Emulator\Game\Navigator\NavigatorManager;
 use Emulator\Game\Navigator\Enums\NavigatorListMode;
 use Emulator\Game\Navigator\Search\NavigatorSearchList;
@@ -12,43 +13,45 @@ class NavigatorPublicFilter implements INavigatorFilter
 {
     public const FILTER_NAME = 'official_view';
 
-    /** @return array<NavigatorSearchList> */
-    public function getFilterResult(): array
+    /** @return ArrayObject<NavigatorSearchList> */
+    public function getFilterResult(): ArrayObject
     {
         $index = 0;
 
-        /** @var array<NavigatorSearchList> */
-        $searchLists = [
-            new NavigatorSearchList(
-                $index,
-                'official-root',
-                '',
-                NavigatorSearchAction::None,
-                NavigatorListMode::Thumbnails,
-                NavigatorDisplayMode::Visible,
-                false,
-                false,
-                NavigatorDisplayOrder::OrderNumeric,
-                -1,
-                NavigatorManager::getInstance()->getRoomsForView('official-root')
-            )
-        ];
+        /** @var ArrayObject<NavigatorSearchList> */
+        $searchLists = new ArrayObject;
+
+        $searchLists->append(new NavigatorSearchList(
+            $index,
+            'official-root',
+            '',
+            NavigatorSearchAction::None,
+            NavigatorListMode::Thumbnails,
+            NavigatorDisplayMode::Visible,
+            false,
+            false,
+            NavigatorDisplayOrder::OrderNumeric,
+            -1,
+            NavigatorManager::getInstance()->getRoomsForView('official-root')
+        ));
         
         $publicCategories = NavigatorManager::getInstance()->getPublicCategories();
 
         foreach ($publicCategories as $publicCategory) {
-            $searchLists[] = new NavigatorSearchList(
-                ++$index,
-                '',
-                $publicCategory->getName(),
-                NavigatorSearchAction::None,
-                NavigatorListMode::List,
-                NavigatorDisplayMode::Visible,
-                true,
-                false,
-                NavigatorDisplayOrder::OrderNumeric,
-                $publicCategory->getOrder(),
-                $publicCategory->getRooms()
+            $searchLists->append(
+                new NavigatorSearchList(
+                    ++$index,
+                    '',
+                    $publicCategory->getName(),
+                    NavigatorSearchAction::None,
+                    NavigatorListMode::List,
+                    NavigatorDisplayMode::Visible,
+                    true,
+                    false,
+                    NavigatorDisplayOrder::OrderNumeric,
+                    $publicCategory->getOrder(),
+                    $publicCategory->getRooms()
+                )
             );
         }
 
@@ -57,13 +60,13 @@ class NavigatorPublicFilter implements INavigatorFilter
         return $searchLists;
     }
 
-    /** @param array<NavigatorSearchList> $resultList */
-    public function getRooms(array $resultList): array
+    /** @param ArrayObject<NavigatorSearchList> $resultList */
+    public function getRooms(ArrayObject $resultList): ArrayObject
     {
-        $rooms = [];
+        $rooms = new ArrayObject;
 
         foreach ($resultList as $list) {
-            $rooms = array_merge($rooms, $list->getRooms());
+            $rooms->append($list->getRooms());
         }
 
         return $rooms;

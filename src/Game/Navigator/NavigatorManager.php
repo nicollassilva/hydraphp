@@ -2,6 +2,8 @@
 
 namespace Emulator\Game\Navigator;
 
+use ArrayObject;
+use Emulator\Hydra;
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Users\IUser;
@@ -10,7 +12,6 @@ use Emulator\Api\Game\Navigator\INavigatorManager;
 use Emulator\Game\Navigator\Data\NavigatorFilterField;
 use Emulator\Storage\Repositories\Navigator\NavigatorRepository;
 use Emulator\Api\Game\Navigator\Data\{INavigatorCategory,INavigatorPublicCategory};
-use Emulator\Hydra;
 
 class NavigatorManager implements INavigatorManager
 {
@@ -20,18 +21,22 @@ class NavigatorManager implements INavigatorManager
 
     private bool $isStarted = false;
 
-    /** @var array<int,INavigatorCategory> */
-    private array $flatCategories = [];
+    /** @var ArrayObject<int,INavigatorCategory> */
+    private ArrayObject $flatCategories;
 
-    /** @var array<int,INavigatorPublicCategory> */
-    private array $publicCategories = [];
+    /** @var ArrayObject<int,INavigatorPublicCategory> */
+    private ArrayObject $publicCategories;
 
-    /** @var array<string,NavigatorFilterField> */
-    private array $filterSettings = [];
+    /** @var ArrayObject<string,NavigatorFilterField> */
+    private ArrayObject $filterSettings;
 
     public function __construct()
     {
         $this->logger = new Logger(get_class($this));
+
+        $this->flatCategories = new ArrayObject;
+        $this->publicCategories = new ArrayObject;
+        $this->filterSettings = new ArrayObject;
     }
 
     public static function getInstance(): NavigatorManager
@@ -61,8 +66,8 @@ class NavigatorManager implements INavigatorManager
         return $this->logger;
     }
 
-    /** @return array<int,INavigatorCategory> */
-    public function getFlatCategories(): array
+    /** @return ArrayObject<int,INavigatorCategory> */
+    public function getFlatCategories(): ArrayObject
     {
         return $this->flatCategories;
     }
@@ -83,8 +88,8 @@ class NavigatorManager implements INavigatorManager
         return null;
     }
 
-    /** @return array<int,INavigatorPublicCategory> */
-    public function getPublicCategories(): array
+    /** @return ArrayObject<int,INavigatorPublicCategory> */
+    public function getPublicCategories(): ArrayObject
     {
         return $this->publicCategories;
     }
@@ -94,8 +99,8 @@ class NavigatorManager implements INavigatorManager
         return $this->publicCategories[$id] ?? null;
     }
 
-    /** @return array<int,IRoom> */
-    public function getRoomsForView(string $category, ?IUser $user = null): array
+    /** @return ArrayObject<int,IRoom> */
+    public function getRoomsForView(string $category, ?IUser $user = null): ArrayObject
     {
         return match ($category) {
             "official-root" => RoomManager::getInstance()->getLoadedPublicRooms(),
@@ -103,8 +108,8 @@ class NavigatorManager implements INavigatorManager
         };
     }
 
-    /** @return array<string,NavigatorFilterField> */
-    public function getFilterSettings(): array
+    /** @return ArrayObject<string,NavigatorFilterField> */
+    public function getFilterSettings(): ArrayObject
     {
         return $this->filterSettings;
     }

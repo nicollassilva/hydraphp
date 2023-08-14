@@ -2,6 +2,7 @@
 
 namespace Emulator\Api\Game\Navigator\Data;
 
+use ArrayObject;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Game\Navigator\Enums\NavigatorListMode;
 
@@ -14,6 +15,6 @@ interface INavigatorPublicCategory
 
     public function addRoom(IRoom &$room): void;
     
-    /** @return array<int,IRoom> */
-    public function getRooms(): array;
+    /** @return ArrayObject<int,IRoom> */
+    public function getRooms(): ArrayObject;
 }

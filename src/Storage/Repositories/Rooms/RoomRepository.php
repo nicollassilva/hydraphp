@@ -64,6 +64,8 @@ abstract class RoomRepository extends EmulatorRepository
             foreach($result->resultRows as $row) {
                 $room = RoomManager::getInstance()->loadRoomFromData(new RoomData($row));
 
+                if(!$room) continue;
+
                 $publicRoomsProperty->offsetSet($room->getData()->getId(), $room);
             }
         }, ['1', '1']);
@@ -83,6 +85,8 @@ abstract class RoomRepository extends EmulatorRepository
                 }
 
                 $room = RoomManager::getInstance()->loadRoomFromData(new RoomData($row));
+
+                if(!$room) continue;
 
                 $category->addRoom($room);
             }

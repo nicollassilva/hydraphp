@@ -2,51 +2,52 @@
 
 namespace Emulator\Game\Navigator\Filters;
 
-use Emulator\Api\Game\Navigator\Data\INavigatorCategory;
+use ArrayObject;
+use Emulator\Hydra;
+use Emulator\Game\Rooms\RoomManager;
 use Emulator\Game\Navigator\NavigatorManager;
 use Emulator\Game\Navigator\Enums\NavigatorListMode;
 use Emulator\Game\Navigator\Search\NavigatorSearchList;
+use Emulator\Api\Game\Navigator\Data\INavigatorCategory;
 use Emulator\Api\Game\Navigator\Filters\INavigatorFilter;
 use Emulator\Game\Navigator\Enums\{NavigatorDisplayOrder,NavigatorSearchAction,NavigatorDisplayMode};
-use Emulator\Game\Rooms\RoomManager;
-use Emulator\Hydra;
 
 class NavigatorHotelFilter implements INavigatorFilter
 {
     public const FILTER_NAME = 'hotel_view';
 
-    /** @return array<NavigatorSearchList> */
-    public function getFilterResult(): array
+    /** @return ArrayObject<NavigatorSearchList> */
+    public function getFilterResult(): ArrayObject
     {
         $index = 0;
 
-        /** @var array<NavigatorSearchList> */
-        $searchLists = [
-            new NavigatorSearchList(
-                $index,
-                'popular',
-                '',
-                NavigatorSearchAction::None,
-                NavigatorListMode::from(Hydra::getEmulator()->getConfigManager()->get('hotel.navigator.popular.listtype')),
-                NavigatorDisplayMode::Visible,
-                false,
-                true, // show invisible rooms
-                NavigatorDisplayOrder::OrderNumeric,
-                -1,
-                NavigatorManager::getInstance()->getRoomsForView('popular')
-            )
-        ];
+        /** @var ArrayObject<NavigatorSearchList> */
+        $searchLists = new ArrayObject;
+
+        $searchLists->append(new NavigatorSearchList(
+            $index,
+            'popular',
+            '',
+            NavigatorSearchAction::None,
+            NavigatorListMode::from(Hydra::getEmulator()->getConfigManager()->get('hotel.navigator.popular.listtype')),
+            NavigatorDisplayMode::Visible,
+            false,
+            true, // show invisible rooms
+            NavigatorDisplayOrder::OrderNumeric,
+            -1,
+            NavigatorManager::getInstance()->getRoomsForView('popular')
+        ));
         
         $popularRoomsByCategory = RoomManager::getInstance()->getPopularRoomsByCategory(
             Hydra::getEmulator()->getConfigManager()->get('hotel.navigator.popular.amount')
         );
 
         foreach ($popularRoomsByCategory as $rooms) {
-            $firstRoom = $rooms[0];
+            $firstRoom = $rooms->offsetGet(0);
 
             if(empty($firstRoom) || !($firstRoom->getData()->getCategory() instanceof INavigatorCategory)) continue;
 
-            $searchLists[] = new NavigatorSearchList(
+            $searchLists->append(new NavigatorSearchList(
                 ++$index,
                 $firstRoom->getData()->getCategory()->getCaption(),
                 $firstRoom->getData()->getCategory()->getCaption(),
@@ -58,7 +59,7 @@ class NavigatorHotelFilter implements INavigatorFilter
                 NavigatorDisplayOrder::OrderNumeric,
                 $firstRoom->getData()->getCategory()->getOrder(),
                 $rooms
-            );
+            ));
         }
 
         unset($index, $popularRoomsByCategory);
@@ -66,13 +67,13 @@ class NavigatorHotelFilter implements INavigatorFilter
         return $searchLists;
     }
 
-    /** @param array<NavigatorSearchList> $resultList */
-    public function getRooms(array $resultList): array
+    /** @param ArrayObject<NavigatorSearchList> $resultList */
+    public function getRooms(ArrayObject $resultList): ArrayObject
     {
-        $rooms = [];
+        $rooms = new ArrayObject;
 
         foreach ($resultList as $list) {
-            $rooms = array_merge($rooms, $list->getRooms());
+            $rooms->append($list->getRooms());
         }
 
         return $rooms;

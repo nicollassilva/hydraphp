@@ -6,14 +6,11 @@ use ArrayObject;
 use Emulator\Hydra;
 use Emulator\Utils\Logger;
 use Emulator\Game\Rooms\Room;
-use Emulator\Api\Game\Users\IUser;
 use Emulator\Api\Game\Rooms\Data\IRoomData;
+use Emulator\Game\Rooms\Enums\LoadedRoomSort;
 use Emulator\Api\Game\Rooms\{IRoomManager,IRoom};
-use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Storage\Repositories\Rooms\RoomRepository;
-use Emulator\Game\Rooms\Enums\{RoomEntityStatus,RoomRightLevels};
 use Emulator\Game\Rooms\Components\{RoomModelsComponent,ChatBubblesComponent};
-use Emulator\Networking\Outgoing\Rooms\{RoomRightsComposer,RoomScoreComposer,RoomPaintComposer,RoomOwnerComposer,RoomRightsListComposer,RoomPromotionComposer,HideDoorbellComposer};
 
 class RoomManager implements IRoomManager
 {
@@ -89,23 +86,16 @@ class RoomManager implements IRoomManager
             return $this->loadedRooms->offsetGet($roomId);
         }
 
-        $roomData = RoomRepository::loadRoomData($roomId);
-
-        if($roomData === null) return null;
-
-        $room = new Room($roomData);
-
-        $this->loadedRooms[$roomId] = &$room;
-
-
-        return $room;
+        return $this->loadRoomFromData(
+            RoomRepository::loadRoomData($roomId), true
+        );
     }
 
-    public function loadRoomFromData(IRoomData $roomData): ?IRoom
+    public function loadRoomFromData(IRoomData $roomData, bool $bypassExists = false): ?IRoom
     {
         if($roomData === null) return null;
 
-        if($this->loadedRooms->offsetExists($roomData->getId())) {
+        if(!$bypassExists && $this->loadedRooms->offsetExists($roomData->getId())) {
             if(Hydra::$isDebugging) $this->getLogger()->info("Room already loaded: {$roomData->getId()}.");
 
             return $this->loadedRooms->offsetGet($roomData->getId());
@@ -125,56 +115,65 @@ class RoomManager implements IRoomManager
         return $this->loadedRooms;
     }
 
-    /** @return array<int,IRoom> */
-    public function getLoadedPublicRooms(): array
+    /** @return ArrayObject<int,IRoom> */
+    public function getLoadedPublicRooms(): ArrayObject
     {
-        $publicRooms = $this->publicRooms->getArrayCopy();
+        $publicRooms = $this->publicRooms;
 
-        usort($publicRooms,
+        $publicRooms->uasort(
             fn(IRoom $a, IRoom $b) => $a->getData()->getId() <=> $b->getData()->getId()
         );
 
         return $publicRooms;
     }
     
-    /** @return array<int,IRoom> */
-    public function getPopularRooms(int $roomsLimit): array
+    /** @return ArrayObject<int,IRoom> */
+    public function getPopularRooms(int $roomsLimit): ArrayObject
     {
-        $rooms = [];
+        $rooms = new ArrayObject;
 
         foreach($this->loadedRooms as $room) {
-            if($room->getEntityComponent()->getUserEntitiesCount() > 0) {
-                $rooms[] = $room;
-            }
-        }
+            if($rooms->count() >= $roomsLimit) break;
 
-        usort($rooms, 
-            fn (IRoom $a, IRoom $b) => $a->getEntityComponent()->getUserEntitiesCount() < $b->getEntityComponent()->getUserEntitiesCount()
-        );
-
-        return array_slice($rooms, 0, $roomsLimit);
-    }
-    
-    /** @return array<int,array<IRoom> */
-    public function getPopularRoomsByCategory(int $roomsLimit): array
-    {
-        $rooms = [];
-
-        foreach($this->loadedRooms as $room) {
             if($room->getData()->isPublic()) continue;
 
-            if(!array_key_exists($room->getData()->getCategoryId(), $rooms)) {
-                $rooms[$room->getData()->getCategoryId()] = [];
+            if($room->getEntityComponent()->getUserEntitiesCount() > 0) {
+                $rooms->append($room);
             }
-            
-            $rooms[$room->getData()->getCategoryId()][] = $room;
         }
 
-        usort($rooms, 
-            fn (IRoom $roomA, IRoom $roomB) => $roomA->getEntityComponent()->getUserEntitiesCount() < $roomB->getEntityComponent()->getUserEntitiesCount()
+        $rooms->uasort(
+            fn (IRoom $a, IRoom $b) => $a->getEntityComponent()->getUserEntitiesCount() < $b->getEntityComponent()->getUserEntitiesCount() ? -1 : 1
         );
 
-        return array_slice($rooms, 0, $roomsLimit);
+        return $rooms;
+    }
+    
+    /** @return ArrayObject<int,ArrayObject<IRoom> */
+    public function getPopularRoomsByCategory(int $roomsLimit): ArrayObject
+    {
+        $popularRooms = new ArrayObject;
+        $sortedRooms = $this->getSortedLoadedRooms(LoadedRoomSort::UsersCount);
+
+        foreach($sortedRooms as $room) {
+            if(!($room instanceof IRoom) || $room->getData()->isPublic()) continue;
+
+            if(!$popularRooms->offsetExists($room->getData()->getCategoryId())) {
+                $popularRooms->offsetSet($room->getData()->getCategoryId(), new ArrayObject);
+            }
+
+            if($popularRooms->offsetGet($room->getData()->getCategoryId())->count() >= $roomsLimit) break;
+
+            if($room->getEntityComponent()->getUserEntitiesCount() <= 0 && !$room->getProcessComponent()->started()) continue;
+
+            $popularRooms->offsetGet($room->getData()->getCategoryId())->append($room);
+        }
+
+        $popularRooms->uasort(
+            fn (IRoom $roomA, IRoom $roomB) => $roomA->getEntityComponent()->getUserEntitiesCount() < $roomB->getEntityComponent()->getUserEntitiesCount() ? 1 : -1
+        );
+        
+        return $popularRooms;
     }
 
     public function disposeRoom(IRoom &$room): void
@@ -190,5 +189,25 @@ class RoomManager implements IRoomManager
         }
 
         $room = null;
+    }
+
+    /** @return ArrayObject<int,IRoom> */
+    private function getSortedLoadedRooms(LoadedRoomSort $sortBy): ArrayObject
+    {
+        $sortedLoadedRooms = $this->loadedRooms;
+
+        if($sortBy === LoadedRoomSort::UsersCount) {
+            $sortedLoadedRooms->uasort(
+                fn (IRoom $roomA, IRoom $roomB) => $roomA->getEntityComponent()->getUserEntitiesCount() < $roomB->getEntityComponent()->getUserEntitiesCount() ? -1 : 1
+            );
+        }
+        
+        if($sortBy == LoadedRoomSort::Id) {
+            $sortedLoadedRooms->uasort(
+                fn (IRoom $roomA, IRoom $roomB) => $roomA->getData()->getId() < $roomB->getData()->getId() ? -1 : 1
+            );
+        }
+
+        return $sortedLoadedRooms;
     }
 }

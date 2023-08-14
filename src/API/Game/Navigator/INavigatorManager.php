@@ -2,6 +2,7 @@
 
 namespace Emulator\Api\Game\Navigator;
 
+use ArrayObject;
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Users\IUser;
@@ -12,12 +13,12 @@ interface INavigatorManager
     public function initialize(): void;
     public function getLogger(): Logger;
 
-    /** @return array<int,IRoom> */
-    public function getRoomsForView(string $view, IUser $user): array;
+    /** @return ArrayObject<int,IRoom> */
+    public function getRoomsForView(string $category, ?IUser $user = null): ArrayObject;
     public function getCategoryByView(string $view): ?INavigatorCategory;
     
-    /** @return array<int,INavigatorPublicCategory> */
-    public function getPublicCategories(): array;
+    /** @return ArrayObject<int,INavigatorPublicCategory> */
+    public function getPublicCategories(): ArrayObject;
     public function getPublicCategoryById(int|string $id): ?INavigatorPublicCategory;
 
     public function getFlatCategoryById(int $id): ?INavigatorCategory;

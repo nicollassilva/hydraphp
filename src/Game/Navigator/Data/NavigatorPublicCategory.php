@@ -2,6 +2,7 @@
 
 namespace Emulator\Game\Navigator\Data;
 
+use ArrayObject;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Game\Navigator\Enums\NavigatorListMode;
 use Emulator\Api\Game\Navigator\Data\INavigatorPublicCategory;
@@ -13,8 +14,8 @@ class NavigatorPublicCategory implements INavigatorPublicCategory
     private readonly NavigatorListMode $listMode;
     private readonly int $order;
 
-    /** @var array<int,IRoom> */
-    private array $rooms = [];
+    /** @property ArrayObject<int,IRoom> */
+    private ArrayObject $rooms;
 
     public function __construct(array &$data)
     {
@@ -22,6 +23,8 @@ class NavigatorPublicCategory implements INavigatorPublicCategory
         $this->name = $data['name'];
         $this->listMode = NavigatorListMode::from((int) $data['image']);
         $this->order = $data['order_num'];
+
+        $this->rooms = new ArrayObject;
     }
 
     public function getId(): int
@@ -46,11 +49,11 @@ class NavigatorPublicCategory implements INavigatorPublicCategory
 
     public function addRoom(IRoom &$room): void
     {
-        $this->rooms[$room->getData()->getId()] = $room;
+        $this->rooms->offsetSet($room->getData()->getId(), $room);
     }
 
-    /** @return array<int,IRoom> */
-    public function getRooms(): array
+    /** @return ArrayObject<int,IRoom> */
+    public function getRooms(): ArrayObject
     {
         return $this->rooms;
     }

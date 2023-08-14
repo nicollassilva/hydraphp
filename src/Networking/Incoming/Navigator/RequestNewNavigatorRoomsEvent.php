@@ -2,6 +2,7 @@
 
 namespace Emulator\Networking\Incoming\Navigator;
 
+use ArrayObject;
 use Emulator\Game\Navigator\NavigatorManager;
 use Emulator\Api\Networking\Connections\IClient;
 use Emulator\Networking\Connections\ClientMessage;
@@ -40,13 +41,13 @@ class RequestNewNavigatorRoomsEvent implements IIncomingMessage
 
         if(($filterField == null || empty($search)) && !($filter instanceof INavigatorFilter)) return;
 
-        /** @var array<NavigatorSearchList> */
+        /** @var ArrayObject<NavigatorSearchList> */
         $resultList = $filter->getFilterResult();
 
         if(!empty($search)) {
-            $resultList = new NavigatorSearchList(
+            $resultList = new ArrayObject(new NavigatorSearchList(
                 0, 'query', '', NavigatorSearchAction::None, NavigatorListMode::List, NavigatorDisplayMode::Visible, true, true, NavigatorDisplayOrder::Activity, -1, $filter->getRooms($resultList)
-            );
+            ));
         }
 
         if(empty($filter)) return;

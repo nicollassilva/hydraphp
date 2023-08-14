@@ -2,16 +2,17 @@
 
 namespace Emulator\Game\Navigator\Search;
 
+use ArrayObject;
 use Emulator\Api\Game\Rooms\IRoom;
+use Emulator\Game\Rooms\Enums\RoomState;
 use Emulator\Api\Game\Utilities\IComposable;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
 use Emulator\Game\Navigator\Enums\{NavigatorDisplayMode,NavigatorDisplayOrder,NavigatorSearchAction,NavigatorListMode};
-use Emulator\Game\Rooms\Enums\RoomState;
 
 class NavigatorSearchList implements IComposable
 {
-    /** @var array<int,IRoom> */
-    private array $rooms;
+    /** @property ArrayObject<int,IRoom> $rooms */
+    private ArrayObject $rooms;
 
     public function __construct(
         private readonly int $order,
@@ -24,7 +25,7 @@ class NavigatorSearchList implements IComposable
         private readonly bool $showInvisibleRooms,
         private readonly NavigatorDisplayOrder $displayOrder,
         private readonly int $categoryOrder,
-        array $rooms
+        ArrayObject $rooms
     ) {
         $this->rooms = $rooms;
     }
@@ -39,21 +40,21 @@ class NavigatorSearchList implements IComposable
 
         if(!$this->showInvisibleRooms) {
             foreach ($this->rooms as $room) {
-                if($room->getData()->getState() != RoomState::Invisible) continue;
+                if($room->getData()->getState() !== RoomState::Invisible) continue;
                 
-                unset($this->rooms[$room->getData()->getId()]);
+                $this->rooms->offsetUnset($room->getData()->getId());
             }
         }
 
-        $message->writeInt(count($this->rooms));
+        $message->writeInt($this->rooms->count());
 
         foreach ($this->rooms as $room) {
             $room->compose($message);
         }
     }
 
-    /** @return array<int,IRoom> */
-    public function getRooms(): array
+    /** @return ArrayObject<int,IRoom> */
+    public function getRooms(): ArrayObject
     {
         return $this->rooms;
     }

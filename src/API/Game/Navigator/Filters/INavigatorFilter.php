@@ -2,13 +2,14 @@
 
 namespace Emulator\Api\Game\Navigator\Filters;
 
+use ArrayObject;
 use Emulator\Game\Navigator\Search\NavigatorSearchList;
 
 interface INavigatorFilter
 {
-    /** @return array<NavigatorSearchList> */
-    public function getFilterResult(): array;
+    /** @return ArrayObject<NavigatorSearchList> */
+    public function getFilterResult(): ArrayObject;
 
-    /** @param array<NavigatorSearchList> $resultList */
-    public function getRooms(array $resultList): array;
+    /** @param ArrayObject<NavigatorSearchList> $resultList */
+    public function getRooms(ArrayObject $resultList): ArrayObject;
 }

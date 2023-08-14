@@ -16,16 +16,16 @@ interface IRoomManager
     public function loadRoom(int $roomId): ?IRoom;
     public function getChatBubblesComponent(): ChatBubblesComponent;
     public function getRoomModelsComponent(): RoomModelsComponent;
-    public function loadRoomFromData(IRoomData $roomData): ?IRoom;
+    public function loadRoomFromData(IRoomData $roomData, bool $bypassExists = false): ?IRoom;
 
-    /** @return array<int,IRoom> */
-    public function getLoadedPublicRooms(): array;
+    /** @return ArrayObject<int,IRoom> */
+    public function getLoadedPublicRooms(): ArrayObject;
 
-    /** @return array<int,IRoom> */
-    public function getPopularRooms(int $roomsLimit): array;
+    /** @return ArrayObject<int,IRoom> */
+    public function getPopularRooms(int $roomsLimit): ArrayObject;
 
-    /** @return array<int,array<IRoom> */
-    public function getPopularRoomsByCategory(int $roomsLimit): array;
+    /** @return ArrayObject<int,ArrayObject<IRoom> */
+    public function getPopularRoomsByCategory(int $roomsLimit): ArrayObject;
 
     public function disposeRoom(IRoom &$room): void;
 }
