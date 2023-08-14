@@ -2,12 +2,13 @@
 
 namespace Emulator\Game\Navigator;
 
+use ArrayObject;
 use Emulator\Utils\Logger;
+use Emulator\Api\Game\Users\IUser;
 use Emulator\Game\Navigator\Filters\NavigatorFilter;
 use Emulator\Api\Game\Navigator\INavigatorFilterManager;
 use Emulator\Api\Game\Navigator\Filters\INavigatorFilter;
-use Emulator\Game\Navigator\Filters\NavigatorHotelFilter;
-use Emulator\Game\Navigator\Filters\NavigatorPublicFilter;
+use Emulator\Game\Navigator\Filters\{NavigatorHotelFilter,NavigatorPublicFilter,NavigatorRoomEventFilter, NavigatorUserViewFilter};
 
 class NavigatorFilterManager implements INavigatorFilterManager
 {
@@ -17,12 +18,14 @@ class NavigatorFilterManager implements INavigatorFilterManager
 
     private bool $isStarted = false;
 
-    /** @param array<int,NavigatorFilter> */
-    private array $filters = [];
+    /** @param ArrayObject<int,NavigatorFilter> */
+    private ArrayObject $filters;
 
     public function __construct()
     {
         $this->logger = new Logger(get_class($this));
+
+        $this->filters = new ArrayObject;
     }
 
     public static function getInstance(): NavigatorFilterManager
@@ -43,8 +46,10 @@ class NavigatorFilterManager implements INavigatorFilterManager
 
     private function loadNavigatorFilters(): void
     {
-        $this->filters[NavigatorPublicFilter::FILTER_NAME] = new NavigatorPublicFilter;
-        $this->filters[NavigatorHotelFilter::FILTER_NAME] = new NavigatorHotelFilter;
+        $this->filters->offsetSet(NavigatorPublicFilter::FILTER_NAME, NavigatorPublicFilter::class);
+        $this->filters->offsetSet(NavigatorHotelFilter::FILTER_NAME, NavigatorHotelFilter::class);
+        $this->filters->offsetSet(NavigatorRoomEventFilter::FILTER_NAME, NavigatorRoomEventFilter::class);
+        $this->filters->offsetSet(NavigatorUserViewFilter::FILTER_NAME, NavigatorUserViewFilter::class);
     }
 
     public function getLogger(): Logger
@@ -52,8 +57,14 @@ class NavigatorFilterManager implements INavigatorFilterManager
         return $this->logger;
     }
 
-    public function getFilterForView(string &$view): ?INavigatorFilter
+    public function getFilterForView(string &$view, IUser $user, string $fallbackView): ?INavigatorFilter
     {
-        return $this->filters[$view] ?? null;
+        $filter = $this->filters->offsetGet($view);
+
+        if(!$filter) {
+            $filter = $this->filters->offsetGet($fallbackView);
+        }
+
+        return new $filter($user);
     }
 }

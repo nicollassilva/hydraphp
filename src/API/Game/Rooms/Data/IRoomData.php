@@ -16,10 +16,10 @@ interface IRoomData
     public function getMaxUsers(): int;
     public function getScore(): int;
     public function getPassword(): string;
-    public function getState(): RoomState;
+    public function getState(): ?RoomState;
     public function getGuildId(): int;
     public function getCategoryId(): string;
-    public function getCategory(): INavigatorCategory;
+    public function getCategory(): ?INavigatorCategory;
     public function getPaperFloor(): string;
     public function getPaperWall(): string;
     public function getPaperLandscape(): string;

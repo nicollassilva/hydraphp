@@ -19,10 +19,10 @@ class RoomData implements IRoomData
     private int $maxUsers;
     private int $score;
     private string $password;
-    private RoomState $state;
+    private ?RoomState $state;
     private int $guildId;
     private string $categoryId;
-    private INavigatorCategory $category;
+    private ?INavigatorCategory $category;
     private string $paperFloor;
     private string $paperWall;
     private string $paperLandscape;
@@ -153,7 +153,7 @@ class RoomData implements IRoomData
         return $this->password;
     }
 
-    public function getState(): RoomState
+    public function getState(): ?RoomState
     {
         return $this->state;
     }
@@ -168,7 +168,7 @@ class RoomData implements IRoomData
         return $this->categoryId;
     }
 
-    public function getCategory(): INavigatorCategory
+    public function getCategory(): ?INavigatorCategory
     {
         return $this->category;
     }

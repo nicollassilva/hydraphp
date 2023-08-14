@@ -13,7 +13,7 @@ enum RoomState: int
     {
         return match ($state) {
             "open" => RoomState::Open,
-            "closed" => RoomState::Closed,
+            "locked" => RoomState::Closed,
             "password" => RoomState::Password,
             "invisible" => RoomState::Invisible,
             default => throw new \Exception("Invalid room state: " . $state),

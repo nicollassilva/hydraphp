@@ -28,4 +28,7 @@ interface IRoomManager
     public function getPopularRoomsByCategory(int $roomsLimit): ArrayObject;
 
     public function disposeRoom(IRoom &$room): void;
+    
+    /** @return ArrayObject<int,IRoom> */
+    public function getPromotedRooms(): ArrayObject;
 }

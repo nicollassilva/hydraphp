@@ -5,16 +5,19 @@ namespace Emulator\Game\Users;
 use Emulator\Api\Game\Users\IUser;
 use Emulator\Api\Networking\Connections\IClient;
 use Emulator\Game\Rooms\Types\Entities\UserEntity;
+use Emulator\Game\Users\Components\{RoomsComponent};
 use Emulator\Game\Users\Data\{UserData,UserSettings};
 use Emulator\Api\Game\Users\Data\{IUserData,IUserSettings};
 
 class User implements IUser
 {
-    private IUserData $data;
-    private IUserSettings $settings;
+    private ?IUserData $data = null;
+    private ?IUserSettings $settings = null;
 
     private ?IClient $client = null;
     private ?UserEntity $entity = null;
+
+    private ?RoomsComponent $roomsComponent = null;
 
     private bool $isDisposed = false;
 
@@ -22,16 +25,23 @@ class User implements IUser
     {
         $this->data = new UserData($data);
         $this->settings = new UserSettings($data);
+
+        $this->roomsComponent = new RoomsComponent($this);
     }
 
-    public function getData(): IUserData
+    public function getData(): ?IUserData
     {
         return $this->data;
     }
 
-    public function getSettings(): IUserSettings
+    public function getSettings(): ?IUserSettings
     {
         return $this->settings;
+    }
+    
+    public function getRoomsComponent(): ?RoomsComponent
+    {
+        return $this->roomsComponent;
     }
 
     public function setClient(IClient $client): void

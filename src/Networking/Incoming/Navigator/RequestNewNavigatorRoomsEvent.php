@@ -26,12 +26,8 @@ class RequestNewNavigatorRoomsEvent implements IIncomingMessage
             $view = "hotel_view";
         }
 
-        $filter = NavigatorFilterManager::getInstance()->getFilterForView($view);
+        $filter = NavigatorFilterManager::getInstance()->getFilterForView($view, $client->getUser(), NavigatorPublicFilter::FILTER_NAME);
         $category = NavigatorManager::getInstance()->getCategoryByView($view);
-
-        if(!($filter instanceof INavigatorFilter)) {
-            $filter = NavigatorFilterManager::getInstance()->getFilterForView(NavigatorPublicFilter::FILTER_NAME);
-        }
 
         if(!($category instanceof INavigatorCategory)) {
             $category = NavigatorManager::getInstance()->getCategoryByView(NavigatorPublicFilter::FILTER_NAME);
@@ -49,8 +45,6 @@ class RequestNewNavigatorRoomsEvent implements IIncomingMessage
                 0, 'query', '', NavigatorSearchAction::None, NavigatorListMode::List, NavigatorDisplayMode::Visible, true, true, NavigatorDisplayOrder::Activity, -1, $filter->getRooms($resultList)
             ));
         }
-
-        if(empty($filter)) return;
 
         $client->send(new NewNavigatorSearchResultsComposer($view, $search, $resultList));
     }

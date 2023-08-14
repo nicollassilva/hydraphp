@@ -9,7 +9,7 @@ use Emulator\Api\Networking\Connections\IClientManager;
 
 class ClientManager implements IClientManager
 {
-    // @param array<string, IClient>
+    /** @property array<string,IClient> */
     private array $activeClients = [];
 
     public function getClients(): array
@@ -62,7 +62,7 @@ class ClientManager implements IClientManager
     private function getClientByDataProperty(mixed $searchedValue, string $property): ?IClient
     {
         foreach($this->activeClients as $client) {
-            if($client->getUser()?->getData()->{$property}() === $searchedValue) {
+            if($client->getUser()?->getData()?->{$property}() === $searchedValue) {
                 return $client;
             }
         }

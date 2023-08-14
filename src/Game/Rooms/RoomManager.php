@@ -198,4 +198,18 @@ class RoomManager implements IRoomManager
 
         return $sortedLoadedRooms;
     }
+
+    /** @return ArrayObject<int,IRoom> */
+    public function getPromotedRooms(): ArrayObject
+    {
+        $rooms = new ArrayObject();
+
+        foreach ($this->loadedRooms as $room) {
+            if($room->getData()->isPromoted()) {
+                $rooms->append($room);
+            }
+        }
+
+        return $rooms;
+    }
 }

@@ -2,10 +2,13 @@
 
 namespace Emulator\Storage\Repositories\Users;
 
+use ArrayObject;
 use Emulator\Utils\Logger;
 use React\MySQL\QueryResult;
 use Emulator\Game\Users\User;
 use Emulator\Api\Game\Users\IUser;
+use Emulator\Game\Rooms\Data\RoomData;
+use Emulator\Game\Rooms\RoomManager;
 use Emulator\Storage\Repositories\EmulatorRepository;
 
 abstract class UserRepository extends EmulatorRepository
@@ -48,5 +51,21 @@ abstract class UserRepository extends EmulatorRepository
         }, [$ticket]);
 
         return $user;
+    }
+
+    /** @param ArrayObject<int,IRoom> $ownRoomsProperty */
+    public static function loadOwnRooms(IUser &$user, ArrayObject &$ownRoomsProperty): void
+    {
+        self::encapsuledSelect("SELECT * FROM rooms WHERE owner_id = ?", function(QueryResult $result) use (&$ownRoomsProperty) {
+            if(empty($result->resultRows)) return;
+
+            foreach($result->resultRows as $row) {
+                $room = RoomManager::getInstance()->loadRoomFromData(new RoomData($row));
+
+                if(!$room) continue;
+
+                $ownRoomsProperty->append($room);
+            }
+        }, [$user->getData()->getId()]);
     }
 }

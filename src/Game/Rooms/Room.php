@@ -18,7 +18,7 @@ class Room implements IRoom
     private IRoomData $data;
     private readonly Logger $logger;
 
-    private readonly IRoomModel $model;
+    private IRoomModel $model;
 
     private ProcessComponent $processComponent;
     private MappingComponent $mappingComponent;
@@ -125,20 +125,15 @@ class Room implements IRoom
         $this->idleCycle = 0;
     }
 
-    public function dispose(): void
+    public function dispose(bool $completelyDispose = false): void
     {
-        if($this->getData()->isPublic()) {
-            $this->processComponent->dispose();
-            return;
-        }
-
         if(Hydra::$isDebugging) $this->getLogger()->info("Disposing room [{$this->data->getName()} #{$this->data->getId()}]");
-
-        RoomManager::getInstance()->disposeRoom($this);
 
         $this->processComponent->dispose();
 
-        unset($this->data, $this->processComponent, $this->mappingComponent, $this->entityComponent);
+        if($completelyDispose) {
+            unset($this->data, $this->processComponent, $this->mappingComponent, $this->entityComponent, $this->model);
+        }
     }
 
     public function onUserEntityRemoved(UserEntity $entity): void

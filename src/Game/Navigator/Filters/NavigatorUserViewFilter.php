@@ -7,11 +7,16 @@ use Emulator\Game\Navigator\NavigatorManager;
 use Emulator\Game\Navigator\Enums\NavigatorListMode;
 use Emulator\Game\Navigator\Search\NavigatorSearchList;
 use Emulator\Api\Game\Navigator\Filters\INavigatorFilter;
+use Emulator\Api\Game\Users\IUser;
 use Emulator\Game\Navigator\Enums\{NavigatorDisplayOrder,NavigatorSearchAction,NavigatorDisplayMode};
 
-class NavigatorPublicFilter implements INavigatorFilter
+class NavigatorUserViewFilter implements INavigatorFilter
 {
-    public const FILTER_NAME = 'official_view';
+    public const FILTER_NAME = 'myworld_view';
+
+    public function __construct(
+        private IUser $user
+    ) {}
 
     /** @return ArrayObject<NavigatorSearchList> */
     public function getFilterResult(): ArrayObject
@@ -23,39 +28,17 @@ class NavigatorPublicFilter implements INavigatorFilter
 
         $searchLists->append(new NavigatorSearchList(
             $index,
-            'official-root',
+            'my',
             '',
             NavigatorSearchAction::None,
-            NavigatorListMode::Thumbnails,
+            NavigatorListMode::List,
             NavigatorDisplayMode::Visible,
             false,
-            false,
-            NavigatorDisplayOrder::OrderNumeric,
-            -1,
-            NavigatorManager::getInstance()->getRoomsForView('official-root')
+            true, // show invisible
+            NavigatorDisplayOrder::Activity,
+            0,
+            NavigatorManager::getInstance()->getRoomsForView('my-rooms', $this->user)
         ));
-        
-        $publicCategories = NavigatorManager::getInstance()->getPublicCategories();
-
-        foreach ($publicCategories as $publicCategory) {
-            $searchLists->append(
-                new NavigatorSearchList(
-                    ++$index,
-                    '',
-                    $publicCategory->getName(),
-                    NavigatorSearchAction::None,
-                    NavigatorListMode::List,
-                    NavigatorDisplayMode::Visible,
-                    true,
-                    true, // show invisible
-                    NavigatorDisplayOrder::OrderNumeric,
-                    $publicCategory->getOrder(),
-                    $publicCategory->getRooms()
-                )
-            );
-        }
-
-        unset($index, $publicCategories);
 
         return $searchLists;
     }
