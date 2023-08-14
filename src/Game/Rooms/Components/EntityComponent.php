@@ -11,6 +11,8 @@ class EntityComponent
     /** @var ArrayObject<int,UserEntity> */
     private ArrayObject $userEntities;
 
+    private int $nextEntityId = 0;
+
     public function __construct(private readonly IRoom $room)
     {
         $this->userEntities = new ArrayObject();
@@ -18,7 +20,7 @@ class EntityComponent
 
     public function getNextEntityId(): int
     {
-        return $this->userEntities->count() + 1;
+        return ++$this->nextEntityId;
     }
 
     public function addUserEntity(UserEntity &$entity): void
