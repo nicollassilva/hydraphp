@@ -59,6 +59,11 @@ class ClientManager implements IClientManager
         return $this->getClientByDataProperty($userId, "getId");
     }
 
+    public function hasClientByUserId(int $userId): bool
+    {
+        return $this->getClientByUserId($userId) !== null;
+    }
+
     private function getClientByDataProperty(mixed $searchedValue, string $property): ?IClient
     {
         foreach($this->activeClients as $client) {

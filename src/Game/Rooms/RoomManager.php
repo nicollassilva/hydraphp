@@ -8,14 +8,15 @@ use Emulator\Utils\Logger;
 use Emulator\Game\Rooms\Room;
 use Emulator\Api\Game\Rooms\Data\IRoomData;
 use Emulator\Game\Rooms\Enums\LoadedRoomSort;
-use Emulator\Api\Game\Rooms\{IRoomManager,IRoom};
+use Emulator\Api\Game\Rooms\{IRoomManager, IRoom};
 use Emulator\Storage\Repositories\Rooms\RoomRepository;
-use Emulator\Game\Rooms\Components\{RoomModelsComponent,ChatBubblesComponent};
+use Emulator\Game\Rooms\Components\{RoomModelsComponent, ChatBubblesComponent};
 
 class RoomManager implements IRoomManager
 {
-    public CONST IDLE_CYCLES_BEFORE_DISPOSE = 60;
-    public CONST ROOM_TICK_MS = 0.5;
+    public const ROOM_TICK_MS = 0.5;
+    public const DISPOSE_INACTIVE_ROOMS_MS = 120;
+    public const IDLE_CYCLES_BEFORE_DISPOSE = 60;
 
     public static IRoomManager $instance;
 
@@ -25,7 +26,7 @@ class RoomManager implements IRoomManager
 
     /** @var ArrayObject<int,IRoom> */
     private ArrayObject $loadedRooms;
-    
+
     /** @var ArrayObject<int,IRoom> */
     private ArrayObject $publicRooms;
 
@@ -45,7 +46,7 @@ class RoomManager implements IRoomManager
 
     public static function getInstance(): IRoomManager
     {
-        if(!isset(self::$instance)) self::$instance = new RoomManager();
+        if (!isset(self::$instance)) self::$instance = new RoomManager();
 
         return self::$instance;
     }
@@ -57,7 +58,7 @@ class RoomManager implements IRoomManager
 
     public function initialize(): void
     {
-        if($this->isStarted) return;
+        if ($this->isStarted) return;
 
         $this->isStarted = true;
 
@@ -80,23 +81,24 @@ class RoomManager implements IRoomManager
 
     public function loadRoom(int $roomId): ?IRoom
     {
-        if($this->loadedRooms->offsetExists($roomId)) {
-            if(Hydra::$isDebugging) $this->getLogger()->info("Room already loaded: {$roomId}.");
+        if ($this->loadedRooms->offsetExists($roomId)) {
+            if (Hydra::$isDebugging) $this->getLogger()->info("Room already loaded: {$roomId}.");
 
             return $this->loadedRooms->offsetGet($roomId);
         }
 
         return $this->loadRoomFromData(
-            RoomRepository::loadRoomData($roomId), true
+            RoomRepository::loadRoomData($roomId),
+            true
         );
     }
 
     public function loadRoomFromData(IRoomData $roomData, bool $bypassExists = false): ?IRoom
     {
-        if($roomData === null) return null;
+        if ($roomData === null) return null;
 
-        if(!$bypassExists && $this->loadedRooms->offsetExists($roomData->getId())) {
-            if(Hydra::$isDebugging) $this->getLogger()->info("Room already loaded: {$roomData->getId()}.");
+        if (!$bypassExists && $this->loadedRooms->offsetExists($roomData->getId())) {
+            if (Hydra::$isDebugging) $this->getLogger()->info("Room already loaded: {$roomData->getId()}.");
 
             return $this->loadedRooms->offsetGet($roomData->getId());
         }
@@ -105,7 +107,7 @@ class RoomManager implements IRoomManager
 
         $this->loadedRooms->offsetSet($roomData->getId(), $room);
 
-        if(Hydra::$isDebugging) $this->getLogger()->info("Room loaded successfully: {$roomData->getName()}.");
+        if (Hydra::$isDebugging) $this->getLogger()->info("Room loaded successfully: {$roomData->getName()}.");
 
         return $room;
     }
@@ -121,61 +123,62 @@ class RoomManager implements IRoomManager
         $publicRooms = $this->publicRooms;
 
         $publicRooms->uasort(
-            fn(IRoom $a, IRoom $b) => $a->getData()->getId() <=> $b->getData()->getId()
+            fn (IRoom $a, IRoom $b) => $a->getData()->getId() <=> $b->getData()->getId()
         );
 
         return $publicRooms;
     }
-    
+
     /** @return ArrayObject<int,IRoom> */
     public function getPopularRooms(int $roomsLimit): ArrayObject
     {
         $rooms = new ArrayObject;
 
-        foreach($this->loadedRooms as $room) {
-            if($rooms->count() >= $roomsLimit) break;
+        foreach ($this->loadedRooms as $room) {
+            if ($rooms->count() >= $roomsLimit) break;
 
-            if($room->getEntityComponent()->getUserEntitiesCount() > 0) {
+            if ($room->getEntityComponent()->getUserEntitiesCount() > 0) {
                 $rooms->append($room);
             }
         }
 
         return $rooms;
     }
-    
+
     /** @return ArrayObject<int,ArrayObject<IRoom> */
     public function getPopularRoomsByCategory(int $roomsLimit): ArrayObject
     {
         $popularRooms = new ArrayObject;
         $sortedRooms = $this->getSortedLoadedRooms(LoadedRoomSort::UsersCount);
 
-        foreach($sortedRooms as $room) {
-            if(!$popularRooms->offsetExists($room->getData()->getCategoryId())) {
+        foreach ($sortedRooms as $room) {
+            if (!$popularRooms->offsetExists($room->getData()->getCategoryId())) {
                 $popularRooms->offsetSet($room->getData()->getCategoryId(), new ArrayObject);
             }
 
-            if($popularRooms->offsetGet($room->getData()->getCategoryId())->count() >= $roomsLimit) break;
+            if ($popularRooms->offsetGet($room->getData()->getCategoryId())->count() >= $roomsLimit) break;
 
-            if($room->getEntityComponent()->getUserEntitiesCount() <= 0 && !$room->getProcessComponent()->started()) continue;
+            if ($room->getEntityComponent()->getUserEntitiesCount() <= 0 && !$room->getProcessComponent()->started()) continue;
 
             $popularRooms->offsetGet($room->getData()->getCategoryId())->append($room);
         }
-        
+
         return $popularRooms;
     }
 
     public function disposeRoom(IRoom &$room): void
     {
-        if($room === null || $room->getData()->isPublic()) return;
+        if ($room === null || $room->getData()->isPublic()) return;
 
-        if(Hydra::$isDebugging) $this->getLogger()->info("Room [{$room->getData()->getName()} #{$room->getData()->getId()}] disposed successfully.");
+        if (Hydra::$isDebugging) $this->getLogger()->advertisement("Room [{$room->getData()->getName()} #{$room->getData()->getId()}] completely disposed successfully.");
 
         $this->loadedRooms->offsetUnset($room->getData()->getId());
 
-        if($this->publicRooms->offsetExists($room->getData()->getId())) {
+        if ($this->publicRooms->offsetExists($room->getData()->getId())) {
             $this->publicRooms->offsetUnset($room->getData()->getId());
         }
 
+        $room->dispose(true);
         $room = null;
     }
 
@@ -184,13 +187,13 @@ class RoomManager implements IRoomManager
     {
         $sortedLoadedRooms = $this->loadedRooms;
 
-        if($sortBy === LoadedRoomSort::UsersCount) {
+        if ($sortBy === LoadedRoomSort::UsersCount) {
             $sortedLoadedRooms->uasort(
                 fn (IRoom $roomA, IRoom $roomB) => $roomA->getEntityComponent()->getUserEntitiesCount() < $roomB->getEntityComponent()->getUserEntitiesCount() ? -1 : 1
             );
         }
-        
-        if($sortBy == LoadedRoomSort::Id) {
+
+        if ($sortBy == LoadedRoomSort::Id) {
             $sortedLoadedRooms->uasort(
                 fn (IRoom $roomA, IRoom $roomB) => $roomA->getData()->getId() < $roomB->getData()->getId() ? -1 : 1
             );
@@ -205,11 +208,20 @@ class RoomManager implements IRoomManager
         $rooms = new ArrayObject();
 
         foreach ($this->loadedRooms as $room) {
-            if($room->getData()->isPromoted()) {
+            if ($room->getData()->isPromoted()) {
                 $rooms->append($room);
             }
         }
 
         return $rooms;
+    }
+
+    public function disposeInactiveRooms(): void
+    {
+        foreach ($this->loadedRooms as $room) {
+            if (!$room->canBeCompletelyDisposed()) continue;
+
+            $this->disposeRoom($room);
+        }
     }
 }

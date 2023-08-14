@@ -14,4 +14,5 @@ interface IClientManager
     public function disposeClient(ConnectionInterface $connection): void;
     public function getClientByTicket(string $ticket): ?IClient;
     public function getClientByUserId(int $userId): ?IClient;
+    public function hasClientByUserId(int $userId): bool;
 }

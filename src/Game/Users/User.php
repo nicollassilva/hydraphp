@@ -61,10 +61,10 @@ class User implements IUser
         if(!empty($this->getEntity())) {
             $this->getEntity()->dispose(true);
         }
-        
-        $this->getClient()->disconnect();
 
-        unset($this->client, $this->settings, $this->data);
+        $this->getClient()->disconnectAndDispose();
+
+        unset($this->client, $this->settings, $this->data, $this->roomsComponent, $this->entity);
     }
 
     private function setIsDisposed(bool $value = true): void

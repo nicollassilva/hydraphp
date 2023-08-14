@@ -14,6 +14,7 @@ use Emulator\Api\Networking\INetworkManager;
 use Emulator\Game\Navigator\NavigatorManager;
 use Emulator\Game\Rooms\Types\Items\ItemManager;
 use Emulator\Storage\Compositions\IConnectorManager;
+use Emulator\Workers\CleanerWorker;
 
 class Emulator
 {
@@ -38,6 +39,8 @@ class Emulator
             CatalogManager::getInstance()->initialize();
 
             $this->startNetworkManager();
+
+            CleanerWorker::initialize();
         });
     }
 

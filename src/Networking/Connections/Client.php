@@ -35,7 +35,7 @@ class Client implements IClient
         return $this->connection;
     }
 
-    public function disconnect(): void
+    public function disconnectAndDispose(): void
     {
         $this->connection->close();
         Hydra::getEmulator()->getNetworkManager()->getClientManager()->disposeClient($this->connection);

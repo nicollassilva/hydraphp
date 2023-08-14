@@ -31,4 +31,6 @@ interface IRoomManager
     
     /** @return ArrayObject<int,IRoom> */
     public function getPromotedRooms(): ArrayObject;
+
+    public function disposeInactiveRooms(): void;
 }

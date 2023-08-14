@@ -31,4 +31,6 @@ interface IRoom extends IComposable
 
     public function onUserEntityRemoved(UserEntity $entity): void;
     public function resetIdleCycle(): void;
+    
+    public function canBeCompletelyDisposed(): bool;
 }

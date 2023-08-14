@@ -19,7 +19,7 @@ interface IClient
     public function getUniqueId(): string;
 
     public function send(?IMessageComposer $message): IClient;
-    public function disconnect(): void;
+    public function disconnectAndDispose(): void;
 
     public function getLogger(): Logger;
 

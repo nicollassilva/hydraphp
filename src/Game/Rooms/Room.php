@@ -11,7 +11,7 @@ use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
 use Emulator\Api\Game\Rooms\Data\{IRoomData, IRoomModel};
 use Emulator\Networking\Outgoing\Rooms\RemoveUserComposer;
-use Emulator\Game\Rooms\Components\{EntityComponent,MappingComponent,ProcessComponent};
+use Emulator\Game\Rooms\Components\{EntityComponent, MappingComponent, ProcessComponent};
 
 class Room implements IRoom
 {
@@ -77,8 +77,8 @@ class Room implements IRoom
 
     public function broadcastMessage(IMessageComposer $message): IRoom
     {
-        foreach($this->entityComponent->getUserEntities() as $userEntity) {
-            if(empty($userEntity->getUser()?->getClient()) || $userEntity->getUser()->isDisposed()) {
+        foreach ($this->entityComponent->getUserEntities() as $userEntity) {
+            if (empty($userEntity->getUser()?->getClient()) || $userEntity->getUser()->isDisposed()) {
                 continue;
             }
 
@@ -117,7 +117,7 @@ class Room implements IRoom
     {
         $this->idleCycle++;
 
-        if($this->idleCycle >= RoomManager::IDLE_CYCLES_BEFORE_DISPOSE) $this->dispose();
+        if ($this->idleCycle >= RoomManager::IDLE_CYCLES_BEFORE_DISPOSE) $this->dispose();
     }
 
     public function resetIdleCycle(): void
@@ -127,11 +127,11 @@ class Room implements IRoom
 
     public function dispose(bool $completelyDispose = false): void
     {
-        if(Hydra::$isDebugging) $this->getLogger()->info("Disposing room [{$this->data->getName()} #{$this->data->getId()}]");
+        if (Hydra::$isDebugging && !$completelyDispose) $this->getLogger()->advertisement("Disposing room process [{$this->data->getName()} #{$this->data->getId()}]");
 
         $this->processComponent->dispose();
 
-        if($completelyDispose) {
+        if ($completelyDispose) {
             unset($this->data, $this->processComponent, $this->mappingComponent, $this->entityComponent, $this->model);
         }
     }
@@ -139,5 +139,13 @@ class Room implements IRoom
     public function onUserEntityRemoved(UserEntity $entity): void
     {
         $this->broadcastMessage(new RemoveUserComposer($entity->getId()));
+    }
+
+    public function canBeCompletelyDisposed(): bool
+    {
+        return !$this->getData()->isPublic()
+            && !$this->getData()->isStaffPicked()
+            && !Hydra::getEmulator()->getNetworkManager()->getClientManager()->hasClientByUserId($this->getData()->getOwnerId())
+            && !$this->processComponent->started();
     }
 }
