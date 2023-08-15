@@ -2,12 +2,11 @@
 
 namespace Emulator\Game\Catalog\Components;
 
-use Emulator\Api\Game\Catalog\Layouts\{ICatalogLayout};
 use Emulator\Game\Catalog\Layouts\{BotsLayout, PetsLayout, TraxLayout, Pets2Layout, Pets3Layout, SingleBundle, SpacesLayout, VipBuyLayout, ClubBuyLayout, RoomAdsLayout, InfoNikoLayout, InfoPetsLayout, MadMoneyLayout, RecyclerLayout, TrophiesLayout, ClubGiftsLayout, FrontPageLayout, GroupForumLayout, Default3x3Layout, InfoMonkeyLayout, RoomBundleLayout, CatalogRootLayout, InfoDucketsLayout, InfoLoyaltyLayout, MarketplaceLayout, BadgeDisplayLayout, RecyclerInfoLayout, SoldLTDItemsLayout, ColorGroupingLayout, InfoRentablesLayout, LoyaltyVipBuyLayout, GroupFrontPageLayout, GroupFurnitureLayout, RecyclerPrizesLayout, RecentPurchasesLayout, PetCustomizationLayout, FrontPageFeaturedLayout, BuildersClubAddonsLayout, BuildersClubLoyaltyLayout, MarketplaceOwnItemsLayout, BuildersClubFrontPageLayout};
 
 class LayoutComponent
 {
-    /** @var array<string,ICatalogLayout> */
+    /** @var array<string,string> */
     private array $layouts = [];
 
     public function __construct()
@@ -15,7 +14,7 @@ class LayoutComponent
         $this->registerLayouts();
     }
 
-    public function getByName(string $name): ?ICatalogLayout
+    public function getByName(string $name): ?string
     {
         return $this->layouts[$name] ?? null;
     }
