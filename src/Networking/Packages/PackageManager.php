@@ -4,10 +4,10 @@ namespace Emulator\Networking\Packages;
 
 use Emulator\Hydra;
 use Emulator\Utils\Logger;
-use Emulator\Api\Networking\Connections\IClient;
-use Emulator\Api\Networking\Packages\IPackageManager;
-use Emulator\Networking\Connections\ClientMessage;
 use Emulator\Utils\Services\EncodingService;
+use Emulator\Api\Networking\Connections\IClient;
+use Emulator\Networking\Connections\ClientMessage;
+use Emulator\Api\Networking\Packages\IPackageManager;
 
 class PackageManager implements IPackageManager
 {
@@ -16,14 +16,15 @@ class PackageManager implements IPackageManager
 
     public function __construct(
         private readonly string $crossDomainPolicy = '<?xml version="1.0"?><!DOCTYPE cross-domain-policy SYSTEM "/xml/dtds/cross-domain-policy.dtd"><cross-domain-policy><allow-access-from domain="*" to-ports="*" /></cross-domain-policy>'
-    ) {
+    )
+    {
         $this->logger = new Logger(get_class($this));
         $this->incomingPackagesLoader = new IncomingPackagesLoader();
     }
-    
+
     public function handle(mixed $data, IClient $client): void
     {
-        if(str_starts_with($data, '<')) {
+        if (str_starts_with($data, '<')) {
             $this->handleCrossDomainPolicy($client);
             return;
         }
@@ -48,22 +49,22 @@ class PackageManager implements IPackageManager
 
     private function handlePackage(IClient $client, ClientMessage $message): void
     {
-        if(empty($client)) return;
+        if (empty($client)) return;
 
-        if($package = $this->incomingPackagesLoader->getPackageByHeader($message->getHeader())) {
-            if(Hydra::$isDebugging) $this->logger->info(sprintf('[I] [%s] %s', $message->getHeader(), $package));
+        if ($package = $this->incomingPackagesLoader->getPackageByHeader($message->getHeader())) {
+            if (Hydra::$isDebugging) $this->logger->info(sprintf('[I] [%s] %s', $message->getHeader(), $package));
 
             $package = new $package();
 
-            if($package->needsAuthentication() && (!$client->getUser() || $client->getUser()->isDisposed())) {
+            if ($package->needsAuthentication() && (!$client->getUser() || $client->getUser()->isDisposed())) {
                 $this->logger->warning(sprintf('[%s] %s', $message->getHeader(), "Package needs authentication"));
-                $client->disconnect();
+                $client->disconnectAndDispose();
                 return;
             }
 
             $package->handle($client, $message);
         } else {
-            if(Hydra::$isDebugging) $this->logger->warning(sprintf('[%s] %s', $message->getHeader(), "Unhandled package"));
+            if (Hydra::$isDebugging) $this->logger->warning(sprintf('[%s] %s', $message->getHeader(), "Unhandled package"));
         }
     }
 

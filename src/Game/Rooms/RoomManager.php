@@ -5,10 +5,9 @@ namespace Emulator\Game\Rooms;
 use ArrayObject;
 use Emulator\Hydra;
 use Emulator\Utils\Logger;
-use Emulator\Game\Rooms\Room;
 use Emulator\Api\Game\Rooms\Data\IRoomData;
 use Emulator\Game\Rooms\Enums\LoadedRoomSort;
-use Emulator\Api\Game\Rooms\{IRoomManager, IRoom};
+use Emulator\Api\Game\Rooms\{IRoom, IRoomManager};
 use Emulator\Storage\Repositories\Rooms\RoomRepository;
 use Emulator\Game\Rooms\Components\{RoomModelsComponent, ChatBubblesComponent};
 
@@ -93,7 +92,7 @@ class RoomManager implements IRoomManager
         );
     }
 
-    public function loadRoomFromData(IRoomData $roomData, bool $bypassExists = false): ?IRoom
+    public function loadRoomFromData(?IRoomData $roomData, bool $bypassExists = false): ?IRoom
     {
         if ($roomData === null) return null;
 
@@ -123,7 +122,7 @@ class RoomManager implements IRoomManager
         $publicRooms = $this->publicRooms;
 
         $publicRooms->uasort(
-            fn (IRoom $a, IRoom $b) => $a->getData()->getId() <=> $b->getData()->getId()
+            fn(IRoom $a, IRoom $b) => $a->getData()->getId() <=> $b->getData()->getId()
         );
 
         return $publicRooms;
@@ -168,7 +167,7 @@ class RoomManager implements IRoomManager
 
     public function disposeRoom(IRoom &$room): void
     {
-        if ($room === null || $room->getData()->isPublic()) return;
+        if ($room->getData()->isPublic()) return;
 
         if (Hydra::$isDebugging) $this->getLogger()->advertisement("Room [{$room->getData()->getName()} #{$room->getData()->getId()}] completely disposed successfully.");
 
@@ -189,13 +188,13 @@ class RoomManager implements IRoomManager
 
         if ($sortBy === LoadedRoomSort::UsersCount) {
             $sortedLoadedRooms->uasort(
-                fn (IRoom $roomA, IRoom $roomB) => $roomA->getEntityComponent()->getUserEntitiesCount() < $roomB->getEntityComponent()->getUserEntitiesCount() ? -1 : 1
+                fn(IRoom $roomA, IRoom $roomB) => $roomA->getEntityComponent()->getUserEntitiesCount() < $roomB->getEntityComponent()->getUserEntitiesCount() ? -1 : 1
             );
         }
 
         if ($sortBy == LoadedRoomSort::Id) {
             $sortedLoadedRooms->uasort(
-                fn (IRoom $roomA, IRoom $roomB) => $roomA->getData()->getId() < $roomB->getData()->getId() ? -1 : 1
+                fn(IRoom $roomA, IRoom $roomB) => $roomA->getData()->getId() < $roomB->getData()->getId() ? -1 : 1
             );
         }
 

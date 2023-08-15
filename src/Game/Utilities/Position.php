@@ -4,14 +4,14 @@ namespace Emulator\Game\Utilities;
 
 class Position
 {
-    public CONST NORTH = 0;
-    public CONST NORTH_EAST = 1;
-    public CONST EAST = 2;
-    public CONST SOUTH_EAST = 3;
-    public CONST SOUTH = 4;
-    public CONST SOUTH_WEST = 5;
-    public CONST WEST = 6;
-    public CONST NORTH_WEST = 7;
+    public const NORTH = 0;
+    public const NORTH_EAST = 1;
+    public const EAST = 2;
+    public const SOUTH_EAST = 3;
+    public const SOUTH = 4;
+    public const SOUTH_WEST = 5;
+    public const WEST = 6;
+    public const NORTH_WEST = 7;
 
     private int $x;
     private int $y;
@@ -69,7 +69,6 @@ class Position
             $this->getX() > $newPosition->getX() => self::WEST,
             $this->getX() < $newPosition->getX() => self::EAST,
             $this->getY() < $newPosition->getY() => self::SOUTH,
-            $this->getY() > $newPosition->getY() => self::NORTH,
             default => self::NORTH
         };
     }

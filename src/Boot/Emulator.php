@@ -4,7 +4,7 @@ namespace Emulator\Boot;
 
 use Closure;
 use Emulator\Utils\Logger;
-use Emulator\Boot\HydraConfig;
+use Emulator\Workers\CleanerWorker;
 use Emulator\Game\Rooms\RoomManager;
 use Emulator\Game\Users\UserManager;
 use Emulator\Storage\ConnectorManager;
@@ -14,7 +14,6 @@ use Emulator\Api\Networking\INetworkManager;
 use Emulator\Game\Navigator\NavigatorManager;
 use Emulator\Game\Rooms\Types\Items\ItemManager;
 use Emulator\Storage\Compositions\IConnectorManager;
-use Emulator\Workers\CleanerWorker;
 
 class Emulator
 {
@@ -23,13 +22,14 @@ class Emulator
     private readonly INetworkManager $networkManager;
     private readonly IConnectorManager $connectorManager;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->logger = new Logger(get_class($this));
 
         $this->showAdvertisement();
         $this->startConfigManager();
 
-        $this->startConnectorManager(function() {
+        $this->startConnectorManager(function () {
             $this->getConfigManager()->loadEmulatorSettings();
 
             NavigatorManager::getInstance()->initialize();
@@ -53,13 +53,13 @@ class Emulator
         $this->logger->advertisement('░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░');
     }
 
-    public function startNetworkManager()
-    {  
+    public function startNetworkManager(): void
+    {
         $this->networkManager = new NetworkManager();
     }
 
-    public function startConfigManager()
-    {  
+    public function startConfigManager(): void
+    {
         $this->configManager = new HydraConfig();
     }
 

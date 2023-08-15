@@ -2,9 +2,11 @@
 
 namespace Emulator\Game\Users\Data;
 
+use Throwable;
+use Emulator\Game\Rooms\RoomManager;
+use Emulator\Game\Users\UserManager;
 use Emulator\Api\Game\Rooms\Data\IChatBubble;
 use Emulator\Api\Game\Users\Data\IUserSettings;
-use Emulator\Game\Rooms\{RoomManager,UserManager};
 
 class UserSettings implements IUserSettings
 {
@@ -56,14 +58,14 @@ class UserSettings implements IUserSettings
             $this->respectPointsGiven = $data["respects_given"];
             $this->petRespectPointsToGive = $data["daily_pet_respect_points"];
             $this->respectPointsToGive = $data["daily_respect_points"];
-            $this->blockFollowing = (bool) $data["block_following"];
-            $this->blockFriendRequests = (bool) $data["block_friendrequests"];
-            $this->blockRoomInvites = (bool) $data["block_roominvites"];
-            $this->preferOldChat = (bool) $data["old_chat"];
-            $this->blockCameraFollow = (bool) $data["block_camera_follow"];
+            $this->blockFollowing = (bool)$data["block_following"];
+            $this->blockFriendRequests = (bool)$data["block_friendrequests"];
+            $this->blockRoomInvites = (bool)$data["block_roominvites"];
+            $this->preferOldChat = (bool)$data["old_chat"];
+            $this->blockCameraFollow = (bool)$data["block_camera_follow"];
             $this->guild = $data["guild_id"];
             $this->tags = explode(';', $data["tags"]);
-            $this->allowTrade = (bool) $data["can_trade"];
+            $this->allowTrade = (bool)$data["can_trade"];
             $this->votedRooms = [];
             $this->clubExpireTimestamp = $data["club_expire_timestamp"];
             $this->loginStreak = $data["login_streak"];
@@ -85,12 +87,12 @@ class UserSettings implements IUserSettings
             $this->perkTrade = $data["perk_trade"];
             $this->forumPostsCount = $data["forums_post_count"];
             $this->uiFlags = $data["ui_flags"];
-            $this->hasGottenDefaultSavedSearches = (bool) $data["has_gotten_default_saved_searches"];
+            $this->hasGottenDefaultSavedSearches = (bool)$data["has_gotten_default_saved_searches"];
             $this->maxFriends = $data["max_friends"];
             $this->maxRooms = $data["max_rooms"];
             $this->lastHCPayday = $data["last_hc_payday"];
             $this->hcGiftsClaimed = $data["hc_gifts_claimed"];
-        } catch (\Throwable $error) {
+        } catch (Throwable $error) {
             UserManager::getInstance()->getLogger()->error('Error while constructing a user settings: ' . $error->getMessage());
         }
     }

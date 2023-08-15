@@ -3,15 +3,14 @@
 namespace Emulator\Networking\Outgoing\Rooms;
 
 use ArrayObject;
-use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Networking\Outgoing\MessageComposer;
 use Emulator\Networking\Outgoing\OutgoingHeaders;
 use Emulator\Game\Navigator\Search\NavigatorSearchList;
 
 class NewNavigatorSearchResultsComposer extends MessageComposer
 {
-    /** @param array<NavigatorSearchList> */
-    public function __construct(string &$category, string &$search, ArrayObject &$resultList)
+    /** @param ArrayObject<NavigatorSearchList> $resultList */
+    public function __construct(string $category, string $search, ArrayObject $resultList)
     {
         $this->header = OutgoingHeaders::$newNavigatorSearchResultsComposer;
 

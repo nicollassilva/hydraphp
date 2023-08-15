@@ -34,15 +34,15 @@ class SSOTicketEvent implements IIncomingMessage
 
         $loginRequest = new LoginRequest($client, $ticket);
 
-        if(!$loginRequest->isValid()) {
+        if (!$loginRequest->isValid()) {
             $client->getLogger()->warning('Invalid SSO ticket length: ' . $loginRequest->getTicketLength());
-            $client->disconnect();
+            $client->disconnectAndDispose();
             return;
         }
 
-        if(!$loginRequest->attemptLogin()) {
+        if (!$loginRequest->attemptLogin()) {
             $client->getLogger()->warning('Failed to login user with ticket: ' . $ticket);
-            $client->disconnect();
+            $client->disconnectAndDispose();
             return;
         }
 
@@ -67,7 +67,7 @@ class SSOTicketEvent implements IIncomingMessage
             ->send(new UserHomeRoomComposer);
     }
 
-    
+
     public function needsAuthentication(): bool
     {
         return false;

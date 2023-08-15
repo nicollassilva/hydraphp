@@ -17,10 +17,10 @@ class CatalogManager
 
     private bool $isStarted = false;
 
-    /** @var ArrayObject<int,ICatalogPage> */
+    /** @property ArrayObject<int,ICatalogPage> $pages */
     private ArrayObject $pages;
 
-    /** @var ArrayObject<int,ICatalogFeaturedPage> */
+    /** @property ArrayObject<int,ICatalogFeaturedPage> $featuredPages */
     private ArrayObject $featuredPages;
 
     public function __construct()
@@ -33,7 +33,7 @@ class CatalogManager
         $this->featuredPages = new ArrayObject();
     }
 
-    public static function getInstance()
+    public static function getInstance(): CatalogManager
     {
         if (!isset(self::$instance)) self::$instance = new CatalogManager();
 

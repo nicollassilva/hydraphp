@@ -7,15 +7,16 @@ use Emulator\Utils\Logger;
 use React\MySQL\QueryResult;
 use Emulator\Game\Users\User;
 use Emulator\Api\Game\Users\IUser;
-use Emulator\Game\Rooms\Data\RoomData;
+use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Game\Rooms\RoomManager;
+use Emulator\Game\Rooms\Data\RoomData;
 use Emulator\Storage\Repositories\EmulatorRepository;
 
 abstract class UserRepository extends EmulatorRepository
 {
     public static Logger $logger;
 
-    public static function initialize()
+    public static function initialize(): void
     {
         self::$logger = new Logger(static::class);
     }
@@ -44,8 +45,8 @@ abstract class UserRepository extends EmulatorRepository
             FROM users u
             JOIN users_settings uSettings ON uSettings.user_id = u.id
             WHERE auth_ticket = ?
-        ", function(QueryResult $result) use (&$user) {
-            if(empty($result->resultRows)) return;
+        ", function (QueryResult $result) use (&$user) {
+            if (empty($result->resultRows)) return;
 
             $user = new User($result->resultRows[0]);
         }, [$ticket]);
@@ -54,15 +55,15 @@ abstract class UserRepository extends EmulatorRepository
     }
 
     /** @param ArrayObject<int,IRoom> $ownRoomsProperty */
-    public static function loadOwnRooms(IUser &$user, ArrayObject &$ownRoomsProperty): void
+    public static function loadOwnRooms(IUser $user, ArrayObject &$ownRoomsProperty): void
     {
-        self::encapsuledSelect("SELECT * FROM rooms WHERE owner_id = ?", function(QueryResult $result) use (&$ownRoomsProperty) {
-            if(empty($result->resultRows)) return;
+        self::encapsuledSelect("SELECT * FROM rooms WHERE owner_id = ?", function (QueryResult $result) use (&$ownRoomsProperty) {
+            if (empty($result->resultRows)) return;
 
-            foreach($result->resultRows as $row) {
+            foreach ($result->resultRows as $row) {
                 $room = RoomManager::getInstance()->loadRoomFromData(new RoomData($row));
 
-                if(!$room) continue;
+                if (!$room) continue;
 
                 $ownRoomsProperty->append($room);
             }

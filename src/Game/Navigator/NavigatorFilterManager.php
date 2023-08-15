@@ -5,10 +5,9 @@ namespace Emulator\Game\Navigator;
 use ArrayObject;
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Users\IUser;
-use Emulator\Game\Navigator\Filters\NavigatorFilter;
 use Emulator\Api\Game\Navigator\INavigatorFilterManager;
 use Emulator\Api\Game\Navigator\Filters\INavigatorFilter;
-use Emulator\Game\Navigator\Filters\{NavigatorHotelFilter,NavigatorPublicFilter,NavigatorRoomEventFilter, NavigatorUserViewFilter};
+use Emulator\Game\Navigator\Filters\{NavigatorHotelFilter, NavigatorPublicFilter, NavigatorUserViewFilter, NavigatorRoomEventFilter};
 
 class NavigatorFilterManager implements INavigatorFilterManager
 {
@@ -18,7 +17,7 @@ class NavigatorFilterManager implements INavigatorFilterManager
 
     private bool $isStarted = false;
 
-    /** @param ArrayObject<int,NavigatorFilter> */
+    /** @property ArrayObject<int,INavigatorFilter> */
     private ArrayObject $filters;
 
     public function __construct()
@@ -61,7 +60,7 @@ class NavigatorFilterManager implements INavigatorFilterManager
     {
         $filter = $this->filters->offsetGet($view);
 
-        if(!$filter) {
+        if (!$filter) {
             $filter = $this->filters->offsetGet($fallbackView);
         }
 

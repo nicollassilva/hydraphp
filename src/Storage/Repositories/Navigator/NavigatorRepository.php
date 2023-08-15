@@ -16,7 +16,7 @@ abstract class NavigatorRepository extends EmulatorRepository
 {
     public static Logger $logger;
 
-    public static function initialize()
+    public static function initialize(): void
     {
         self::$logger = new Logger(static::class);
     }

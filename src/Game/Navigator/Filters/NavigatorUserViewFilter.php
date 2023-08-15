@@ -3,27 +3,29 @@
 namespace Emulator\Game\Navigator\Filters;
 
 use ArrayObject;
+use Emulator\Api\Game\Users\IUser;
 use Emulator\Game\Navigator\NavigatorManager;
 use Emulator\Game\Navigator\Enums\NavigatorListMode;
 use Emulator\Game\Navigator\Search\NavigatorSearchList;
 use Emulator\Api\Game\Navigator\Filters\INavigatorFilter;
-use Emulator\Api\Game\Users\IUser;
-use Emulator\Game\Navigator\Enums\{NavigatorDisplayOrder,NavigatorSearchAction,NavigatorDisplayMode};
+use Emulator\Game\Navigator\Enums\{NavigatorDisplayMode, NavigatorSearchAction, NavigatorDisplayOrder};
 
 class NavigatorUserViewFilter implements INavigatorFilter
 {
     public const FILTER_NAME = 'myworld_view';
 
     public function __construct(
-        private IUser $user
-    ) {}
+        private readonly IUser $user
+    )
+    {
+    }
 
     /** @return ArrayObject<NavigatorSearchList> */
     public function getFilterResult(): ArrayObject
     {
         $index = 0;
 
-        /** @var ArrayObject<NavigatorSearchList> */
+        /** @var ArrayObject<NavigatorSearchList> $searchLists */
         $searchLists = new ArrayObject;
 
         $searchLists->append(new NavigatorSearchList(

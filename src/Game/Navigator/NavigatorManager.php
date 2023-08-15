@@ -116,8 +116,8 @@ class NavigatorManager implements INavigatorManager
         return $this->filterSettings;
     }
 
-    public function getFilterByKey(string $key): ?NavigatorFilterField
+    public function getFilterByKey(string $key, string $fallbackField = 'anything'): ?NavigatorFilterField
     {
-        return $this->filterSettings[$key] ?? null;
+        return $this->filterSettings[$key] ?? $this->filterSettings[$fallbackField] ?? null;
     }
 }

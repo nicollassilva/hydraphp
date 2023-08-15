@@ -7,7 +7,7 @@ use Emulator\Api\Game\Rooms\Data\IChatBubble;
 
 class ChatBubblesComponent
 {
-    // @param array<int, IChatBubble>
+    /** @property array<int,IChatBubble> */
     private readonly array $bubbles;
 
     private bool $isLoaded = false;
@@ -19,7 +19,7 @@ class ChatBubblesComponent
 
     private function loadChatBubbles(bool $forceLoad = false): void
     {
-        if($this->isLoaded && !$forceLoad) return;
+        if ($this->isLoaded && !$forceLoad) return;
 
         $bubbleId = 0;
 
@@ -32,15 +32,16 @@ class ChatBubblesComponent
             new ChatBubble("yellow", ++$bubbleId, "", true),
             new ChatBubble("green", ++$bubbleId, "", true),
             new ChatBubble("black", ++$bubbleId, "", true),
-            new ChatBubble("fortune_teller", ++$bubbleId, "", true)
+            new ChatBubble("fortune_teller", ++$bubbleId, "", true),
         ];
 
         $this->isLoaded = true;
     }
 
+    /** @return array<int,IChatBubble> */
     public function getChatBubbles(): array
     {
-        return self::$bubbles;
+        return $this->bubbles;
     }
 
     public function getChatBubbleById(int $id): ?IChatBubble

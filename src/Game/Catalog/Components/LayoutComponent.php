@@ -2,50 +2,8 @@
 
 namespace Emulator\Game\Catalog\Components;
 
-use Emulator\Api\Game\Catalog\Layouts\{ICatalogFrontPage,ICatalogLayout};
-use Emulator\Game\Catalog\Layouts\{
-    BadgeDisplayLayout,
-    BotsLayout,
-    BuildersClubAddonsLayout,
-    BuildersClubFrontPageLayout,
-    BuildersClubLoyaltyLayout,
-    CatalogRootLayout,
-    ClubBuyLayout,
-    ClubGiftsLayout,
-    ColorGroupingLayout,
-    Default3x3Layout,
-    FrontPageFeaturedLayout,
-    FrontPageLayout,
-    GroupFrontPageLayout,
-    GroupFurnitureLayout,
-    GuildForumLayout,
-    InfoDucketsLayout,
-    InfoLoyaltyLayout,
-    InfoMonkeyLayout,
-    InfoNikoLayout,
-    InfoPetsLayout,
-    InfoRentablesLayout,
-    LoyaltyVipBuyLayout,
-    MadMoneyLayout,
-    MarketplaceLayout,
-    MarketplaceOwnItemsLayout,
-    PetCustomizationLayout,
-    Pets2Layout,
-    Pets3Layout,
-    PetsLayout,
-    RecentPurchasesLayout,
-    RecyclerInfoLayout,
-    RecyclerLayout,
-    RecyclerPrizesLayout,
-    RoomAdsLayout,
-    RoomBundleLayout,
-    SingleBundle,
-    SoldLTDItemsLayout,
-    SpacesLayout,
-    TraxLayout,
-    TrophiesLayout,
-    VipBuyLayout
-};
+use Emulator\Api\Game\Catalog\Layouts\{ICatalogLayout};
+use Emulator\Game\Catalog\Layouts\{BotsLayout, PetsLayout, TraxLayout, Pets2Layout, Pets3Layout, SingleBundle, SpacesLayout, VipBuyLayout, ClubBuyLayout, RoomAdsLayout, InfoNikoLayout, InfoPetsLayout, MadMoneyLayout, RecyclerLayout, TrophiesLayout, ClubGiftsLayout, FrontPageLayout, GroupForumLayout, Default3x3Layout, InfoMonkeyLayout, RoomBundleLayout, CatalogRootLayout, InfoDucketsLayout, InfoLoyaltyLayout, MarketplaceLayout, BadgeDisplayLayout, RecyclerInfoLayout, SoldLTDItemsLayout, ColorGroupingLayout, InfoRentablesLayout, LoyaltyVipBuyLayout, GroupFrontPageLayout, GroupFurnitureLayout, RecyclerPrizesLayout, RecentPurchasesLayout, PetCustomizationLayout, FrontPageFeaturedLayout, BuildersClubAddonsLayout, BuildersClubLoyaltyLayout, MarketplaceOwnItemsLayout, BuildersClubFrontPageLayout};
 
 class LayoutComponent
 {
@@ -57,7 +15,7 @@ class LayoutComponent
         $this->registerLayouts();
     }
 
-    public function getByName(string $name): ?string
+    public function getByName(string $name): ?ICatalogLayout
     {
         return $this->layouts[$name] ?? null;
     }
@@ -70,7 +28,7 @@ class LayoutComponent
             'default_3x3' => Default3x3Layout::class,
             'guild_furni' => GroupFurnitureLayout::class,
             'guilds' => GroupFrontPageLayout::class,
-            'guild_forum' => GuildForumLayout::class,
+            'guild_forum' => GroupForumLayout::class,
             'info_duckets' => InfoDucketsLayout::class,
             'info_rentables' => InfoRentablesLayout::class,
             'info_loyalty' => InfoLoyaltyLayout::class,
@@ -108,7 +66,7 @@ class LayoutComponent
             'builders_club_loyalty' => BuildersClubLoyaltyLayout::class,
             'monkey' => InfoMonkeyLayout::class,
             'niko' => InfoNikoLayout::class,
-            'mad_money' => MadMoneyLayout::class
+            'mad_money' => MadMoneyLayout::class,
         ];
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Emulator\Game\Rooms\Utils\Pathfinder;
 
-use Emulator\Game\Rooms\Data\RoomTile;
 use Emulator\Game\Utilities\Position;
+use Emulator\Game\Rooms\Data\RoomTile;
 
 class PathfinderNode
 {
@@ -25,11 +25,6 @@ class PathfinderNode
     public function getPosition(): Position
     {
         return $this->position;
-    }
-
-    public function setPosition(Position $position): void
-    {
-        $this->position = $position;
     }
 
     public function getNextNode(): ?PathfinderNode
@@ -70,20 +65,5 @@ class PathfinderNode
     public function isInClosed(): bool
     {
         return $this->inClosed;
-    }
-
-    public function setInClosed(bool $inClosed): void
-    {
-        $this->inClosed = $inClosed;
-    }
-
-    public function equals($obj): bool
-    {
-        return ($obj instanceof PathfinderNode) && ($obj->getPosition()->equals($this->position));
-    }
-
-    public function compareTo($o): int
-    {
-        return $this->cost <=> $o->getCost();
     }
 }
