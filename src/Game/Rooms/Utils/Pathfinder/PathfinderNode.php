@@ -66,4 +66,9 @@ class PathfinderNode
     {
         return $this->inClosed;
     }
+    
+    public function setInClosed(bool $inClosed): void
+    {
+        $this->inClosed = $inClosed;
+    }
 }

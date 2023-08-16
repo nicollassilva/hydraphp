@@ -3,11 +3,13 @@
 namespace Emulator\Game\Rooms;
 
 use ArrayObject;
+use Closure;
 use Emulator\Hydra;
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\Data\IRoomData;
 use Emulator\Game\Rooms\Enums\LoadedRoomSort;
 use Emulator\Api\Game\Rooms\{IRoom, IRoomManager};
+use Emulator\Game\Navigator\Data\NavigatorFilterField;
 use Emulator\Storage\Repositories\Rooms\RoomRepository;
 use Emulator\Game\Rooms\Components\{RoomModelsComponent, ChatBubblesComponent};
 
@@ -116,6 +118,16 @@ class RoomManager implements IRoomManager
         return $this->loadedRooms;
     }
 
+    /** @param Closure<null|IRoom> $roomNotLoadedCallback */
+    public function getLoadedRoomOr(int $id, Closure $roomNotLoadedCallback): ?IRoom
+    {
+        if(!$this->loadedRooms->offsetExists($id)) {
+            return $roomNotLoadedCallback();
+        }
+
+        return $this->loadedRooms->offsetGet($id);
+    }
+
     /** @return ArrayObject<int,IRoom> */
     public function getLoadedPublicRooms(): ArrayObject
     {
@@ -211,6 +223,23 @@ class RoomManager implements IRoomManager
                 $rooms->append($room);
             }
         }
+
+        return $rooms;
+    }
+
+    /** @return ArrayObject<int,IRoom> */
+    public function findRoomsFromNavigatorSearch(NavigatorFilterField $filterField, string $search, int $roomCategoryId, bool $showInvisible = true): ArrayObject
+    {
+        $rooms = new ArrayObject;
+
+        $databaseQuery = sprintf("%s AND rooms.state NOT LIKE '%s' %s ORDER BY rooms.users, rooms.id DESC LIMIT 10",
+            $filterField->getQuery(),
+            $showInvisible ? '' : 'invisible',
+            $roomCategoryId >= 0 ? "AND rooms.category = '{$roomCategoryId}'": ''
+        );
+
+        echo $databaseQuery;
+        RoomRepository::findRoomsFromNavigatorSearch($databaseQuery, $search, $rooms, $filterField);
 
         return $rooms;
     }

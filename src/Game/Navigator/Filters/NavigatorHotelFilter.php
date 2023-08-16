@@ -4,13 +4,15 @@ namespace Emulator\Game\Navigator\Filters;
 
 use ArrayObject;
 use Emulator\Hydra;
+use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Game\Rooms\RoomManager;
 use Emulator\Game\Navigator\NavigatorManager;
 use Emulator\Game\Navigator\Enums\NavigatorListMode;
+use Emulator\Game\Navigator\Data\NavigatorFilterField;
 use Emulator\Game\Navigator\Search\NavigatorSearchList;
 use Emulator\Api\Game\Navigator\Data\INavigatorCategory;
 use Emulator\Api\Game\Navigator\Filters\INavigatorFilter;
-use Emulator\Game\Navigator\Enums\{NavigatorDisplayOrder,NavigatorSearchAction,NavigatorDisplayMode};
+use Emulator\Game\Navigator\Enums\{NavigatorDisplayMode, NavigatorSearchAction, NavigatorDisplayOrder};
 
 class NavigatorHotelFilter implements INavigatorFilter
 {
@@ -37,7 +39,7 @@ class NavigatorHotelFilter implements INavigatorFilter
             -1,
             NavigatorManager::getInstance()->getRoomsForView('popular')
         ));
-        
+
         $popularRoomsByCategory = RoomManager::getInstance()->getPopularRoomsByCategory(
             Hydra::getEmulator()->getConfigManager()->get('hotel.navigator.popular.amount')
         );
@@ -45,7 +47,7 @@ class NavigatorHotelFilter implements INavigatorFilter
         foreach ($popularRoomsByCategory as $rooms) {
             $firstRoom = $rooms->count() ? $rooms->offsetGet(0) : null;
 
-            if(empty($firstRoom) || !($firstRoom->getData()->getCategory() instanceof INavigatorCategory)) continue;
+            if (empty($firstRoom) || !($firstRoom->getData()->getCategory() instanceof INavigatorCategory)) continue;
 
             $searchLists->append(new NavigatorSearchList(
                 ++$index,
@@ -77,5 +79,42 @@ class NavigatorHotelFilter implements INavigatorFilter
         }
 
         return $rooms;
+    }
+
+    public function getFilterResultBySearch(NavigatorFilterField $field, string $search, int $categoryId): ArrayObject
+    {
+        if (empty($field->getQuery())) {
+            return $this->getFilterResult();
+        }
+        
+        $searchLists = new ArrayObject;
+        $i = 0;
+
+        /** @var ArrayObject<int,ArrayObject<int,IRoom> $rooms */
+        $rooms = RoomManager::getInstance()->findRoomsFromNavigatorSearch($field, $search, $categoryId);
+
+        foreach ($rooms as $categoryId => $categoryRooms) {
+            if (!$categoryRooms->count()) continue;
+
+            $category = NavigatorManager::getInstance()->getFlatCategoryById($categoryId);
+
+            if(!$category) continue;
+
+            $searchLists->append(new NavigatorSearchList(
+                $i++,
+                $category->getCaptionSave(),
+                $category->getCaption(),
+                NavigatorSearchAction::None,
+                NavigatorListMode::List,
+                NavigatorDisplayMode::Visible,
+                true,
+                true,
+                NavigatorDisplayOrder::Activity,
+                $category->getOrder(),
+                $categoryRooms
+            ));
+        }
+
+        return $searchLists;
     }
 }

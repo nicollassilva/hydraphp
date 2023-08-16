@@ -11,7 +11,9 @@ use Emulator\Api\Game\Rooms\Data\IRoomData;
 use Emulator\Game\Navigator\NavigatorManager;
 use Emulator\Game\Rooms\Data\{RoomData,RoomModel};
 use Emulator\Storage\Repositories\EmulatorRepository;
+use Emulator\Game\Navigator\Data\NavigatorFilterField;
 use Emulator\Api\Game\Navigator\Data\INavigatorPublicCategory;
+use Emulator\Game\Navigator\Enums\NavigatorFilterComparator;
 
 abstract class RoomRepository extends EmulatorRepository
 {
@@ -93,5 +95,29 @@ abstract class RoomRepository extends EmulatorRepository
                 $category->addRoom($room);
             }
         });
+    }
+
+    public static function findRoomsFromNavigatorSearch(string $databaseQuery, string $search, ArrayObject &$filteredRooms, NavigatorFilterField $filterField): void
+    {
+        $preparedValue = $filterField->getComparator() === NavigatorFilterComparator::Equals ? $search : "%{$search}%";
+
+        self::encapsuledSelect($databaseQuery, function(QueryResult $result) use (&$filteredRooms) {
+            if(empty($result->resultRows)) return;
+
+            foreach($result->resultRows as $row) {
+                $room = RoomManager::getInstance()->getLoadedRoomOr($row['id'], function() use ($row): ?IRoom {
+                    return RoomManager::getInstance()->loadRoomFromData(new RoomData($row));
+                });
+
+                if(!$room) continue;
+
+                if(!$filteredRooms->offsetExists($row['category'])) {
+                    $filteredRooms->offsetSet($row['category'], new ArrayObject());
+                }
+
+                $filteredRooms->offsetGet($row['category'])
+                    ->offsetSet($room->getData()->getId(), $room);
+            }
+        }, [$preparedValue]);
     }
 }

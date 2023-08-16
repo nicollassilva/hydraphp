@@ -32,7 +32,7 @@ class ConnectorManager implements IConnectorManager
     private function initializeConnector(): void
     {
         $connectionFactory = new Factory();
-        $connectionString = "{$this->user}:{$this->password}@{$this->host}:{$this->port}/{$this->dbName}?characterEncoding=utf8&useSSL=false";
+        $connectionString = "{$this->user}:{$this->password}@{$this->host}:{$this->port}/{$this->dbName}?charset=utf8&useSSL=false";
 
         if($this->tcpKeepAlive) {
             $connectionString .= "&tcpKeepAlive={$this->tcpKeepAlive}";

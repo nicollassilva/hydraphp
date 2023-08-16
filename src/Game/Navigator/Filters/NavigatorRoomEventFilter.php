@@ -5,6 +5,7 @@ namespace Emulator\Game\Navigator\Filters;
 use ArrayObject;
 use Emulator\Game\Navigator\NavigatorManager;
 use Emulator\Game\Navigator\Enums\NavigatorListMode;
+use Emulator\Game\Navigator\Data\NavigatorFilterField;
 use Emulator\Game\Navigator\Search\NavigatorSearchList;
 use Emulator\Api\Game\Navigator\Filters\INavigatorFilter;
 use Emulator\Game\Navigator\Enums\{NavigatorDisplayOrder,NavigatorSearchAction,NavigatorDisplayMode};
@@ -46,5 +47,10 @@ class NavigatorRoomEventFilter implements INavigatorFilter
         }
 
         return $rooms;
+    }
+
+    public function getFilterResultBySearch(NavigatorFilterField $field, string $search, int $categoryId): ArrayObject
+    {
+        return $this->getFilterResult();
     }
 }

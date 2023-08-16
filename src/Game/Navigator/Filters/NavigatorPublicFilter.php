@@ -5,9 +5,10 @@ namespace Emulator\Game\Navigator\Filters;
 use ArrayObject;
 use Emulator\Game\Navigator\NavigatorManager;
 use Emulator\Game\Navigator\Enums\NavigatorListMode;
+use Emulator\Game\Navigator\Data\NavigatorFilterField;
 use Emulator\Game\Navigator\Search\NavigatorSearchList;
 use Emulator\Api\Game\Navigator\Filters\INavigatorFilter;
-use Emulator\Game\Navigator\Enums\{NavigatorDisplayOrder,NavigatorSearchAction,NavigatorDisplayMode};
+use Emulator\Game\Navigator\Enums\{NavigatorDisplayMode, NavigatorSearchAction, NavigatorDisplayOrder};
 
 class NavigatorPublicFilter implements INavigatorFilter
 {
@@ -18,7 +19,7 @@ class NavigatorPublicFilter implements INavigatorFilter
     {
         $index = 0;
 
-        /** @var ArrayObject<NavigatorSearchList> */
+        /** @var ArrayObject<NavigatorSearchList> $searchLists */
         $searchLists = new ArrayObject;
 
         $searchLists->append(new NavigatorSearchList(
@@ -34,7 +35,7 @@ class NavigatorPublicFilter implements INavigatorFilter
             -1,
             NavigatorManager::getInstance()->getRoomsForView('official-root')
         ));
-        
+
         $publicCategories = NavigatorManager::getInstance()->getPublicCategories();
 
         foreach ($publicCategories as $publicCategory) {
@@ -70,5 +71,10 @@ class NavigatorPublicFilter implements INavigatorFilter
         }
 
         return $rooms;
+    }
+    
+    public function getFilterResultBySearch(NavigatorFilterField $field, string $search, int $categoryId): ArrayObject
+    {
+        return $this->getFilterResult();
     }
 }

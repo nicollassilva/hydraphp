@@ -7,31 +7,34 @@ use Emulator\Game\Navigator\NavigatorManager;
 use Emulator\Api\Networking\Connections\IClient;
 use Emulator\Networking\Connections\ClientMessage;
 use Emulator\Game\Navigator\NavigatorFilterManager;
+use Emulator\Game\Navigator\Enums\NavigatorListMode;
 use Emulator\Api\Networking\Incoming\IIncomingMessage;
-use Emulator\Game\Navigator\Data\NavigatorFilterField;
 use Emulator\Game\Navigator\Search\NavigatorSearchList;
-use Emulator\Api\Game\Navigator\Filters\INavigatorFilter;
+use Emulator\Game\Navigator\Enums\NavigatorDisplayMode;
+use Emulator\Api\Game\Navigator\Data\INavigatorCategory;
+use Emulator\Game\Navigator\Enums\NavigatorDisplayOrder;
+use Emulator\Game\Navigator\Enums\NavigatorSearchAction;
 use Emulator\Game\Navigator\Filters\NavigatorPublicFilter;
 use Emulator\Networking\Outgoing\Rooms\NewNavigatorSearchResultsComposer;
-use Emulator\Game\Navigator\Enums\{NavigatorListMode, NavigatorDisplayMode, NavigatorSearchAction, NavigatorDisplayOrder};
 
 class RequestNewNavigatorRoomsEvent implements IIncomingMessage
 {
     public function handle(IClient $client, ClientMessage $message): void
     {
-        $view = $message->readString();
+        $view = $this->normalizeView($message->readString());
         $search = $message->readString();
-
-        if (in_array($view, ['query', 'groups'])) {
-            $view = "hotel_view";
-        }
 
         $filter = NavigatorFilterManager::getInstance()->getFilterForView($view, $client->getUser(), NavigatorPublicFilter::FILTER_NAME);
         $category = NavigatorManager::getInstance()->getCategoryByView($view);
 
+        if (empty($filter)) {
+            $this->treatEmptyFilter($client, $view, $search);
+            return;
+        }
+
         $filterField = NavigatorManager::getInstance()->getFilterByKey('anything');
 
-        if (($filterField == null || empty($search)) && !($filter instanceof INavigatorFilter)) return;
+        if (empty($filterField)) return;
 
         /** @var ArrayObject<NavigatorSearchList> $resultList */
         $resultList = $filter->getFilterResult();
@@ -41,29 +44,48 @@ class RequestNewNavigatorRoomsEvent implements IIncomingMessage
             return;
         }
 
-        $filterField = $this->resolveNavigatorSearch($search, $filterField);
-
-        $resultList = new ArrayObject(new NavigatorSearchList(
-            0, 'query', '', NavigatorSearchAction::None, NavigatorListMode::List, NavigatorDisplayMode::Visible, true, true, NavigatorDisplayOrder::Activity, -1, $filter->getRooms($resultList)
-        ));
-    }
-
-    private function resolveNavigatorSearch(string &$search, NavigatorFilterField &$defaultFilter): ?NavigatorFilterField
-    {
-        $filterField = &$defaultFilter;
         $parsedSearch = explode(':', $search);
 
         if (count($parsedSearch) <= 1) {
-            $search = str_replace(':', '', $search);
+            $resultList = $filter->getFilterResultBySearch($filterField, $search[0], $category instanceof INavigatorCategory ? $category->getId() : -1);
 
-            $filterField = NavigatorManager::getInstance()->getFilterByKey($search);
+            $client->send(new NewNavigatorSearchResultsComposer($view, $search, $resultList));
+            return;
         }
 
-        if (!$filterField) {
-            $filterField = &$defaultFilter;
+        $filterField = NavigatorManager::getInstance()->getFilterByKey(str_replace(':', '', $parsedSearch[0]));
+
+        if (empty($filterField)) return;
+
+        $resultList = $filter->getFilterResultBySearch($filterField, $parsedSearch[1], $category instanceof INavigatorCategory ? $category->getId() : -1);
+
+        $client->send(new NewNavigatorSearchResultsComposer($view, $search, $resultList));
+    }
+
+    public function normalizeView(string $view): string
+    {
+        if (in_array($view, ['query', 'groups'])) {
+            $view = "hotel_view";
         }
 
-        return $filterField;
+        return $view;
+    }
+
+    public function treatEmptyFilter(IClient $client, string $view, string $search): void
+    {
+        $rooms = NavigatorManager::getInstance()->getRoomsForView($view, $client->getUser());
+
+        if (!$rooms->count()) return;
+
+        $resultList = new ArrayObject();
+
+        $resultList->append(
+            new NavigatorSearchList(
+                0, $view, $search, NavigatorSearchAction::None, NavigatorListMode::List, NavigatorDisplayMode::Visible, true, true, NavigatorDisplayOrder::Activity, -1, $rooms
+            )
+        );
+
+        $client->send(new NewNavigatorSearchResultsComposer($view, $search, $resultList));
     }
 
     public function needsAuthentication(): bool

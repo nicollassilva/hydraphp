@@ -2,9 +2,12 @@
 
 namespace Emulator\Api\Game\Rooms;
 
+use Closure;
 use ArrayObject;
 use Emulator\Utils\Logger;
+use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Rooms\Data\IRoomData;
+use Emulator\Game\Navigator\Data\NavigatorFilterField;
 use Emulator\Game\Rooms\Components\{RoomModelsComponent, ChatBubblesComponent};
 
 interface IRoomManager
@@ -26,6 +29,9 @@ interface IRoomManager
     /** @return ArrayObject<int,IRoom> */
     public function getLoadedPublicRooms(): ArrayObject;
 
+    /** @param Closure<null|IRoom> $roomNotLoadedCallback */
+    public function getLoadedRoomOr(int $id, Closure $callback): ?IRoom;
+
     /** @return ArrayObject<int,IRoom> */
     public function getPopularRooms(int $roomsLimit): ArrayObject;
 
@@ -38,4 +44,7 @@ interface IRoomManager
     public function getPromotedRooms(): ArrayObject;
 
     public function disposeInactiveRooms(): void;
+    
+    /** @return ArrayObject<int,IRoom> */
+    public function findRoomsFromNavigatorSearch(NavigatorFilterField $filterField, string $search, int $roomCategoryId, bool $showInvisible = true): ArrayObject;
 }

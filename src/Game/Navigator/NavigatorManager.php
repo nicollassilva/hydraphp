@@ -106,7 +106,8 @@ class NavigatorManager implements INavigatorManager
             "official-root" => RoomManager::getInstance()->getLoadedPublicRooms(),
             "popular" => RoomManager::getInstance()->getPopularRooms(Hydra::getEmulator()->getConfigManager()->get('hotel.navigator.popular.amount')),
             "categories" => RoomManager::getInstance()->getPromotedRooms(),
-            "my-rooms" => $user->getRoomsComponent()->getOwnRooms()
+            "my-rooms" => $user->getRoomsComponent()->getOwnRooms(),
+            default => new ArrayObject
         };
     }
 
