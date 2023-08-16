@@ -3,7 +3,7 @@
 namespace Emulator\Api\Game\Catalog\Data;
 
 use Emulator\Api\Game\Utilities\IComposable;
-use Emulator\Api\Game\Rooms\Types\Items\Data\IItemDefinition;
+use Emulator\Api\Game\Items\Data\IItemDefinition;
 
 interface ICatalogItem extends IComposable
 {

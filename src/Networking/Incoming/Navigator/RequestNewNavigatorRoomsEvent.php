@@ -57,7 +57,7 @@ class RequestNewNavigatorRoomsEvent implements IIncomingMessage
 
         if (empty($filterField)) return;
 
-        $resultList = $filter->getFilterResultBySearch($filterField, $parsedSearch[1], $category instanceof INavigatorCategory ? $category->getId() : -1);
+        $resultList = $filter->getFilterResultBySearch($filterField, str_replace(' ', '', $parsedSearch[1]), $category instanceof INavigatorCategory ? $category->getId() : -1);
 
         $client->send(new NewNavigatorSearchResultsComposer($view, $search, $resultList));
     }

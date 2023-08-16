@@ -5,6 +5,7 @@ namespace Emulator\Boot;
 use Closure;
 use Emulator\Utils\Logger;
 use Emulator\Workers\CleanerWorker;
+use Emulator\Game\Items\ItemManager;
 use Emulator\Game\Rooms\RoomManager;
 use Emulator\Game\Users\UserManager;
 use Emulator\Storage\ConnectorManager;
@@ -12,7 +13,6 @@ use Emulator\Networking\NetworkManager;
 use Emulator\Game\Catalog\CatalogManager;
 use Emulator\Api\Networking\INetworkManager;
 use Emulator\Game\Navigator\NavigatorManager;
-use Emulator\Game\Rooms\Types\Items\ItemManager;
 use Emulator\Storage\Compositions\IConnectorManager;
 
 class Emulator

@@ -11,7 +11,7 @@ use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
 use Emulator\Api\Game\Rooms\Data\{IRoomData, IRoomModel};
 use Emulator\Networking\Outgoing\Rooms\RemoveUserComposer;
-use Emulator\Game\Rooms\Components\{EntityComponent, MappingComponent, ProcessComponent};
+use Emulator\Game\Rooms\Components\{EntityComponent, ItemComponent, MappingComponent, ProcessComponent};
 
 class Room implements IRoom
 {
@@ -23,6 +23,7 @@ class Room implements IRoom
     private ProcessComponent $processComponent;
     private MappingComponent $mappingComponent;
     private EntityComponent $entityComponent;
+    private ItemComponent $itemComponent;
 
     private int $idleCycle = 0;
 
@@ -36,6 +37,7 @@ class Room implements IRoom
         $this->processComponent = new ProcessComponent($this);
         $this->mappingComponent = new MappingComponent($this);
         $this->entityComponent = new EntityComponent($this);
+        $this->itemComponent = new ItemComponent($this);
 
         $this->loadHeightmap();
     }
@@ -75,6 +77,11 @@ class Room implements IRoom
         return $this->entityComponent;
     }
 
+    public function getItemComponent(): ItemComponent
+    {
+        return $this->itemComponent;
+    }
+
     public function broadcastMessage(IMessageComposer $message): IRoom
     {
         foreach ($this->entityComponent->getUserEntities() as $userEntity) {
@@ -91,6 +98,11 @@ class Room implements IRoom
     public function getNextEntityId(): int
     {
         return $this->entityComponent->getNextEntityId();
+    }
+
+    public function getNextItemId(): int
+    {
+        return $this->itemComponent->getNextItemId();
     }
 
     public function isOwner(IUser $user): bool
@@ -132,7 +144,14 @@ class Room implements IRoom
         $this->processComponent->dispose();
 
         if ($completelyDispose) {
-            unset($this->data, $this->processComponent, $this->mappingComponent, $this->entityComponent, $this->model);
+            unset(
+                $this->data,
+                $this->processComponent,
+                $this->mappingComponent,
+                $this->entityComponent,
+                $this->itemComponent,
+                $this->model
+            );
         }
     }
 

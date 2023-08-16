@@ -1,8 +1,8 @@
 <?php
 
-namespace Emulator\Api\Game\Rooms\Types\Items\Data;
+namespace Emulator\Api\Game\Items\Data;
 
-use Emulator\Game\Rooms\Types\Items\Enums\ItemDefinitionType;
+use Emulator\Game\Items\Enums\ItemDefinitionType;
 
 interface IItemDefinition
 {

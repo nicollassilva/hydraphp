@@ -1,6 +1,6 @@
 <?php
 
-namespace Emulator\Game\Rooms\Types\Items\Enums;
+namespace Emulator\Game\Items\Enums;
 
 enum ItemDefinitionType: string
 {

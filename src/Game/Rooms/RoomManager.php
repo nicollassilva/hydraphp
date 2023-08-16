@@ -94,12 +94,12 @@ class RoomManager implements IRoomManager
         );
     }
 
-    public function loadRoomFromData(?IRoomData $roomData, bool $bypassExists = false): ?IRoom
+    public function loadRoomFromData(?IRoomData $roomData, bool $bypassExists = false, bool $shouldShowLogger = true): ?IRoom
     {
         if ($roomData === null) return null;
 
         if (!$bypassExists && $this->loadedRooms->offsetExists($roomData->getId())) {
-            if (Hydra::$isDebugging) $this->getLogger()->info("Room already loaded: {$roomData->getId()}.");
+            if (Hydra::$isDebugging && $shouldShowLogger) $this->getLogger()->info("Room already loaded: {$roomData->getId()}.");
 
             return $this->loadedRooms->offsetGet($roomData->getId());
         }
@@ -108,7 +108,7 @@ class RoomManager implements IRoomManager
 
         $this->loadedRooms->offsetSet($roomData->getId(), $room);
 
-        if (Hydra::$isDebugging) $this->getLogger()->info("Room loaded successfully: {$roomData->getName()}.");
+        if (Hydra::$isDebugging && $shouldShowLogger) $this->getLogger()->info("Room loaded successfully: {$roomData->getName()}.");
 
         return $room;
     }
@@ -238,7 +238,6 @@ class RoomManager implements IRoomManager
             $roomCategoryId >= 0 ? "AND rooms.category = '{$roomCategoryId}'": ''
         );
 
-        echo $databaseQuery;
         RoomRepository::findRoomsFromNavigatorSearch($databaseQuery, $search, $rooms, $filterField);
 
         return $rooms;

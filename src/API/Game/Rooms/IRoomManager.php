@@ -24,7 +24,7 @@ interface IRoomManager
 
     public function getRoomModelsComponent(): RoomModelsComponent;
 
-    public function loadRoomFromData(?IRoomData $roomData, bool $bypassExists = false): ?IRoom;
+    public function loadRoomFromData(?IRoomData $roomData, bool $bypassExists = false, bool $shouldShowLogger = true): ?IRoom;
 
     /** @return ArrayObject<int,IRoom> */
     public function getLoadedPublicRooms(): ArrayObject;

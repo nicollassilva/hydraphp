@@ -5,8 +5,8 @@ namespace Emulator\Storage\Repositories\Items;
 use Emulator\Utils\Logger;
 use React\MySQL\QueryResult;
 use Emulator\Storage\Repositories\EmulatorRepository;
-use Emulator\Api\Game\Rooms\Types\Items\Data\IItemDefinition;
-use Emulator\Game\Rooms\Types\Items\Data\ItemDefinition;
+use Emulator\Api\Game\Items\Data\IItemDefinition;
+use Emulator\Game\Items\Data\ItemDefinition;
 
 abstract class ItemRepository extends EmulatorRepository
 {

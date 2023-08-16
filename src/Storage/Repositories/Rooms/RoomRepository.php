@@ -3,6 +3,7 @@
 namespace Emulator\Storage\Repositories\Rooms;
 
 use ArrayObject;
+use Emulator\Hydra;
 use Emulator\Utils\Logger;
 use React\MySQL\QueryResult;
 use Emulator\Api\Game\Rooms\IRoom;
@@ -64,7 +65,7 @@ abstract class RoomRepository extends EmulatorRepository
             if(empty($result->resultRows)) return;
 
             foreach($result->resultRows as $row) {
-                $room = RoomManager::getInstance()->loadRoomFromData(new RoomData($row));
+                $room = RoomManager::getInstance()->loadRoomFromData(new RoomData($row), false, false);
 
                 if(!$room) continue;
 
@@ -86,7 +87,7 @@ abstract class RoomRepository extends EmulatorRepository
                     continue;
                 }
 
-                $room = RoomManager::getInstance()->loadRoomFromData(new RoomData($row));
+                $room = RoomManager::getInstance()->loadRoomFromData(new RoomData($row), false, false);
 
                 if(!$room) continue;
 
@@ -99,17 +100,21 @@ abstract class RoomRepository extends EmulatorRepository
 
     public static function findRoomsFromNavigatorSearch(string $databaseQuery, string $search, ArrayObject &$filteredRooms, NavigatorFilterField $filterField): void
     {
-        $preparedValue = $filterField->getComparator() === NavigatorFilterComparator::Equals ? $search : "%{$search}%";
+        $preparedValue = $filterField->getComparator() === NavigatorFilterComparator::Contains ? "%{$search}%" : $search;
 
         self::encapsuledSelect($databaseQuery, function(QueryResult $result) use (&$filteredRooms) {
             if(empty($result->resultRows)) return;
 
             foreach($result->resultRows as $row) {
-                $room = RoomManager::getInstance()->getLoadedRoomOr($row['id'], function() use ($row): ?IRoom {
+                $room = RoomManager::getInstance()->getLoadedRoomOr($row['id'], function() use (&$row): ?IRoom {
                     return RoomManager::getInstance()->loadRoomFromData(new RoomData($row));
                 });
 
-                if(!$room) continue;
+                if(!$room) {
+                    if(Hydra::$isDebugging) self::getLogger()->error("Could not instantiate room: {$row['id']}.");
+                    
+                    continue;
+                }
 
                 if(!$filteredRooms->offsetExists($row['category'])) {
                     $filteredRooms->offsetSet($row['category'], new ArrayObject());

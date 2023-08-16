@@ -98,7 +98,11 @@ class NavigatorHotelFilter implements INavigatorFilter
 
             $category = NavigatorManager::getInstance()->getFlatCategoryById($categoryId);
 
-            if(!$category) continue;
+            if(!$category) {
+                if(Hydra::$isDebugging) RoomManager::getInstance()->getLogger("Category not found: ID [{$categoryId}]");
+                
+                continue;
+            }
 
             $searchLists->append(new NavigatorSearchList(
                 $i++,

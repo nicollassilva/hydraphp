@@ -1,9 +1,9 @@
 <?php
 
-namespace Emulator\Api\Game\Rooms\Types\Items;
+namespace Emulator\Api\Game\Items;
 
 use Emulator\Utils\Logger;
-use Emulator\Api\Game\Rooms\Types\Items\Data\IItemDefinition;
+use Emulator\Api\Game\Items\Data\IItemDefinition;
 
 interface IItemManager
 {

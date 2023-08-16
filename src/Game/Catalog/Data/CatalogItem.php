@@ -2,12 +2,12 @@
 
 namespace Emulator\Game\Catalog\Data;
 
+use Emulator\Game\Items\ItemManager;
+use Emulator\Game\Items\Data\ItemDefinition;
 use Emulator\Api\Game\Catalog\Data\ICatalogItem;
-use Emulator\Game\Rooms\Types\Items\ItemManager;
+use Emulator\Api\Game\Items\Data\IItemDefinition;
+use Emulator\Game\Items\Enums\ItemDefinitionType;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
-use Emulator\Api\Game\Rooms\Types\Items\Data\IItemDefinition;
-use Emulator\Game\Rooms\Types\Items\Data\ItemDefinition;
-use Emulator\Game\Rooms\Types\Items\Enums\ItemDefinitionType;
 
 class CatalogItem implements ICatalogItem
 {

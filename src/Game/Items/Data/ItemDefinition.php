@@ -1,9 +1,9 @@
 <?php
 
-namespace Emulator\Game\Rooms\Types\Items\Data;
+namespace Emulator\Game\Items\Data;
 
-use Emulator\Api\Game\Rooms\Types\Items\Data\IItemDefinition;
-use Emulator\Game\Rooms\Types\Items\Enums\ItemDefinitionType;
+use Emulator\Api\Game\Items\Data\IItemDefinition;
+use Emulator\Game\Items\Enums\ItemDefinitionType;
 
 class ItemDefinition implements IItemDefinition
 {

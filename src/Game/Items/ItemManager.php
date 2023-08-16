@@ -1,11 +1,11 @@
 <?php
 
-namespace Emulator\Game\Rooms\Types\Items;
+namespace Emulator\Game\Items;
 
 use Emulator\Utils\Logger;
-use Emulator\Api\Game\Rooms\Types\Items\IItemManager;
+use Emulator\Api\Game\Items\IItemManager;
+use Emulator\Api\Game\Items\Data\IItemDefinition;
 use Emulator\Storage\Repositories\Items\ItemRepository;
-use Emulator\Api\Game\Rooms\Types\Items\Data\IItemDefinition;
 
 class ItemManager implements IItemManager
 {
@@ -35,6 +35,8 @@ class ItemManager implements IItemManager
         if ($this->isStarted) return;
 
         ItemRepository::loadItemDefinitions($this->itemsDefinitions);
+
+        ItemFactory::getInstance()->initialize();
 
         $this->isStarted = true;
 
