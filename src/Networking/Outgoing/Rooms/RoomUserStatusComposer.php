@@ -22,7 +22,7 @@ class RoomUserStatusComposer extends MessageComposer
 
     private function composeEntity(UserEntity $entity): void
     {
-        $this->writeInt($entity->getId());
+        $this->writeInt($entity->getVirtualId());
         $this->writeInt($entity->getPosition()->getX());
         $this->writeInt($entity->getPosition()->getY());
         $this->writeString((string) $entity->getPosition()->getZ());

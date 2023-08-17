@@ -33,7 +33,7 @@ class RoomUsersComposer extends MessageComposer
         $this->writeString($entity->getUser()->getData()->getUsername());
         $this->writeString($entity->getUser()->getData()->getMotto());
         $this->writeString($entity->getUser()->getData()->getLook());
-        $this->writeInt($entity->getId());
+        $this->writeInt($entity->getVirtualId());
         $this->writeInt($entity->getPosition()->getX());
         $this->writeInt($entity->getPosition()->getY());
         $this->writeString((string) $entity->getPosition()->getZ());

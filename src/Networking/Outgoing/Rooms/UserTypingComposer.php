@@ -12,7 +12,7 @@ class UserTypingComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$userTypingComposer;
 
-        $this->writeInt($userEntity->getId());
+        $this->writeInt($userEntity->getVirtualId());
         $this->writeInt((int) $isTyping);
     }
 }

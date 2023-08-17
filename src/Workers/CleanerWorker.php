@@ -2,9 +2,9 @@
 
 namespace Emulator\Workers;
 
-use Emulator\Game\Rooms\RoomManager;
 use React\EventLoop\Loop;
 use React\EventLoop\LoopInterface;
+use Emulator\Game\Rooms\RoomManager;
 
 class CleanerWorker
 {
@@ -21,9 +21,9 @@ class CleanerWorker
         $this->lastInactiveRoomsDisposed = time();
     }
 
-    public static function initialize()
+    public static function initialize(): void
     {
-        if(self::$instance instanceof CleanerWorker) return;
+        if (self::$instance instanceof CleanerWorker) return;
 
         self::$instance = new CleanerWorker;
 
@@ -34,16 +34,21 @@ class CleanerWorker
     {
         $this->loop = Loop::get();
 
-        $this->loop->addPeriodicTimer(self::CLEANER_WORKER_INTERVAL, function() {
+        $this->loop->addPeriodicTimer(self::CLEANER_WORKER_INTERVAL, function () {
             $this->processCleanings();
         });
+    }
+
+    public function getLoop(): LoopInterface
+    {
+        return $this->loop;
     }
 
     public function processCleanings(): void
     {
         $currentTime = time();
 
-        if($currentTime - $this->lastInactiveRoomsDisposed > RoomManager::DISPOSE_INACTIVE_ROOMS_MS) {
+        if ($currentTime - $this->lastInactiveRoomsDisposed > RoomManager::DISPOSE_INACTIVE_ROOMS_MS) {
             RoomManager::getInstance()->disposeInactiveRooms();
 
             $this->lastInactiveRoomsDisposed = $currentTime;

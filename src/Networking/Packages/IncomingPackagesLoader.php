@@ -3,6 +3,7 @@
 namespace Emulator\Networking\Packages;
 
 use Emulator\Networking\Incoming\IncomingHeaders;
+use Emulator\Networking\Incoming\Items\ToggleFloorItemEvent;
 use Emulator\Networking\Incoming\Emulator\{PingEvent, PongEvent};
 use Emulator\Networking\Incoming\GameCenter\{GetGameListMessageEvent, GameCenterRequestGamesEvent};
 use Emulator\Networking\Incoming\HotelView\{HotelViewRequestBonusRareEvent,HotelViewDataEvent, HotelViewEvent};
@@ -114,6 +115,7 @@ class IncomingPackagesLoader
         $this->addPackage(IncomingHeaders::$joinRoomEvent, JoinRoomEvent::class);
         $this->addPackage(IncomingHeaders::$requestHeightmapEvent, RequestHeightmapEvent::class);
         $this->addPackage(IncomingHeaders::$requestRoomHeightmapEvent, RequestRoomHeightmapEvent::class);
+        $this->addPackage(IncomingHeaders::$toggleFloorItemEvent, ToggleFloorItemEvent::class);
     }
 
     private function loadCatalogEvents(): void

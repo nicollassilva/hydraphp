@@ -157,7 +157,7 @@ class Room implements IRoom
 
     public function onUserEntityRemoved(UserEntity $entity): void
     {
-        $this->broadcastMessage(new RemoveUserComposer($entity->getId()));
+        $this->broadcastMessage(new RemoveUserComposer($entity->getVirtualId()));
     }
 
     public function canBeCompletelyDisposed(): bool

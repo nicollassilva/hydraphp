@@ -58,7 +58,7 @@ class CatalogItem implements ICatalogItem
     private function attachItemsInstance(): void
     {
         foreach ($this->getItemIds() as $itemId) {
-            $this->itemsDefinitions[$itemId] = ItemManager::getInstance()->getItemById($itemId);
+            $this->itemsDefinitions[$itemId] = ItemManager::getInstance()->getItemDefinitionById($itemId);
         }
     }
 

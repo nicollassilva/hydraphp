@@ -25,12 +25,12 @@ class EntityComponent
 
     public function addUserEntity(UserEntity &$entity): void
     {
-        $this->userEntities->offsetSet($entity->getId(), $entity);
+        $this->userEntities->offsetSet($entity->getVirtualId(), $entity);
     }
 
     public function removeUserEntity(UserEntity $entity): void
     {
-        $this->userEntities->offsetUnset($entity->getId());
+        $this->userEntities->offsetUnset($entity->getVirtualId());
 
         $this->room->onUserEntityRemoved($entity);
     }

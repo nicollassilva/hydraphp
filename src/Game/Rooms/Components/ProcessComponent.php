@@ -109,15 +109,20 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
 
     public function markEntityNeedsUpdate(RoomEntity $entity): void
     {
-        if($this->entitiesToUpdate->offsetExists($entity->getId())) return;
+        if($this->entitiesToUpdate->offsetExists($entity->getVirtualId())) return;
 
         $entity->setNeedsUpdate(true);
-        $this->entitiesToUpdate->offsetSet($entity->getId(), $entity);
+        $this->entitiesToUpdate->offsetSet($entity->getVirtualId(), $entity);
     }
 
     public function getRoom(): IRoom
     {
         return $this->room;
+    }
+
+    public function getLogger(): Logger
+    {
+        return $this->logger;
     }
 
     private function processComplete(bool $resetEntities = true, bool $resetRoomIdleCycle = true): void

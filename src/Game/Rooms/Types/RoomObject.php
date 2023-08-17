@@ -23,7 +23,7 @@ class RoomObject implements IRoomObject, IPositionable
         $this->room = $room;
     }
 
-    public function getId(): int
+    public function getVirtualId(): int
     {
         return $this->id;
     }

@@ -12,7 +12,22 @@ class RoomFloorItemsComposer extends MessageComposer
     {
         $this->header = OutgoingHeaders::$roomFloorItemsComposer;
 
-        $this->writeInt(0); // furni owner names count
-        $this->writeInt(0); // items count
+        $this->writeInt($room->getItemComponent()->getFloorItemsOwnerNames()->count());
+
+        foreach ($room->getItemComponent()->getFloorItemsOwnerNames() as $ownerId => $ownerName) {
+            $this->writeInt($ownerId);
+            $this->writeString($ownerName);
+        }
+
+        $this->writeInt($room->getItemComponent()->getFloorItems()->count());
+
+        foreach ($room->getItemComponent()->getFloorItems() as $item) {
+            $item->compose($this);
+            $this->writeInt(1);
+            $item->composeExtraData($this);
+            $this->writeInt(-1);
+            $this->writeInt(1);
+            $this->writeInt($item->getData()->getOwnerId());
+        }
     }
 }

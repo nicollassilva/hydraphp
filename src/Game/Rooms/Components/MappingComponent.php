@@ -32,7 +32,7 @@ class MappingComponent
         bool $isLastStep, 
         bool $isRetry
     ): bool {
-        return $this->checkStepValidation($object->getId(), $from, $to, $isLastStep, false, $isRetry, false, false);
+        return $this->checkStepValidation($object->getVirtualId(), $from, $to, $isLastStep, false, $isRetry, false, false);
     }
     
     public function isValidStep(

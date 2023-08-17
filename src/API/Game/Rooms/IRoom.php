@@ -8,7 +8,7 @@ use Emulator\Api\Game\Utilities\IComposable;
 use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
 use Emulator\Api\Game\Rooms\Data\{IRoomData,IRoomModel};
-use Emulator\Game\Rooms\Components\{MappingComponent,ProcessComponent,EntityComponent};
+use Emulator\Game\Rooms\Components\{MappingComponent,ProcessComponent,EntityComponent,ItemComponent};
 
 interface IRoom extends IComposable
 {
@@ -25,6 +25,7 @@ interface IRoom extends IComposable
     public function getProcessComponent(): ProcessComponent;
     public function getMappingComponent(): MappingComponent;
     public function getEntityComponent(): EntityComponent;
+    public function getItemComponent(): ItemComponent;
 
     public function dispose(): void;
     public function onIdleCycleChanged(): void;

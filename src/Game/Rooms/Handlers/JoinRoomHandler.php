@@ -58,7 +58,15 @@ class JoinRoomHandler extends AbstractHandler
 
         $userEntity->clearStatus();
 
-        $user->getClient()->send(new RoomPaintComposer($room));
+        if(!$room->getData()->getPaperWall() != '0.0') {
+            $user->getClient()->send(new RoomPaintComposer('wallpaper', $room->getData()->getPaperWall()));
+        }
+
+        if(!$room->getData()->getPaperFloor() != '0.0') {
+            $user->getClient()->send(new RoomPaintComposer('floor', $room->getData()->getPaperFloor()));
+        }
+
+        $user->getClient()->send(new RoomPaintComposer('landscape', $room->getData()->getPaperLandscape()));
 
         $flatCtrl = RoomRightLevels::None;
 
@@ -110,6 +118,7 @@ class JoinRoomHandler extends AbstractHandler
         }
 
         if (!$room->getProcessComponent()->started()) {
+            $room->getItemComponent()->loadItems();
             $room->getProcessComponent()->start();
         }
 

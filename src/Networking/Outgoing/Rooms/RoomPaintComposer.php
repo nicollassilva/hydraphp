@@ -8,11 +8,11 @@ use Emulator\Networking\Outgoing\OutgoingHeaders;
 
 class RoomPaintComposer extends MessageComposer
 {
-    public function __construct(IRoom &$room)
+    public function __construct(string $type, string $value)
     {
         $this->header = OutgoingHeaders::$roomPaintComposer;
 
-        $this->writeString('landscape');
-        $this->writeString($room->getData()->getPaperLandscape());
+        $this->writeString($type);
+        $this->writeString($value);
     }
 }

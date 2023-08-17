@@ -71,7 +71,7 @@ class UserEntity extends RoomEntity implements IUserEntity
             $this->getUser()->getClient()->send(new GenericErrorComposer(GenericErrorComposer::KICKED_OUT_OF_THE_ROOM));
         }
 
-        $this->getRoom()->broadcastMessage(new RemoveUserComposer($this->getId()));
+        $this->getRoom()->broadcastMessage(new RemoveUserComposer($this->getVirtualId()));
 
         if(!$isOffline && $toHotelView) {
             $this->getUser()->getClient()->send(new HotelViewComposer);

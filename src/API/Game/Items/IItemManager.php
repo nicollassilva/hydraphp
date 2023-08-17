@@ -9,5 +9,5 @@ interface IItemManager
 {
     public function initialize(): void;
     public function getLogger(): Logger;
-    public function getItemById(string|int $id): ?IItemDefinition;
+    public function getItemDefinitionById(string|int $id): ?IItemDefinition;
 }

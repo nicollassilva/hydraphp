@@ -35,7 +35,6 @@ class ItemManager implements IItemManager
         if ($this->isStarted) return;
 
         ItemRepository::loadItemDefinitions($this->itemsDefinitions);
-
         ItemFactory::getInstance()->initialize();
 
         $this->isStarted = true;
@@ -48,7 +47,7 @@ class ItemManager implements IItemManager
         return $this->logger;
     }
 
-    public function getItemById(string|int $id): ?IItemDefinition
+    public function getItemDefinitionById(string|int $id): ?IItemDefinition
     {
         return $this->itemsDefinitions[$id] ?? null;
     }

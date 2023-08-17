@@ -6,6 +6,6 @@ use Emulator\Api\Game\Rooms\IRoom;
 
 interface IRoomObject
 {
-    public function getId(): int;
+    public function getVirtualId(): int;
     public function getRoom(): ?IRoom;
 }

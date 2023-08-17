@@ -32,10 +32,10 @@ class Emulator
         $this->startConnectorManager(function () {
             $this->getConfigManager()->loadEmulatorSettings();
 
+            ItemManager::getInstance()->initialize();
             NavigatorManager::getInstance()->initialize();
             RoomManager::getInstance()->initialize();
             UserManager::getInstance()->initialize();
-            ItemManager::getInstance()->initialize();
             CatalogManager::getInstance()->initialize();
 
             $this->startNetworkManager();
