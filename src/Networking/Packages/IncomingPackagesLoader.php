@@ -10,7 +10,7 @@ use Emulator\Networking\Incoming\HotelView\{HotelViewRequestBonusRareEvent,Hotel
 use Emulator\Networking\Incoming\Handshake\{UniqueIdEvent, SSOTicketEvent, ReleaseVersionEvent, ClientVariablesEvent};
 use Emulator\Networking\Incoming\Messenger\{RequestFriendRequestsEvent, RequestFriendsEvent, RequestInitFriendsEvent};
 use Emulator\Networking\Incoming\Navigator\{RequestNavigatorSettingsEvent, RequestNewNavigatorDataEvent, RequestNewNavigatorRoomsEvent};
-use Emulator\Networking\Incoming\Rooms\{RequestRoomHeightmapEvent, JoinRoomEvent, RequestPromotedRoomsEvent, RequestRoomCategoriesEvent, RequestRoomDataEvent, RequestRoomLoadEvent, RequestHeightmapEvent};
+use Emulator\Networking\Incoming\Rooms\{RequestRoomHeightmapEvent, RequestCreateRoomEvent, JoinRoomEvent, RequestPromotedRoomsEvent, RequestRoomCategoriesEvent, RequestRoomDataEvent, RequestRoomLoadEvent, RequestHeightmapEvent};
 use Emulator\Networking\Incoming\Catalog\{RequestDiscountEvent, RequestCatalogModeEvent, RequestCatalogPageEvent, RequestTargetOfferEvent, RequestGiftConfigurationEvent, GetMarketplaceConfigEvent, RequestRecylerLogicEvent};
 use Emulator\Networking\Incoming\Users\{UserWalkingEvent, UserActivityEvent, RequestUserDataEvent, MySanctionStatusEvent, RequestIgnoredUsersEvent, RequestMeMenuSettingsEvent, RequestUserClubEvent, RequestUserCreditsEvent, UserLookToEvent, UsernameEvent, UserStartTypingEvent, UserStopTypingEvent, UserTalkEvent};
 
@@ -116,6 +116,7 @@ class IncomingPackagesLoader
         $this->addPackage(IncomingHeaders::$requestHeightmapEvent, RequestHeightmapEvent::class);
         $this->addPackage(IncomingHeaders::$requestRoomHeightmapEvent, RequestRoomHeightmapEvent::class);
         $this->addPackage(IncomingHeaders::$toggleFloorItemEvent, ToggleFloorItemEvent::class);
+        $this->addPackage(IncomingHeaders::$requestCreateRoomEvent, RequestCreateRoomEvent::class);
     }
 
     private function loadCatalogEvents(): void

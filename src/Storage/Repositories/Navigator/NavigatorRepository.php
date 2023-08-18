@@ -29,7 +29,7 @@ abstract class NavigatorRepository extends EmulatorRepository
     /** @param ArrayObject<int,INavigatorCategory> $navigatorCategoriesProperty */
     public static function loadNavigatorCategories(ArrayObject &$navigatorCategoriesProperty): void
     {
-        self::encapsuledSelect('SELECT * FROM navigator_flatcats', function(QueryResult $result) use (&$navigatorCategoriesProperty) {
+        self::databaseQuery('SELECT * FROM navigator_flatcats', function(QueryResult $result) use (&$navigatorCategoriesProperty) {
             if(empty($result->resultRows)) return;
 
             foreach($result->resultRows as $row) {
@@ -41,7 +41,7 @@ abstract class NavigatorRepository extends EmulatorRepository
     /** @param ArrayObject<int,INavigatorCategory> $publicCategoriesProperty */
     public static function loadNavigatorPublicCategories(ArrayObject &$publicCategoriesProperty): void
     {
-        self::encapsuledSelect("SELECT * FROM navigator_publiccats WHERE visible = '1'", function(QueryResult $result) use (&$publicCategoriesProperty) {
+        self::databaseQuery("SELECT * FROM navigator_publiccats WHERE visible = '1'", function(QueryResult $result) use (&$publicCategoriesProperty) {
             if(empty($result->resultRows)) return;
 
             foreach($result->resultRows as $row) {
@@ -53,7 +53,7 @@ abstract class NavigatorRepository extends EmulatorRepository
     /** @param ArrayObject<int,NavigatorFilterField> $filterSettingsProperty */
     public static function loadNavigatorFilterSettings(ArrayObject &$filterSettingsProperty): void
     {
-        self::encapsuledSelect("SELECT * FROM navigator_filter", function(QueryResult $result) use (&$filterSettingsProperty) {
+        self::databaseQuery("SELECT * FROM navigator_filter", function(QueryResult $result) use (&$filterSettingsProperty) {
             if(empty($result->resultRows)) return;
 
             foreach($result->resultRows as $row) {

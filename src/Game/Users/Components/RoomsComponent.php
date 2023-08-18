@@ -30,4 +30,11 @@ class RoomsComponent
     {
         return $this->ownRooms;
     }
+
+    public function addOwnRoom(IRoom &$room): void
+    {
+        if($this->ownRooms->offsetExists($room->getData()->getId())) return;
+
+        $this->ownRooms->offsetSet($room->getData()->getId(), $room);
+    }
 }

@@ -31,7 +31,7 @@ abstract class ItemRepository extends EmulatorRepository
     /** @param array<int,IItemDefinition> $itemsDefinitionsProperty */
     public static function loadItemDefinitions(array &$itemsDefinitionsProperty): void
     {
-        self::encapsuledSelect('SELECT * FROM items_base ORDER BY id DESC', function(QueryResult $result) use (&$itemsDefinitionsProperty) {
+        self::databaseQuery('SELECT * FROM items_base ORDER BY id DESC', function(QueryResult $result) use (&$itemsDefinitionsProperty) {
             if(empty($result->resultRows)) return;
 
             foreach($result->resultRows as $row) {
@@ -46,7 +46,7 @@ abstract class ItemRepository extends EmulatorRepository
      */
     public static function loadRoomItemsByRoomId(IRoom &$room, ArrayObject &$floorItemsProperty, ArrayObject &$wallItemsProperty): void
     {
-        self::encapsuledSelect('SELECT items.*, items_base.interaction_type,
+        self::databaseQuery('SELECT items.*, items_base.interaction_type,
             items_base.type, users.username AS owner_name FROM items
             JOIN items_base ON items.item_id = items_base.id 
             JOIN users ON users.id = items.user_id

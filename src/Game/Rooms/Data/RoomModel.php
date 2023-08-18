@@ -19,7 +19,7 @@ class RoomModel implements IRoomModel
     private int $mapSizeX;
     private int $mapSizeY;
 
-    // @param RoomTile[][]
+    /** @var RoomTile[][] $roomTiles */
     private array $roomTiles = [];
 
     private RoomTile $doorTile;
@@ -180,7 +180,8 @@ class RoomModel implements IRoomModel
 
     public function isValid(Position $position): bool
     {
-        return $this->tileExists($position->getX(), $position->getY()) && $this->roomTiles[$position->getX()][$position->getY()]->getState() != RoomTileState::Invalid;
+        return $this->tileExists($position->getX(), $position->getY())
+            && !in_array($this->roomTiles[$position->getX()][$position->getY()]->getState(), [RoomTileState::Invalid, RoomTileState::Blocked]);
     }
 
     public function positionIsDoor(Position $position): bool

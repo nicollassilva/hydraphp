@@ -41,7 +41,7 @@ abstract class CatalogRepository extends EmulatorRepository
 
         $pagesProperty->offsetSet(-1, new CatalogPage($rootPageData));
 
-        self::encapsuledSelect("SELECT * FROM catalog_pages ORDER BY parent_id, id", function(QueryResult $result) use (&$pagesProperty) {
+        self::databaseQuery("SELECT * FROM catalog_pages ORDER BY parent_id, id", function(QueryResult $result) use (&$pagesProperty) {
             if(empty($result->resultRows)) return;
 
             foreach($result->resultRows as $pageData) {
@@ -61,7 +61,7 @@ abstract class CatalogRepository extends EmulatorRepository
     /** @param ArrayObject<int,ICatalogFeaturedPage> */
     public static function loadFeaturedPages(ArrayObject &$featuredPagesProperty): void
     {
-        self::encapsuledSelect("SELECT * FROM catalog_featured_pages ORDER BY slot_id ASC", function(QueryResult $result) use (&$featuredPagesProperty) {
+        self::databaseQuery("SELECT * FROM catalog_featured_pages ORDER BY slot_id ASC", function(QueryResult $result) use (&$featuredPagesProperty) {
             if(empty($result->resultRows)) return;
 
             foreach($result->resultRows as $pageData) {
@@ -75,7 +75,7 @@ abstract class CatalogRepository extends EmulatorRepository
     {
         $itemCount = 0;
 
-        self::encapsuledSelect("SELECT * FROM catalog_items WHERE item_ids <> 0", function(QueryResult $result) use (&$catalogPages, &$itemCount) {
+        self::databaseQuery("SELECT * FROM catalog_items WHERE item_ids <> 0", function(QueryResult $result) use (&$catalogPages, &$itemCount) {
             if(empty($result->resultRows)) return;
 
             $itemCount = count($result->resultRows);

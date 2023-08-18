@@ -7,6 +7,7 @@ use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Users\IUser;
 use Emulator\Game\Rooms\Writers\RoomWriter;
+use Emulator\Game\Rooms\RoomEnvironmentData;
 use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
 use Emulator\Api\Game\Rooms\Data\{IRoomData, IRoomModel};
@@ -38,23 +39,14 @@ class Room implements IRoom
         $this->mappingComponent = new MappingComponent($this);
         $this->entityComponent = new EntityComponent($this);
         $this->itemComponent = new ItemComponent($this);
-
-        $this->loadHeightmap();
     }
 
-    private function loadHeightmap(): void
+    public function initializeRoomProcess(): void
     {
-        // Commented because items are not implemented yet.
-        // 
-        // if(empty($this->getModel())) return;
+        $this->getProcessComponent()->start();
 
-        // for($x = 0; $x < $this->getModel()->getMapSizeX(); $x++) {
-        //     for($y = 0; $y < $this->getModel()->getMapSizeY(); $y++) {
-        //         $tile = $this->getModel()->getTile($x, $y);
-
-        //         if($tile) $this->updateTileInitially($tile);
-        //     }
-        // }
+        $this->getItemComponent()->loadItems();
+        $this->mappingComponent->loadRoomHeighmap();
     }
 
     public function getData(): IRoomData
@@ -129,7 +121,7 @@ class Room implements IRoom
     {
         $this->idleCycle++;
 
-        if ($this->idleCycle >= RoomManager::IDLE_CYCLES_BEFORE_DISPOSE) $this->dispose();
+        if ($this->idleCycle >= RoomEnvironmentData::IDLE_CYCLES_BEFORE_DISPOSE) $this->dispose();
     }
 
     public function resetIdleCycle(): void

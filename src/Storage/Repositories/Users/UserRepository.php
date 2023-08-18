@@ -30,7 +30,7 @@ abstract class UserRepository extends EmulatorRepository
     {
         $user = null;
 
-        self::encapsuledSelect("SELECT u.id, u.username, u.mail, u.account_created,
+        self::databaseQuery("SELECT u.id, u.username, u.mail, u.account_created,
             u.last_login, u.last_online, u.motto, u.look, u.gender, u.rank, u.credits,
             u.online, u.auth_ticket, u.ip_register, u.ip_current, u.machine_id, u.home_room,
             uSettings.achievement_score, uSettings.respects_received, uSettings.respects_given, uSettings.daily_pet_respect_points,
@@ -57,7 +57,7 @@ abstract class UserRepository extends EmulatorRepository
     /** @param ArrayObject<int,IRoom> $ownRoomsProperty */
     public static function loadOwnRooms(IUser $user, ArrayObject &$ownRoomsProperty): void
     {
-        self::encapsuledSelect("SELECT * FROM rooms WHERE owner_id = ?", function (QueryResult $result) use (&$ownRoomsProperty) {
+        self::databaseQuery("SELECT * FROM rooms WHERE owner_id = ?", function (QueryResult $result) use (&$ownRoomsProperty) {
             if (empty($result->resultRows)) return;
 
             foreach ($result->resultRows as $row) {

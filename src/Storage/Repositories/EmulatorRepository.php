@@ -26,7 +26,7 @@ abstract class EmulatorRepository implements IEmulatorRepository
     {
         $configurations = [];
 
-        self::encapsuledSelect('SELECT * FROM emulator_settings', function(QueryResult $result) use (&$configurations) {
+        self::databaseQuery('SELECT * FROM emulator_settings', function(QueryResult $result) use (&$configurations) {
             if(empty($result->resultRows)) return;
 
             foreach($result->resultRows as $row) {
@@ -37,7 +37,7 @@ abstract class EmulatorRepository implements IEmulatorRepository
         return $configurations;
     }
 
-    public static function encapsuledSelect(string $select, Closure $onSuccessCallback, array $params = [], ?Closure $onErrorCallback = null): void
+    public static function databaseQuery(string $select, Closure $onSuccessCallback, array $params = [], ?Closure $onErrorCallback = null): void
     {
         if(!is_callable($onErrorCallback)) {
             $onErrorCallback = function(Throwable $error) {

@@ -9,6 +9,8 @@ use Emulator\Api\Game\Rooms\Types\Entities\IUserEntity;
 
 interface IRoomItem extends IComposable
 {
+    public function getVirtualId(): int;
+
     public function getData(): IRoomItemData;
     public function onInteract(IUserEntity $entity, int $state): void;
     public function getItemDefinition(): ?IItemDefinition;

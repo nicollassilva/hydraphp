@@ -24,4 +24,9 @@ class RoomModelsComponent
     {
         return $this->roomModels[$name] ?? null;
     }
+
+    public function roomModelExists(string $name): bool
+    {
+        return isset($this->roomModels[$name]);
+    }
 }

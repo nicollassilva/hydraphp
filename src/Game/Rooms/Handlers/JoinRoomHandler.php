@@ -117,10 +117,7 @@ class JoinRoomHandler extends AbstractHandler
             $client->send(new RoomRightsListComposer($room));
         }
 
-        if (!$room->getProcessComponent()->started()) {
-            $room->getItemComponent()->loadItems();
-            $room->getProcessComponent()->start();
-        }
+        $room->initializeRoomProcess();
 
         $room->broadcastMessage(new RoomUsersComposer(null, $userEntity));
 

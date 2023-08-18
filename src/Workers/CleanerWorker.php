@@ -2,9 +2,8 @@
 
 namespace Emulator\Workers;
 
-use React\EventLoop\Loop;
-use React\EventLoop\LoopInterface;
-use Emulator\Game\Rooms\RoomManager;
+use React\EventLoop\{LoopInterface,Loop};
+use Emulator\Game\Rooms\{RoomManager,RoomEnvironmentData};
 
 class CleanerWorker
 {
@@ -48,7 +47,7 @@ class CleanerWorker
     {
         $currentTime = time();
 
-        if ($currentTime - $this->lastInactiveRoomsDisposed > RoomManager::DISPOSE_INACTIVE_ROOMS_MS) {
+        if ($currentTime - $this->lastInactiveRoomsDisposed > RoomEnvironmentData::DISPOSE_INACTIVE_ROOMS_MS) {
             RoomManager::getInstance()->disposeInactiveRooms();
 
             $this->lastInactiveRoomsDisposed = $currentTime;

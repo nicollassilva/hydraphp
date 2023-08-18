@@ -17,11 +17,16 @@ class RoomFloorItem extends RoomItem implements IRoomFloorItem
     {
         $message->writeInt($this->getVirtualId());
         $message->writeInt($this->getItemDefinition()->getSpriteId());
-        $message->writeInt($this->getPosition()->getX());
-        $message->writeInt($this->getPosition()->getY());
+        $message->writeInt($this->getData()->getX());
+        $message->writeInt($this->getData()->getY());
         $message->writeInt($this->getData()->getRotation());
-        $message->writeString("{$this->getPosition()->getZ()}");
-        $message->writeString(""); // current height
+        $message->writeString("{$this->getData()->getZ()}");
+
+        if($this->getItemDefinition()->isAllowWalk() || $this->getItemDefinition()->isAllowSit()) {
+            $message->writeString("{$this->getItemDefinition()->getStackHeight()}");
+        } else {
+            $message->writeString("");
+        }
     }
 
     public function composeExtraData(IMessageComposer $message): void

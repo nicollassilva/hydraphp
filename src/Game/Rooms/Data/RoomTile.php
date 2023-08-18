@@ -86,6 +86,24 @@ class RoomTile
         $this->previousTile = $previousTile;
     }
 
+    public function setStackHeight(float $stackHeight): void
+    {
+        if($this->state === RoomTileState::Invalid) {
+            $this->stackHeight = (pow(2, 15) - 1);
+            $this->canStack = false;
+            return;
+        }
+
+        if($stackHeight >= 0 && $this->stackHeight != (pow(2, 15) - 1)) {
+            $this->stackHeight = $stackHeight;
+            $this->canStack = true;
+            return;
+        }
+
+        $this->canStack = false;
+        $this->stackHeight = $this->getPosition()->getZ();
+    }
+
     public function getPreviousTile(): RoomTile
     {
         return $this->previousTile;

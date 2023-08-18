@@ -19,7 +19,7 @@ class RoomRelativeMapComposer extends MessageComposer
             for ($x = 0; $x < $room->getModel()->getMapSizeX(); $x++) {
                 $roomTile = $room->getModel()->getTile($x, $y);
 
-                if(!empty($roomTile)) {
+                if(!is_null($roomTile)) {
                     $this->writeShort($roomTile->getRelativeHeight());
                 } else {
                     $this->writeShort(pow(2, 15) - 1);

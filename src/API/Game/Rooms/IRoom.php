@@ -15,6 +15,8 @@ interface IRoom extends IComposable
     public function getData(): IRoomData;
     public function getModel(): IRoomModel;
 
+    public function initializeRoomProcess(): void;
+    
     public function isOwner(IUser $user): bool;
 
     public function broadcastMessage(IMessageComposer $message): IRoom;

@@ -82,6 +82,8 @@ abstract class OutgoingHeaders
     public static int $roomRelativeMapComposer = 2753;
     public static int $roomHeightmapComposer = 1301;
     public static int $removeUserComposer = 2661;
+    public static int $canCreateRoomComposer = 378;
+    public static int $roomCreatedComposer = 1304;
     # -----
 
     # Catalog Outgoing Events

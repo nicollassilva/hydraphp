@@ -5,7 +5,7 @@ namespace Emulator\Game\Rooms\Components;
 use ArrayObject;
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\IRoom;
-use Emulator\Game\Rooms\RoomManager;
+use Emulator\Game\Rooms\RoomEnvironmentData;
 use Emulator\Game\Utilities\PeriodicExecution;
 use Emulator\Game\Rooms\Enums\RoomEntityStatus;
 use Emulator\Api\Game\Rooms\Components\IProcessComponent;
@@ -23,7 +23,7 @@ class ProcessComponent extends PeriodicExecution implements IProcessComponent
 
     public function __construct(private readonly IRoom $room)
     {
-        parent::__construct(RoomManager::ROOM_TICK_MS);
+        parent::__construct(RoomEnvironmentData::ROOM_TICK_MS);
 
         $this->logger = new Logger("Room Process [{$this->room->getData()->getName()} #{$this->room->getData()->getId()}]", false);
 

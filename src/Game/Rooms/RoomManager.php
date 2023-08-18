@@ -2,8 +2,8 @@
 
 namespace Emulator\Game\Rooms;
 
-use ArrayObject;
 use Closure;
+use ArrayObject;
 use Emulator\Hydra;
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\Data\IRoomData;
@@ -15,15 +15,9 @@ use Emulator\Game\Rooms\Components\{RoomModelsComponent, ChatBubblesComponent};
 
 class RoomManager implements IRoomManager
 {
-    public const ROOM_TICK_MS = 0.5;
-    public const DISPOSE_INACTIVE_ROOMS_MS = 120;
-    public const IDLE_CYCLES_BEFORE_DISPOSE = 60;
-
     public static IRoomManager $instance;
 
     private readonly Logger $logger;
-
-    private bool $isStarted = false;
 
     /** @var ArrayObject<int,IRoom> */
     private ArrayObject $loadedRooms;
@@ -33,6 +27,8 @@ class RoomManager implements IRoomManager
 
     private readonly ChatBubblesComponent $chatBubblesComponent;
     private readonly RoomModelsComponent $roomModelsComponent;
+
+    private bool $isStarted = false;
 
     public function __construct()
     {

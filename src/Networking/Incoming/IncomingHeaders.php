@@ -57,6 +57,7 @@ abstract class IncomingHeaders
     public static int $joinRoomEvent = 685;
     public static int $requestRoomHeightmapEvent = 2300;
     public static int $toggleFloorItemEvent = 99;
+    public static int $requestCreateRoomEvent = 2752;
     # -----
     
     # Emulator Events

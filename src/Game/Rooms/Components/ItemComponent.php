@@ -59,7 +59,7 @@ class ItemComponent
         $this->setWallItemsVirtualIdToDatabaseId();
     }
 
-    private function setFloorItemsOwnerNames()
+    private function setFloorItemsOwnerNames(): void
     {
         foreach($this->floorItems as $floorItem) {
             if($this->floorItemsOwnerNames->offsetExists($floorItem->getData()->getOwnerId())) continue;
@@ -68,7 +68,7 @@ class ItemComponent
         }
     }
 
-    private function setWallItemsOwnerNames()
+    private function setWallItemsOwnerNames(): void
     {
         foreach($this->wallItems as $wallItem) {
             if($this->wallItemsOwnerNames->offsetExists($wallItem->getData()->getOwnerId())) continue;
@@ -77,7 +77,7 @@ class ItemComponent
         }
     }
 
-    private function setFloorItemsVirtualIdToDatabaseId()
+    private function setFloorItemsVirtualIdToDatabaseId(): void
     {
         foreach($this->floorItems as $floorItem) {
             if($this->floorItemsVirtualIdToDatabaseId->offsetExists($floorItem->getVirtualId())) continue;
@@ -86,7 +86,7 @@ class ItemComponent
         }
     }
 
-    private function setWallItemsVirtualIdToDatabaseId()
+    private function setWallItemsVirtualIdToDatabaseId(): void
     {
         foreach($this->wallItems as $wallItem) {
             if($this->wallItemsVirtualIdToDatabaseId->offsetExists($wallItem->getVirtualId())) continue;
