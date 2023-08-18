@@ -52,10 +52,10 @@ php bootstrap.php
 - [x] Room movement (pathfinding)
 - [x] Search rooms in the navigator
 - [x] List all catalog pages/items
-- [ ] **WIP**: Load all placed items in the room
-- [ ] Room item placement/movement/interaction
+- [x] Load all placed items in the room
+- [x] Create a room
+- [ ] **WIP**: Room item placement/movement/interaction
 - [ ] Buy catalog items
-- [ ] Create a room
 - [ ] Save room data in MySQL
 - [ ] Create a Nitro connection handler (HTML5 client)
 
