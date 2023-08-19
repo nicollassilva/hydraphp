@@ -4,8 +4,8 @@ namespace Emulator\Storage\Repositories\Rooms;
 
 use ArrayObject;
 use Emulator\Hydra;
+use Amp\Mysql\MysqlResult;
 use Emulator\Utils\Logger;
-use React\MySQL\QueryResult;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Users\IUser;
 use Emulator\Game\Rooms\RoomManager;
@@ -35,10 +35,10 @@ abstract class RoomRepository extends EmulatorRepository
     {
         $roomData = null;
 
-        self::databaseQuery('SELECT * FROM rooms WHERE id = ?', function (QueryResult $result) use (&$roomData) {
-            if (empty($result->resultRows)) return;
+        self::databaseQuery('SELECT * FROM rooms WHERE id = ?', function (MysqlResult $result) use (&$roomData) {
+            if (empty($result)) return;
 
-            $roomData = new RoomData($result->resultRows[0]);
+            $roomData = new RoomData($result[0]);
         }, [$roomId]);
 
         return $roomData;
@@ -48,10 +48,10 @@ abstract class RoomRepository extends EmulatorRepository
     {
         $roomModels = [];
 
-        self::databaseQuery('SELECT * FROM room_models', function (QueryResult $result) use (&$roomModels) {
-            if (empty($result->resultRows)) return;
+        self::databaseQuery('SELECT * FROM room_models', function (MysqlResult $result) use (&$roomModels) {
+            if (empty($result)) return;
 
-            foreach ($result->resultRows as $row) {
+            foreach ($result as $row) {
                 $roomModels[$row['name']] = new RoomModel($row);
             }
         });
@@ -62,10 +62,10 @@ abstract class RoomRepository extends EmulatorRepository
     /** @param ArrayObject<int,IRoom> */
     public static function loadPublicRooms(ArrayObject &$publicRoomsProperty): void
     {
-        self::databaseQuery('SELECT * FROM rooms WHERE is_public = ? OR is_staff_picked = ? ORDER BY id DESC', function (QueryResult $result) use (&$publicRoomsProperty) {
-            if (empty($result->resultRows)) return;
+        self::databaseQuery('SELECT * FROM rooms WHERE is_public = ? OR is_staff_picked = ? ORDER BY id DESC', function (MysqlResult $result) use (&$publicRoomsProperty) {
+            if (empty($result)) return;
 
-            foreach ($result->resultRows as $row) {
+            foreach ($result as $row) {
                 $room = RoomManager::getInstance()->loadRoomFromData(new RoomData($row), false, false);
 
                 if (!$room) continue;
@@ -77,10 +77,10 @@ abstract class RoomRepository extends EmulatorRepository
 
     public static function loadStaffPickedRooms(): void
     {
-        self::databaseQuery("SELECT * FROM navigator_publics JOIN rooms ON rooms.id = navigator_publics.room_id WHERE visible = '1'", function (QueryResult $result) {
-            if (empty($result->resultRows)) return;
+        self::databaseQuery("SELECT * FROM navigator_publics JOIN rooms ON rooms.id = navigator_publics.room_id WHERE visible = '1'", function (MysqlResult $result) {
+            if (empty($result)) return;
 
-            foreach ($result->resultRows as $row) {
+            foreach ($result as $row) {
                 $category = NavigatorManager::getInstance()->getPublicCategoryById($row['public_cat_id']);
 
                 if (!($category instanceof INavigatorPublicCategory)) {
@@ -107,10 +107,10 @@ abstract class RoomRepository extends EmulatorRepository
     ): void {
         $preparedValue = $filterField->getComparator() === NavigatorFilterComparator::Contains ? "%{$search}%" : $search;
 
-        self::databaseQuery($databaseQuery, function (QueryResult $result) use (&$filteredRooms) {
-            if (empty($result->resultRows)) return;
+        self::databaseQuery($databaseQuery, function (MysqlResult $result) use (&$filteredRooms) {
+            if (empty($result)) return;
 
-            foreach ($result->resultRows as $row) {
+            foreach ($result as $row) {
                 $room = RoomManager::getInstance()->getLoadedRoomOr($row['id'], function () use (&$row): ?IRoom {
                     return RoomManager::getInstance()->loadRoomFromData(new RoomData($row));
                 });
@@ -143,10 +143,10 @@ abstract class RoomRepository extends EmulatorRepository
     ): void {
         self::databaseQuery(
             "INSERT INTO rooms (owner_id, owner_name, name, description, model, users_max, category, trade_mode) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            function (QueryResult $queryResult) use (&$roomInstance) {
-                if(!$queryResult->insertId) return;
+            function (MysqlResult $queryResult) use (&$roomInstance) {
+                if(!$lastInsertId = $queryResult->getLastInsertId()) return;
 
-                $roomInstance = RoomManager::getInstance()->loadRoom($queryResult->insertId);
+                $roomInstance = RoomManager::getInstance()->loadRoom($lastInsertId);
             }, [
                 $user->getData()->getId(),
                 $user->getData()->getUsername(),

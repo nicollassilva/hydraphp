@@ -2,17 +2,19 @@
 
 namespace Emulator\Storage;
 
-use Closure;
-use Exception;
-use React\MySQL\Factory;
+use Throwable;
+use Emulator\Hydra;
+use Amp\Mysql\MysqlConfig;
 use Emulator\Utils\Logger;
-use React\MySQL\ConnectionInterface;
+use Amp\Mysql\MysqlConnectionPool;
 use Emulator\Storage\Compositions\IConnectorManager;
 
 class ConnectorManager implements IConnectorManager
 {
+    public static ?ConnectorManager $instance = null;
+
     private readonly Logger $logger;
-    private readonly ConnectionInterface $connection;
+    private readonly MysqlConnectionPool $connectionPool;
 
     public function __construct(
         private readonly string $host,
@@ -21,51 +23,62 @@ class ConnectorManager implements IConnectorManager
         private readonly string $password,
         private readonly string $dbName,
         private readonly string $tcpKeepAlive,
-        private readonly string $autoReconnect,
-        private readonly ?Closure $onConnectionCallback = null
+        private readonly string $autoReconnect
     ) {
         $this->logger = new Logger(get_class($this));
+    }
 
+    public static function getInstance(): ConnectorManager
+    {
+        if(!(self::$instance instanceof ConnectorManager)) {
+            self::$instance = new ConnectorManager(
+                Hydra::getEmulator()->getConfigManager()->get('hydra.db.host'),
+                Hydra::getEmulator()->getConfigManager()->get('hydra.db.port'),
+                Hydra::getEmulator()->getConfigManager()->get('hydra.db.user'),
+                Hydra::getEmulator()->getConfigManager()->get('hydra.db.password'),
+                Hydra::getEmulator()->getConfigManager()->get('hydra.db.name'),
+                Hydra::getEmulator()->getConfigManager()->get('hydra.db.tcpKeepAlive'),
+                Hydra::getEmulator()->getConfigManager()->get('hydra.db.autoReconnect')
+            );
+        }
+
+        return self::$instance;
+    }
+
+    public function initialize(): void
+    {
         $this->initializeConnector();
     }
 
     private function initializeConnector(): void
     {
-        $connectionFactory = new Factory();
-        $connectionString = "{$this->user}:{$this->password}@{$this->host}:{$this->port}/{$this->dbName}?charset=utf8&useSSL=false";
-
-        if($this->tcpKeepAlive) {
-            $connectionString .= "&tcpKeepAlive={$this->tcpKeepAlive}";
-        }
-
-        if($this->autoReconnect) {
-            $connectionString .= "&autoReconnect={$this->autoReconnect}";
-        }
-
-        $connectionFactory->createConnection($connectionString)
-            ->then(
-                fn (ConnectionInterface $connection) => $this->onConnectionSuccessfully($connection),
-                fn (Exception $exception) => $this->onConnectionError($exception)
+        try {
+            $connectionConfig = MysqlConfig::fromString(
+                "host={$this->host};" .
+                "port={$this->port};" .
+                "user={$this->user};" .
+                "password={$this->password};" .
+                "dbname={$this->dbName};" .
+                "tcpKeepAlive={$this->tcpKeepAlive};" .
+                "autoReconnect={$this->autoReconnect}"
             );
+
+            $this->connectionPool = new MysqlConnectionPool($connectionConfig);
+
+            $this->logger->success('Connected to database successfully.');
+        } catch (Throwable $error) {
+            $this->onConnectionError($error);
+        }
     }
 
-    private function onConnectionSuccessfully(ConnectionInterface $connection): void
-    {
-        $this->connection = $connection;
-
-        $this->logger->success('Connected to database successfully.');
-
-        if($this->onConnectionCallback) call_user_func($this->onConnectionCallback);
-    }
-
-    private function onConnectionError(Exception $exception): void
+    private function onConnectionError(Throwable $exception): void
     {
         $this->logger->error($exception->getMessage());
     }
 
-    public function getConnection(): ConnectionInterface
+    public function getConnection(): MysqlConnectionPool
     {
-        return $this->connection;
+        return $this->connectionPool;
     }
 
     public function getLogger(): Logger

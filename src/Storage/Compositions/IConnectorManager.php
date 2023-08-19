@@ -3,10 +3,11 @@
 namespace Emulator\Storage\Compositions;
 
 use Emulator\Utils\Logger;
-use React\MySQL\ConnectionInterface;
+use Amp\Mysql\MysqlConnectionPool;
 
 interface IConnectorManager
 {
-    public function getConnection(): ConnectionInterface;
+    public function getConnection(): MysqlConnectionPool;
     public function getLogger(): Logger;
+    public function initialize(): void;
 }
