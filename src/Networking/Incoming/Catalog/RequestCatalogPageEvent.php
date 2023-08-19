@@ -23,7 +23,7 @@ class RequestCatalogPageEvent implements IIncomingMessage
         if($client->getUser()->getData()->getRank() < $catalogPage->getMinRank()) return;
 
         if(!$catalogPage->isVisible()) {
-            $client->getUser()->getEntity()->getLogger()->error("Scripter detected! User tried to access a hidden catalog page!");
+            $client->getUser()->getLogger()->error("Scripter detected! User tried to access a hidden catalog page!");
             return;
         }
 

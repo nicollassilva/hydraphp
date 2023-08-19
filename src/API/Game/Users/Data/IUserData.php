@@ -2,6 +2,8 @@
 
 namespace Emulator\Api\Game\Users\Data;
 
+use Carbon\CarbonInterface;
+
 interface IUserData
 {
     public function getId(): int;
@@ -24,4 +26,6 @@ interface IUserData
     public function getCurrentIp(): string;
     public function getMachineId(): string;
     public function getHomeRoom(): int;
+    public function getLastPurchaseTime(): CarbonInterface;
+    public function setLastPurchaseTime(CarbonInterface $lastPurchaseTime): void;
 }

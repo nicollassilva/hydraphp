@@ -110,6 +110,11 @@ class CatalogPage implements ICatalogPage
         return $this->pageLayout;
     }
 
+    public function getLayoutHandler(): ?string
+    {
+        return CatalogManager::getInstance()->getLayoutComponent()->getByName($this->getPageLayout());
+    }
+
     public function getIconColor(): int
     {
         return $this->iconColor;
@@ -220,6 +225,11 @@ class CatalogPage implements ICatalogPage
     public function addItem(ICatalogItem $item): void
     {
         $this->items->offsetSet($item->getId(), $item);
+    }
+
+    public function hasItem(int $itemId): bool
+    {
+        return $this->items->offsetExists($itemId);
     }
 
     public function getItemById(int $id): ?ICatalogItem

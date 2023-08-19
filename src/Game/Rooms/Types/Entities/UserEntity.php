@@ -2,20 +2,18 @@
 
 namespace Emulator\Game\Rooms\Types\Entities;
 
-use Emulator\Utils\Logger;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Users\IUser;
 use Emulator\Game\Rooms\Enums\RoomRightLevels;
 use Emulator\Api\Game\Rooms\Types\Entities\IUserEntity;
-use Emulator\Networking\Outgoing\Rooms\GenericErrorComposer;
-use Emulator\Networking\Outgoing\Rooms\HotelViewComposer;
-use Emulator\Networking\Outgoing\Rooms\RemoveUserComposer;
+use Emulator\Networking\Outgoing\Alerts\Enums\GenericErrorCode;
+use Emulator\Networking\Outgoing\Alerts\GenericErrorComposer;
+use Emulator\Networking\Outgoing\Rooms\{HotelViewComposer, RemoveUserComposer};
 
 /** @property ?IRoom $room */
 class UserEntity extends RoomEntity implements IUserEntity
 {
     private readonly IUser $user;
-    private readonly Logger $logger;
 
     private bool $isKicked = false;
 
@@ -26,8 +24,6 @@ class UserEntity extends RoomEntity implements IUserEntity
 
         $this->user = $user;
         $this->roomRightLevel = RoomRightLevels::None;
-
-        $this->logger = new Logger($user->getData()->getUsername(), false);
     }
 
     public function getUser(): IUser
@@ -43,11 +39,6 @@ class UserEntity extends RoomEntity implements IUserEntity
     public function setIsKicked(bool $isKicked): void
     {
         $this->isKicked = $isKicked;
-    }
-
-    public function getLogger(): Logger
-    {
-        return $this->logger;
     }
 
     public function setRoom(?IRoom $room): void
@@ -68,7 +59,7 @@ class UserEntity extends RoomEntity implements IUserEntity
     public function leaveRoom(bool $isOffline, bool $toHotelView)
     {
         if($this->isKicked() && !$isOffline) {
-            $this->getUser()->getClient()->send(new GenericErrorComposer(GenericErrorComposer::KICKED_OUT_OF_THE_ROOM));
+            $this->getUser()->getClient()->send(new GenericErrorComposer(GenericErrorCode::KICKED_OUT_OF_THE_ROOM));
         }
 
         $this->getRoom()->broadcastMessage(new RemoveUserComposer($this->getVirtualId()));

@@ -109,5 +109,11 @@ abstract class OutgoingHeaders
     public static int $availabilityStatusComposer = 2033;
     public static int $pingComposer = 3928;
     public static int $pongComposer = 10;
+    
+    # Alerts Outgoing Events
+    public static int $middleAlertComposer = 1992;
+    public static int $alertPurchaseFailedComposer = 1404;
     public static int $genericErrorComposer = 1600;
+    public static int $alertPurchaseUnavailableComposer = 3770;
+    # -----
 }

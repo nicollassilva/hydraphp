@@ -8,9 +8,12 @@ use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Game\Users\Components\{RoomsComponent};
 use Emulator\Game\Users\Data\{UserData,UserSettings};
 use Emulator\Api\Game\Users\Data\{IUserData,IUserSettings};
+use Emulator\Utils\Logger;
 
 class User implements IUser
 {
+    private readonly Logger $logger;
+
     private ?IUserData $data = null;
     private ?IUserSettings $settings = null;
 
@@ -27,6 +30,8 @@ class User implements IUser
         $this->settings = new UserSettings($data);
 
         $this->roomsComponent = new RoomsComponent($this);
+
+        $this->logger = new Logger($this->data->getUsername(), false);
     }
 
     public function getData(): ?IUserData
@@ -37,6 +42,11 @@ class User implements IUser
     public function getSettings(): ?IUserSettings
     {
         return $this->settings;
+    }
+
+    public function getLogger(): Logger
+    {
+        return $this->logger;
     }
     
     public function getRoomsComponent(): ?RoomsComponent

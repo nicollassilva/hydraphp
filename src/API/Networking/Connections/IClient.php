@@ -5,6 +5,7 @@ namespace Emulator\Api\Networking\Connections;
 use Emulator\Utils\Logger;
 use Emulator\Api\Game\Users\IUser;
 use React\Socket\ConnectionInterface;
+use Emulator\Game\Utilities\Enums\MiddleAlertKeyTypes;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
 
 interface IClient
@@ -25,4 +26,6 @@ interface IClient
 
     public function setUser(IUser $user): void;
     public function getUser(): ?IUser;
+
+    public function sendMiddleAlert(MiddleAlertKeyTypes $errorKey, string $message): void;
 }

@@ -2,12 +2,13 @@
 
 namespace Emulator\Game\Catalog\Components;
 
-use Emulator\Game\Catalog\Layouts\{BotsLayout, PetsLayout, TraxLayout, Pets2Layout, Pets3Layout, SingleBundle, SpacesLayout, VipBuyLayout, ClubBuyLayout, RoomAdsLayout, InfoNikoLayout, InfoPetsLayout, MadMoneyLayout, RecyclerLayout, TrophiesLayout, ClubGiftsLayout, FrontPageLayout, GroupForumLayout, Default3x3Layout, InfoMonkeyLayout, RoomBundleLayout, CatalogRootLayout, InfoDucketsLayout, InfoLoyaltyLayout, MarketplaceLayout, BadgeDisplayLayout, RecyclerInfoLayout, SoldLTDItemsLayout, ColorGroupingLayout, InfoRentablesLayout, LoyaltyVipBuyLayout, GroupFrontPageLayout, GroupFurnitureLayout, RecyclerPrizesLayout, RecentPurchasesLayout, PetCustomizationLayout, FrontPageFeaturedLayout, BuildersClubAddonsLayout, BuildersClubLoyaltyLayout, MarketplaceOwnItemsLayout, BuildersClubFrontPageLayout};
+use ArrayObject;
+use Emulator\Game\Catalog\Layouts\{BotsLayout, PetsLayout, TraxLayout, Pets2Layout, Pets3Layout, SingleBundleLayout, SpacesLayout, VipBuyLayout, ClubBuyLayout, RoomAdsLayout, InfoNikoLayout, InfoPetsLayout, MadMoneyLayout, RecyclerLayout, TrophiesLayout, ClubGiftsLayout, FrontPageLayout, GroupForumLayout, Default3x3Layout, InfoMonkeyLayout, RoomBundleLayout, CatalogRootLayout, InfoDucketsLayout, InfoLoyaltyLayout, MarketplaceLayout, BadgeDisplayLayout, RecyclerInfoLayout, SoldLTDItemsLayout, ColorGroupingLayout, InfoRentablesLayout, LoyaltyVipBuyLayout, GroupFrontPageLayout, GroupFurnitureLayout, RecyclerPrizesLayout, RecentPurchasesLayout, PetCustomizationLayout, FrontPageFeaturedLayout, BuildersClubAddonsLayout, BuildersClubLoyaltyLayout, MarketplaceOwnItemsLayout, BuildersClubFrontPageLayout};
 
 class LayoutComponent
 {
-    /** @var array<string,string> */
-    private array $layouts = [];
+    /** @var ArrayObject<string,string> $layouts */
+    private readonly ArrayObject $layouts;
 
     public function __construct()
     {
@@ -16,14 +17,16 @@ class LayoutComponent
 
     public function getByName(string $name): ?string
     {
-        return $this->layouts[$name] ?? null;
+        if(!$this->layouts->offsetExists($name)) return null;
+
+        return $this->layouts->offsetGet($name);
     }
 
     private function registerLayouts(bool $forceReload = false): void
     {
         if (!empty($this->layouts) && !$forceReload) return;
 
-        $this->layouts = [
+        $this->layouts = new ArrayObject([
             'default_3x3' => Default3x3Layout::class,
             'guild_furni' => GroupFurnitureLayout::class,
             'guilds' => GroupFrontPageLayout::class,
@@ -45,7 +48,7 @@ class LayoutComponent
             'club_buy' => ClubBuyLayout::class,
             'roomads' => RoomAdsLayout::class,
             'trophies' => TrophiesLayout::class,
-            'single_bundle' => SingleBundle::class,
+            'single_bundle' => SingleBundleLayout::class,
             'marketplace' => MarketplaceLayout::class,
             'marketplace_own_items' => MarketplaceOwnItemsLayout::class,
             'recycler' => RecyclerLayout::class,
@@ -66,6 +69,6 @@ class LayoutComponent
             'monkey' => InfoMonkeyLayout::class,
             'niko' => InfoNikoLayout::class,
             'mad_money' => MadMoneyLayout::class,
-        ];
+        ]);
     }
 }

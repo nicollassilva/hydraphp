@@ -105,16 +105,11 @@ class MappingComponent
         $items = new ArrayObject;
 
         foreach ($this->getRoom()->getItemComponent()->getFloorItems() as $item) {
-            $width = 1;
-            $length = 1;
+            $width = $item->getItemDefinition()->getWidth() > 0 ? $item->getItemDefinition()->getWidth() : 1;
+            $length = $item->getItemDefinition()->getLength() > 0 ? $item->getItemDefinition()->getLength() : 1;
 
-            if ($item->getData()->getRotation() != 2 && $item->getData()->getRotation() != 6) {
-                $width = $item->getItemDefinition()->getWidth() > 0 ? $item->getItemDefinition()->getWidth() : 1;
-                $length = $item->getItemDefinition()->getLength() > 0 ? $item->getItemDefinition()->getLength() : 1;
-            }
-            else {
-                $width = $item->getItemDefinition()->getLength() > 0 ? $item->getItemDefinition()->getLength() : 1;
-                $length = $item->getItemDefinition()->getWidth() > 0 ? $item->getItemDefinition()->getWidth() : 1;
+            if ($item->getData()->getRotation() == 2 || $item->getData()->getRotation() == 6) {
+                [$width, $length] = [$length, $width];
             }
 
             if (!(

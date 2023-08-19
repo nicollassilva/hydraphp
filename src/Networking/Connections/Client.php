@@ -2,12 +2,14 @@
 
 namespace Emulator\Networking\Connections;
 
-use Emulator\Api\Game\Users\IUser;
 use Emulator\Hydra;
 use Emulator\Utils\Logger;
+use Emulator\Api\Game\Users\IUser;
 use React\Socket\ConnectionInterface;
 use Emulator\Api\Networking\Connections\IClient;
+use Emulator\Game\Utilities\Enums\MiddleAlertKeyTypes;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
+use Emulator\Networking\Outgoing\Alerts\MiddleAlertComposer;
 
 class Client implements IClient
 {
@@ -60,6 +62,11 @@ class Client implements IClient
         $this->getConnection()->write($message->compose());
 
         return $this;
+    }
+
+    public function sendMiddleAlert(MiddleAlertKeyTypes $errorKey, string $message): void
+    {
+        $this->send(new MiddleAlertComposer($errorKey, $message));
     }
 
     public function setVersion(string $version): void

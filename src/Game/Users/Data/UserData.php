@@ -2,6 +2,8 @@
 
 namespace Emulator\Game\Users\Data;
 
+use Carbon\Carbon;
+use Carbon\CarbonInterface;
 use Emulator\Game\Users\UserManager;
 use Emulator\Api\Game\Users\Data\IUserData;
 
@@ -28,6 +30,9 @@ class UserData implements IUserData
     private string $machineId;
     private int $homeRoom;
 
+    // Runtime properties
+    private CarbonInterface $lastPurchaseTime;
+
     public function __construct(array &$data)
     {
         try {
@@ -51,6 +56,8 @@ class UserData implements IUserData
             $this->currentIp = $data['ip_current'];
             $this->machineId = $data['machine_id'];
             $this->homeRoom = $data['home_room'];
+
+            $this->lastPurchaseTime = Carbon::now();
         } catch (\Throwable $e) {
             UserManager::getInstance()->getLogger()->error("Failed to load user data: " . $e->getMessage());
         }
@@ -154,5 +161,15 @@ class UserData implements IUserData
     public function getHomeRoom(): int
     {
         return $this->homeRoom;
+    }
+
+    public function getLastPurchaseTime(): CarbonInterface
+    {
+        return $this->lastPurchaseTime;
+    }
+
+    public function setLastPurchaseTime(CarbonInterface $lastPurchaseTime): void
+    {
+        $this->lastPurchaseTime = $lastPurchaseTime;
     }
 }

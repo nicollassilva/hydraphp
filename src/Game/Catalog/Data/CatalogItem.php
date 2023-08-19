@@ -140,7 +140,7 @@ class CatalogItem implements ICatalogItem
 
     public function checkHaveOffer(): bool
     {
-        if($this->haveOffer()) {
+        if(!$this->haveOffer()) {
             return false;
         }
 

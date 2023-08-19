@@ -12,6 +12,7 @@ interface ICatalogPage
     public function getCaptionSave(): string;
     public function getCaption(): string;
     public function getPageLayout(): string;
+    public function getLayoutHandler(): ?string;
     public function getIconColor(): int;
     public function getIconImage(): int;
     public function getMinRank(): int;
@@ -31,6 +32,7 @@ interface ICatalogPage
     public function getIncludes(): array;
 
     public function addChildPage(ICatalogPage &$childPage): void;
+    public function hasItem(int $itemId): bool;
     public function getChildPages(): ArrayObject;
     public function setMinRank(int $rank): void;
 

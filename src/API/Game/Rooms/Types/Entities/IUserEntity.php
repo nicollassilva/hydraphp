@@ -10,8 +10,6 @@ use Emulator\Game\Rooms\Enums\RoomRightLevels;
 interface IUserEntity
 {
     public function getUser(): IUser;
-    public function getLogger(): Logger;
-
     public function isKicked(): bool;
 
     public function getRoomRightLevel(): RoomRightLevels;

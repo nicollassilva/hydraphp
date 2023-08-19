@@ -2,6 +2,7 @@
 
 namespace Emulator\Api\Game\Users;
 
+use Emulator\Utils\Logger;
 use Emulator\Api\Networking\Connections\IClient;
 use Emulator\Game\Rooms\Types\Entities\UserEntity;
 use Emulator\Game\Users\Components\RoomsComponent;
@@ -9,6 +10,8 @@ use Emulator\Api\Game\Users\Data\{IUserData,IUserSettings};
 
 interface IUser
 {
+    public function getLogger(): Logger;
+
     public function getData(): ?IUserData;
     public function getSettings(): ?IUserSettings;
 

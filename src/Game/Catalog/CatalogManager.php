@@ -4,9 +4,9 @@ namespace Emulator\Game\Catalog;
 
 use ArrayObject;
 use Emulator\Utils\Logger;
-use Emulator\Game\Catalog\Components\LayoutComponent;
 use Emulator\Storage\Repositories\Catalog\CatalogRepository;
 use Emulator\Api\Game\Catalog\Data\{ICatalogPage,ICatalogFeaturedPage};
+use Emulator\Game\Catalog\Components\{PurchaseProviderComponent, LayoutComponent};
 
 class CatalogManager
 {
@@ -14,13 +14,14 @@ class CatalogManager
 
     private readonly Logger $logger;
     private readonly LayoutComponent $layoutComponent;
+    private readonly PurchaseProviderComponent $purchaseProviderComponent;
 
     private bool $isStarted = false;
 
-    /** @property ArrayObject<int,ICatalogPage> $pages */
+    /** @var ArrayObject<int,ICatalogPage> $pages */
     private ArrayObject $pages;
 
-    /** @property ArrayObject<int,ICatalogFeaturedPage> $featuredPages */
+    /** @var ArrayObject<int,ICatalogFeaturedPage> $featuredPages */
     private ArrayObject $featuredPages;
 
     public function __construct()
@@ -28,6 +29,7 @@ class CatalogManager
         $this->logger = new Logger(get_class($this));
         
         $this->layoutComponent = new LayoutComponent();
+        $this->purchaseProviderComponent = new PurchaseProviderComponent();
         
         $this->pages = new ArrayObject();
         $this->featuredPages = new ArrayObject();
@@ -80,6 +82,15 @@ class CatalogManager
         return $this->pages[$id];
     }
 
+    public function getPageByItemId(int $id): ?ICatalogPage
+    {
+        foreach ($this->pages as $page) {
+            if ($page->hasItem($id)) return $page;
+        }
+
+        return null;
+    }
+
     /** @return null|ArrayObject<int,ICatalogPage> */
     public function getPagesByParent(int $parentId): ?ArrayObject
     {
@@ -91,5 +102,10 @@ class CatalogManager
     public function getLayoutComponent(): LayoutComponent
     {
         return $this->layoutComponent;
+    }
+
+    public function getPurchaseProviderComponent(): PurchaseProviderComponent
+    {
+        return $this->purchaseProviderComponent;
     }
 }
