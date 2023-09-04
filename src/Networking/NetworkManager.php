@@ -45,8 +45,8 @@ class NetworkManager implements INetworkManager
 
     private function initializeServer(): void
     {
-        $host = Hydra::getEmulator()->getConfigManager()->get('hydra.server.host');
-        $port = Hydra::getEmulator()->getConfigManager()->get('hydra.server.port');
+        $host = Hydra::getEmulator()->getConfigManager()->get('hydra.server.flash.host');
+        $port = Hydra::getEmulator()->getConfigManager()->get('hydra.server.flash.port');
 
         $this->loop = Loop::get();
         $this->tcpServer = new TcpServer("{$host}:{$port}", $this->loop);

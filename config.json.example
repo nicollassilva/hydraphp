@@ -1,8 +1,8 @@
 {
     "hydra.emulator.debug": true,
     
-    "hydra.server.host": "0.0.0.0",
-    "hydra.server.port": 1234,
+    "hydra.server.flash.host": "0.0.0.0",
+    "hydra.server.flash.port": 1234,
 
     "hydra.db.host": "localhost",
     "hydra.db.port": 3306,
