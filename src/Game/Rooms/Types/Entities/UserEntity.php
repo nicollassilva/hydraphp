@@ -6,8 +6,8 @@ use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Api\Game\Users\IUser;
 use Emulator\Game\Rooms\Enums\RoomRightLevels;
 use Emulator\Api\Game\Rooms\Types\Entities\IUserEntity;
-use Emulator\Networking\Outgoing\Alerts\Enums\GenericErrorCode;
 use Emulator\Networking\Outgoing\Alerts\GenericErrorComposer;
+use Emulator\Networking\Outgoing\Alerts\Enums\GenericErrorCode;
 use Emulator\Networking\Outgoing\Rooms\{HotelViewComposer, RemoveUserComposer};
 
 /** @property ?IRoom $room */

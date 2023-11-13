@@ -9,5 +9,5 @@ interface IUserManager
 {
     public function getLogger(): Logger;
     public function initialize(): void;
-    public function loadUser(string $ticket): IUser;
+    public function loadUser(string $ticket): ?IUser;
 }

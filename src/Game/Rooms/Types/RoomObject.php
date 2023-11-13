@@ -4,9 +4,9 @@ namespace Emulator\Game\Rooms\Types;
 
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Game\Utilities\Position;
+use Emulator\Game\Rooms\Data\RoomTile;
 use Emulator\Api\Game\Rooms\Types\IRoomObject;
 use Emulator\Api\Game\Utilities\IPositionable;
-use Emulator\Game\Rooms\Data\RoomTile;
 
 class RoomObject implements IRoomObject, IPositionable
 {

@@ -44,7 +44,7 @@ class UserManager implements IUserManager
         return $this->logger;
     }
 
-    public function loadUser(string $ticket): IUser
+    public function loadUser(string $ticket): ?IUser
     {
         return UserRepository::loadUser($ticket);
     }

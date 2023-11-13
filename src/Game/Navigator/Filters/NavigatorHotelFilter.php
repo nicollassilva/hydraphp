@@ -45,6 +45,7 @@ class NavigatorHotelFilter implements INavigatorFilter
         );
 
         foreach ($popularRoomsByCategory as $rooms) {
+            /** @var IRoom $firstRoom */
             $firstRoom = $rooms->count() ? $rooms->offsetGet(0) : null;
 
             if (empty($firstRoom) || !($firstRoom->getData()->getCategory() instanceof INavigatorCategory)) continue;

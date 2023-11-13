@@ -2,10 +2,10 @@
 
 namespace Emulator\Game\Rooms\Utils\Pathfinder;
 
-use Emulator\Game\Rooms\Data\RoomTile;
-use Emulator\Game\Rooms\Types\Entities\RoomEntity;
 use Emulator\Game\Utilities\Position;
+use Emulator\Game\Rooms\Data\RoomTile;
 use Emulator\Game\Rooms\Types\RoomObject;
+use Emulator\Game\Rooms\Types\Entities\RoomEntity;
 use Emulator\Game\Rooms\Utils\Pathfinder\PathfinderNode;
 
 class Pathfinder
