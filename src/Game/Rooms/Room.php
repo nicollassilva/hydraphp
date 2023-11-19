@@ -156,7 +156,7 @@ class Room implements IRoom
     {
         return !$this->getData()->isPublic()
             && !$this->getData()->isStaffPicked()
-            && !Hydra::getEmulator()->getNetworkManager()->getClientManager()->hasClientByUserId($this->getData()->getOwnerId())
+            // && !Hydra::getEmulator()->getNetworkManager()->getClientManager()->hasClientByUserId($this->getData()->getOwnerId())
             && !$this->processComponent->started();
     }
 }

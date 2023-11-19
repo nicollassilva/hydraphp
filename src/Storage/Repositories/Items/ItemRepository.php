@@ -4,8 +4,8 @@ namespace Emulator\Storage\Repositories\Items;
 
 use Throwable;
 use ArrayObject;
+use Amp\Mysql\MysqlResult;
 use Emulator\Utils\Logger;
-use React\MySQL\QueryResult;
 use Emulator\Api\Game\Rooms\IRoom;
 use Emulator\Game\Items\ItemFactory;
 use Emulator\Game\Items\ItemManager;
@@ -31,10 +31,10 @@ abstract class ItemRepository extends EmulatorRepository
     /** @param array<int,IItemDefinition> $itemsDefinitionsProperty */
     public static function loadItemDefinitions(array &$itemsDefinitionsProperty): void
     {
-        self::databaseQuery('SELECT * FROM items_base ORDER BY id DESC', function(QueryResult $result) use (&$itemsDefinitionsProperty) {
-            if(empty($result->resultRows)) return;
+        self::databaseQuery('SELECT * FROM items_base ORDER BY id DESC', function(MysqlResult $result) use (&$itemsDefinitionsProperty) {
+            if(empty($result)) return;
 
-            foreach($result->resultRows as $row) {
+            foreach($result as $row) {
                 $itemsDefinitionsProperty[$row['id']] = new ItemDefinition($row);
             }
         });
@@ -50,10 +50,10 @@ abstract class ItemRepository extends EmulatorRepository
             items_base.type, users.username AS owner_name FROM items
             JOIN items_base ON items.item_id = items_base.id 
             JOIN users ON users.id = items.user_id
-            WHERE room_id = ?', function(QueryResult $result) use (&$floorItemsProperty, &$wallItemsProperty, &$room) {
-            if(empty($result->resultRows)) return;
+            WHERE room_id = ?', function(MysqlResult $result) use (&$floorItemsProperty, &$wallItemsProperty, &$room) {
+            if(empty($result)) return;
 
-            foreach($result->resultRows as $row) {
+            foreach($result as $row) {
                 try {
                     $definitionType = ItemDefinitionType::from($row['type']) ?? null;
 

@@ -3,8 +3,8 @@
 namespace Emulator\Storage\Repositories\Navigator;
 
 use ArrayObject;
+use Amp\Mysql\MysqlResult;
 use Emulator\Utils\Logger;
-use React\MySQL\QueryResult;
 use Emulator\Game\Navigator\Data\NavigatorCategory;
 use Emulator\Storage\Repositories\EmulatorRepository;
 use Emulator\Game\Navigator\Data\NavigatorFilterField;
@@ -29,10 +29,10 @@ abstract class NavigatorRepository extends EmulatorRepository
     /** @param ArrayObject<int,INavigatorCategory> $navigatorCategoriesProperty */
     public static function loadNavigatorCategories(ArrayObject &$navigatorCategoriesProperty): void
     {
-        self::databaseQuery('SELECT * FROM navigator_flatcats', function(QueryResult $result) use (&$navigatorCategoriesProperty) {
-            if(empty($result->resultRows)) return;
+        self::databaseQuery('SELECT * FROM navigator_flatcats', function(MysqlResult $result) use (&$navigatorCategoriesProperty) {
+            if(empty($result)) return;
 
-            foreach($result->resultRows as $row) {
+            foreach($result as $row) {
                 $navigatorCategoriesProperty->offsetSet($row['id'], new NavigatorCategory($row));
             }
         });
@@ -41,10 +41,10 @@ abstract class NavigatorRepository extends EmulatorRepository
     /** @param ArrayObject<int,INavigatorCategory> $publicCategoriesProperty */
     public static function loadNavigatorPublicCategories(ArrayObject &$publicCategoriesProperty): void
     {
-        self::databaseQuery("SELECT * FROM navigator_publiccats WHERE visible = '1'", function(QueryResult $result) use (&$publicCategoriesProperty) {
-            if(empty($result->resultRows)) return;
+        self::databaseQuery("SELECT * FROM navigator_publiccats WHERE visible = '1'", function(MysqlResult $result) use (&$publicCategoriesProperty) {
+            if(empty($result)) return;
 
-            foreach($result->resultRows as $row) {
+            foreach($result as $row) {
                 $publicCategoriesProperty->offsetSet($row['id'], new NavigatorPublicCategory($row));
             }
         });
@@ -53,10 +53,10 @@ abstract class NavigatorRepository extends EmulatorRepository
     /** @param ArrayObject<int,NavigatorFilterField> $filterSettingsProperty */
     public static function loadNavigatorFilterSettings(ArrayObject &$filterSettingsProperty): void
     {
-        self::databaseQuery("SELECT * FROM navigator_filter", function(QueryResult $result) use (&$filterSettingsProperty) {
-            if(empty($result->resultRows)) return;
+        self::databaseQuery("SELECT * FROM navigator_filter", function(MysqlResult $result) use (&$filterSettingsProperty) {
+            if(empty($result)) return;
 
-            foreach($result->resultRows as $row) {
+            foreach($result as $row) {
                 $filterSettingsProperty->offsetSet($row['key'], new NavigatorFilterField(
                     $row['key'], $row['field'], NavigatorFilterComparator::from($row['compare']), $row['database_query']
                 ));

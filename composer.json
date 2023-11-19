@@ -3,10 +3,10 @@
     "description": "A habbo emulator made with PHP",
     "type": "project",
     "require": {
-        "react/react": "^1.4",
         "nunomaduro/termwind": "^1.15",
-        "react/mysql": "0.5.7",
-        "nesbot/carbon": "^2.69"
+        "nesbot/carbon": "^2.69",
+        "amphp/amp": "^3.0",
+        "amphp/mysql": "^3.0"
     },
     "license": "MIT",
     "autoload": {
@@ -19,5 +19,9 @@
             "name": "nicollassilva",
             "email": "inicollashps@gmail.com"
         }
-    ]
+    ],
+    "minimum-stability": "beta",
+    "require-dev": {
+        "symfony/var-dumper": "^6.3"
+    }
 }

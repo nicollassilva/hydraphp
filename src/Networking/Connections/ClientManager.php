@@ -2,6 +2,8 @@
 
 namespace Emulator\Networking\Connections;
 
+use Amp\Socket\ResourceSocket;
+use Closure;
 use React\Socket\ConnectionInterface;
 use Emulator\Networking\Connections\Client;
 use Emulator\Api\Networking\Connections\IClient;
@@ -17,7 +19,7 @@ class ClientManager implements IClientManager
         return $this->activeClients;
     }
 
-    public function addIfAbsent(ConnectionInterface &$connection): IClient
+    public function addIfAbsent(ResourceSocket &$connection, ?Closure $successCallback = null): IClient
     {
         $connectionHash = spl_object_hash($connection);
 
@@ -26,6 +28,8 @@ class ClientManager implements IClientManager
         }
 
         $this->activeClients[$connectionHash] = new Client($connectionHash, $connection);
+
+        if($successCallback) $successCallback($this->getClient($connectionHash));
 
         return $this->getClient($connectionHash);
     }
@@ -44,7 +48,7 @@ class ClientManager implements IClientManager
         return isset($this->activeClients[$connectionHash]);
     }
 
-    public function disposeClient(ConnectionInterface $connection, bool $needsDisconnectUser = false): void
+    public function disposeClient(ResourceSocket $connection, bool $needsDisconnectUser = false): void
     {
         unset($this->activeClients[spl_object_hash($connection)]);
     }

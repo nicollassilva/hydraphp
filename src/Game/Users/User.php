@@ -24,7 +24,7 @@ class User implements IUser
 
     private bool $isDisposed = false;
 
-    public function __construct(array &$data)
+    public function __construct(array $data)
     {
         $this->data = new UserData($data);
         $this->settings = new UserSettings($data);

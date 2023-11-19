@@ -3,8 +3,8 @@
 namespace Emulator\Storage\Repositories\Catalog;
 
 use ArrayObject;
+use Amp\Mysql\MysqlResult;
 use Emulator\Utils\Logger;
-use React\MySQL\QueryResult;
 use Emulator\Storage\Repositories\EmulatorRepository;
 use Emulator\Api\Game\Catalog\Data\{ICatalogPage,ICatalogFeaturedPage};
 use Emulator\Game\Catalog\Data\{CatalogItem,CatalogPage,CatalogFeaturedPage};
@@ -41,10 +41,10 @@ abstract class CatalogRepository extends EmulatorRepository
 
         $pagesProperty->offsetSet(-1, new CatalogPage($rootPageData));
 
-        self::databaseQuery("SELECT * FROM catalog_pages ORDER BY parent_id, id", function(QueryResult $result) use (&$pagesProperty) {
-            if(empty($result->resultRows)) return;
+        self::databaseQuery("SELECT * FROM catalog_pages ORDER BY parent_id, id", function(MysqlResult $result) use (&$pagesProperty) {
+            if(empty($result)) return;
 
-            foreach($result->resultRows as $pageData) {
+            foreach($result as $pageData) {
                 $pagesProperty->offsetSet($pageData['id'], new CatalogPage($pageData));
             }
         });
@@ -61,10 +61,10 @@ abstract class CatalogRepository extends EmulatorRepository
     /** @param ArrayObject<int,ICatalogFeaturedPage> */
     public static function loadFeaturedPages(ArrayObject &$featuredPagesProperty): void
     {
-        self::databaseQuery("SELECT * FROM catalog_featured_pages ORDER BY slot_id ASC", function(QueryResult $result) use (&$featuredPagesProperty) {
-            if(empty($result->resultRows)) return;
+        self::databaseQuery("SELECT * FROM catalog_featured_pages ORDER BY slot_id ASC", function(MysqlResult $result) use (&$featuredPagesProperty) {
+            if(empty($result)) return;
 
-            foreach($result->resultRows as $pageData) {
+            foreach($result as $pageData) {
                 $featuredPagesProperty->offsetSet($pageData['slot_id'], new CatalogFeaturedPage($pageData));
             }
         });
@@ -75,16 +75,16 @@ abstract class CatalogRepository extends EmulatorRepository
     {
         $itemCount = 0;
 
-        self::databaseQuery("SELECT * FROM catalog_items WHERE item_ids <> 0", function(QueryResult $result) use (&$catalogPages, &$itemCount) {
-            if(empty($result->resultRows)) return;
+        self::databaseQuery("SELECT * FROM catalog_items WHERE item_ids <> 0", function(MysqlResult $result) use (&$catalogPages, &$itemCount) {
+            if(empty($result)) return;
 
-            $itemCount = count($result->resultRows);
-
-            foreach($result->resultRows as $catalogItemData) {
+            foreach($result as $catalogItemData) {
                 if(!$catalogPages->offsetExists($catalogItemData['page_id'])) continue;
 
                 $catalogPages->offsetGet($catalogItemData['page_id'])
                     ->addItem(new CatalogItem($catalogItemData));
+
+                $itemCount++;
             }
         });
 

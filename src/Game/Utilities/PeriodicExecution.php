@@ -2,15 +2,14 @@
 
 namespace Emulator\Game\Utilities;
 
-use React\EventLoop\Loop;
+use Revolt\EventLoop;
 use Emulator\Api\Game\Utilities\IRunnable;
-use React\EventLoop\TimerInterface;
 
 class PeriodicExecution implements IRunnable
 {
     private bool $isActive = false;
 
-    private TimerInterface $processTimer;
+    private string $processTimer;
 
     public function __construct(
         private readonly float $delay
@@ -27,7 +26,7 @@ class PeriodicExecution implements IRunnable
 
         $this->isActive = true;
 
-        $this->processTimer = Loop::addPeriodicTimer($this->delay, function() {
+        $this->processTimer = EventLoop::repeat($this->delay, function() {
             $this->tick();
         });
     }
@@ -38,7 +37,7 @@ class PeriodicExecution implements IRunnable
 
         $this->isActive = false;
 
-        Loop::cancelTimer($this->processTimer);
+        EventLoop::cancel($this->processTimer);
 
         unset($this->processTimer);
     }

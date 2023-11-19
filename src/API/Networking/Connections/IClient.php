@@ -3,15 +3,15 @@
 namespace Emulator\Api\Networking\Connections;
 
 use Emulator\Utils\Logger;
+use Amp\Socket\ResourceSocket;
 use Emulator\Api\Game\Users\IUser;
-use React\Socket\ConnectionInterface;
-use Emulator\Game\Utilities\Enums\MiddleAlertKeyTypes;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
+use Emulator\Game\Utilities\Enums\MiddleAlertKeyTypes;
 
 interface IClient
 {
     public function getId(): string;
-    public function getConnection(): ConnectionInterface;
+    public function getConnection(): ResourceSocket;
 
     public function setVersion(string $version): void;
     public function getVersion(): string;
