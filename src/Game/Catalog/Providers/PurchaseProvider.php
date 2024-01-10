@@ -2,9 +2,10 @@
 
 namespace Emulator\Game\Catalog\Providers;
 
-use Emulator\Api\Game\Catalog\Data\{ICatalogPage, ICatalogItem};
 use Emulator\Api\Networking\Connections\IClient;
+use Emulator\Game\Utilities\Enums\MiddleAlertKeyTypes;
 use Emulator\Api\Game\Catalog\Providers\IPurchaseProvider;
+use Emulator\Api\Game\Catalog\Data\{ICatalogPage, ICatalogItem};
 
 class PurchaseProvider implements IPurchaseProvider
 {

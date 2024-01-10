@@ -20,7 +20,7 @@ class RoomFloorItem extends RoomItem implements IRoomFloorItem
         $message->writeInt($this->getData()->getX());
         $message->writeInt($this->getData()->getY());
         $message->writeInt($this->getData()->getRotation());
-        $message->writeString("{$this->getData()->getZ()}");
+        $message->writeString(strval($this->getData()->getZ()));
 
         if($this->getItemDefinition()->isAllowWalk() || $this->getItemDefinition()->isAllowSit()) {
             $message->writeString("{$this->getItemDefinition()->getStackHeight()}");

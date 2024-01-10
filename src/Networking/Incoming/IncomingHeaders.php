@@ -76,4 +76,8 @@ abstract class IncomingHeaders
     public static int $catalogBuyItemEvent = 3492;
     # -----
 
+    # Inventory Events
+    public static int $requestInventoryItemsEvent = 3150;
+    # -----
+
 }
