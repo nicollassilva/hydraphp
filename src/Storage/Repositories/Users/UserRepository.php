@@ -2,12 +2,13 @@
 
 namespace Emulator\Storage\Repositories\Users;
 
+use Amp\Mysql\Internal\MysqlPooledResult;
 use ArrayObject;
+use Amp\Mysql\MysqlResult;
 use Emulator\Utils\Logger;
-use React\MySQL\QueryResult;
 use Emulator\Game\Users\User;
-use Emulator\Api\Game\Users\IUser;
 use Emulator\Api\Game\Rooms\IRoom;
+use Emulator\Api\Game\Users\IUser;
 use Emulator\Game\Rooms\RoomManager;
 use Emulator\Game\Rooms\Data\RoomData;
 use Emulator\Storage\Repositories\EmulatorRepository;
@@ -45,10 +46,10 @@ abstract class UserRepository extends EmulatorRepository
             FROM users u
             JOIN users_settings uSettings ON uSettings.user_id = u.id
             WHERE auth_ticket = ?
-        ", function (QueryResult $result) use (&$user) {
-            if (empty($result->resultRows)) return;
+        ", function (MysqlPooledResult $result) use (&$user) {
+            if (empty($result)) return;
 
-            $user = new User($result->resultRows[0]);
+            $user = new User($result->fetchRow());
         }, [$ticket]);
 
         return $user;
@@ -57,10 +58,10 @@ abstract class UserRepository extends EmulatorRepository
     /** @param ArrayObject<int,IRoom> $ownRoomsProperty */
     public static function loadOwnRooms(IUser $user, ArrayObject &$ownRoomsProperty): void
     {
-        self::databaseQuery("SELECT * FROM rooms WHERE owner_id = ?", function (QueryResult $result) use (&$ownRoomsProperty) {
-            if (empty($result->resultRows)) return;
+        self::databaseQuery("SELECT * FROM rooms WHERE owner_id = ?", function (MysqlResult $result) use (&$ownRoomsProperty) {
+            if (empty($result)) return;
 
-            foreach ($result->resultRows as $row) {
+            foreach ($result as $row) {
                 $room = RoomManager::getInstance()->loadRoomFromData(new RoomData($row));
 
                 if (!$room) continue;

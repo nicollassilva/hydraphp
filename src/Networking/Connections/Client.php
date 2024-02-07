@@ -4,11 +4,11 @@ namespace Emulator\Networking\Connections;
 
 use Emulator\Hydra;
 use Emulator\Utils\Logger;
+use Amp\Socket\ResourceSocket;
 use Emulator\Api\Game\Users\IUser;
-use React\Socket\ConnectionInterface;
 use Emulator\Api\Networking\Connections\IClient;
-use Emulator\Game\Utilities\Enums\MiddleAlertKeyTypes;
 use Emulator\Api\Networking\Outgoing\IMessageComposer;
+use Emulator\Game\Utilities\Enums\MiddleAlertKeyTypes;
 use Emulator\Networking\Outgoing\Alerts\MiddleAlertComposer;
 
 class Client implements IClient
@@ -22,7 +22,7 @@ class Client implements IClient
 
     public function __construct(
         private readonly string $id,
-        private readonly ConnectionInterface $connection
+        private readonly ResourceSocket $connection
     ) {
         $this->logger = new Logger(get_class($this));
     }
@@ -32,7 +32,7 @@ class Client implements IClient
         return $this->id;
     }
 
-    public function getConnection(): ConnectionInterface
+    public function getConnection(): ResourceSocket
     {
         return $this->connection;
     }

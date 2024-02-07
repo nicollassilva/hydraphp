@@ -5,10 +5,13 @@ namespace Emulator\Storage\Repositories;
 use Closure;
 use Throwable;
 use Emulator\Hydra;
+use Amp\Mysql\MysqlResult;
 use Emulator\Utils\Logger;
-use React\MySQL\QueryResult;
-use function React\Async\await;
-use React\MySQL\ConnectionInterface;
+use Amp\Mysql\MysqlConnectionPool;
+use Emulator\Storage\ConnectorManager;
+
+use function Amp\async;
+use function Amp\Future\await;
 
 interface IEmulatorRepository
 {
@@ -17,19 +20,19 @@ interface IEmulatorRepository
 
 abstract class EmulatorRepository implements IEmulatorRepository
 {
-    public static function getConnection(): ConnectionInterface
+    public static function getConnection(): MysqlConnectionPool
     {
-        return Hydra::getEmulator()->getConnectorManager()->getConnection();
+        return ConnectorManager::getInstance()->getConnection();
     }
 
     public static function loadEmulatorConfigurations(): array
     {
         $configurations = [];
 
-        self::databaseQuery('SELECT * FROM emulator_settings', function(QueryResult $result) use (&$configurations) {
-            if(empty($result->resultRows)) return;
+        self::databaseQuery('SELECT * FROM emulator_settings', function(MysqlResult $result) use (&$configurations) {
+            if(empty($result)) return;
 
-            foreach($result->resultRows as $row) {
+            foreach($result as $row) {
                 $configurations[$row['key']] = $row['value'];
             }
         });
@@ -39,7 +42,7 @@ abstract class EmulatorRepository implements IEmulatorRepository
 
     public static function databaseQuery(string $select, Closure $onSuccessCallback, array $params = [], ?Closure $onErrorCallback = null): void
     {
-        if(!is_callable($onErrorCallback)) {
+        if(is_null($onErrorCallback)) {
             $onErrorCallback = function(Throwable $error) {
                 if(!Hydra::$isDebugging) return;
                 
@@ -47,12 +50,18 @@ abstract class EmulatorRepository implements IEmulatorRepository
             };
         }
 
-        $result = await(self::getConnection()->query($select, $params));
+        $statement = null;
 
-        if($result instanceof \Throwable) {
-            $onErrorCallback($result);
+        try {
+            $statement = self::getConnection()->prepare($select);
+            
+            $result = async(fn () => $statement->execute($params));
+        } catch (\Throwable $error) {
+            $onErrorCallback($error);
             return;
         }
+
+        [$result] = await([$result]);
 
         $onSuccessCallback($result);
     }

@@ -2,7 +2,7 @@
 
 namespace Emulator\Boot;
 
-use Closure;
+use Emulator\Hydra;
 use Emulator\Utils\Logger;
 use Emulator\Workers\CleanerWorker;
 use Emulator\Game\Items\ItemManager;
@@ -13,35 +13,16 @@ use Emulator\Networking\NetworkManager;
 use Emulator\Game\Catalog\CatalogManager;
 use Emulator\Api\Networking\INetworkManager;
 use Emulator\Game\Navigator\NavigatorManager;
-use Emulator\Storage\Compositions\IConnectorManager;
 
 class Emulator
 {
     private readonly Logger $logger;
-    public readonly HydraConfig $configManager;
-    private readonly INetworkManager $networkManager;
-    private readonly IConnectorManager $connectorManager;
+    public ?HydraConfig $configManager = null;
+    private ?INetworkManager $networkManager = null;
 
     public function __construct()
     {
         $this->logger = new Logger(get_class($this));
-
-        $this->showAdvertisement();
-        $this->startConfigManager();
-
-        $this->startConnectorManager(function () {
-            $this->getConfigManager()->loadEmulatorSettings();
-
-            ItemManager::getInstance()->initialize();
-            NavigatorManager::getInstance()->initialize();
-            RoomManager::getInstance()->initialize();
-            UserManager::getInstance()->initialize();
-            CatalogManager::getInstance()->initialize();
-
-            $this->startNetworkManager();
-
-            CleanerWorker::initialize();
-        });
     }
 
     private function showAdvertisement(): void
@@ -63,28 +44,31 @@ class Emulator
         $this->configManager = new HydraConfig();
     }
 
-    public function startConnectorManager(Closure $onConnectionCallback): void
+    public function startEmulator(): void
     {
-        $this->connectorManager = new ConnectorManager(
-            $this->configManager->get('hydra.db.host'),
-            $this->configManager->get('hydra.db.port'),
-            $this->configManager->get('hydra.db.user'),
-            $this->configManager->get('hydra.db.password'),
-            $this->configManager->get('hydra.db.name'),
-            $this->configManager->get('hydra.db.tcpKeepAlive'),
-            $this->configManager->get('hydra.db.autoReconnect'),
-            $onConnectionCallback
-        );
+        $this->showAdvertisement();
+        $this->startConfigManager();
+
+        Hydra::$isDebugging = $this->getConfigManager()->get('hydra.emulator.debug', false);
+
+        ConnectorManager::getInstance()->initialize();
+
+        $this->getConfigManager()->loadEmulatorSettings();
+
+        ItemManager::getInstance()->initialize();
+        NavigatorManager::getInstance()->initialize();
+        RoomManager::getInstance()->initialize();
+        UserManager::getInstance()->initialize();
+        CatalogManager::getInstance()->initialize();
+
+        $this->startNetworkManager();
+
+        // CleanerWorker::initialize();
     }
 
     public function getConfigManager(): HydraConfig
     {
         return $this->configManager;
-    }
-
-    public function getConnectorManager(): IConnectorManager
-    {
-        return $this->connectorManager;
     }
 
     public function getNetworkManager(): INetworkManager

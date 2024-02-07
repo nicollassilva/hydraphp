@@ -33,12 +33,12 @@ class LoginRequest
         
         if(empty($user)) return false;
 
-        if(Hydra::getEmulator()->getNetworkManager()->getClientManager()->getClientByUserId($user->getData()->getId())) {
-            $this->client->getLogger()->warning("User {$user->getData()->getUsername()} tried to login twice.");
-            unset($user);
+        // if(Hydra::getEmulator()->getNetworkManager()->getClientManager()->getClientByUserId($user->getData()->getId())) {
+        //     $this->client->getLogger()->warning("User {$user->getData()->getUsername()} tried to login twice.");
+        //     unset($user);
             
-            return false;
-        }
+        //     return false;
+        // }
         
         $this->client->setUser($user);
         $user->setClient($this->client);

@@ -2,7 +2,7 @@
 
 namespace Emulator\Workers;
 
-use React\EventLoop\{LoopInterface,Loop};
+use Revolt\EventLoop;
 use Emulator\Game\Rooms\{RoomManager,RoomEnvironmentData};
 
 class CleanerWorker
@@ -12,8 +12,6 @@ class CleanerWorker
     private const CLEANER_WORKER_INTERVAL = 15;
 
     private int $lastInactiveRoomsDisposed = 0;
-
-    private LoopInterface $loop;
 
     public function __construct()
     {
@@ -31,16 +29,9 @@ class CleanerWorker
 
     public function start(): void
     {
-        $this->loop = Loop::get();
-
-        $this->loop->addPeriodicTimer(self::CLEANER_WORKER_INTERVAL, function () {
+        EventLoop::repeat(self::CLEANER_WORKER_INTERVAL, function () {
             $this->processCleanings();
         });
-    }
-
-    public function getLoop(): LoopInterface
-    {
-        return $this->loop;
     }
 
     public function processCleanings(): void
